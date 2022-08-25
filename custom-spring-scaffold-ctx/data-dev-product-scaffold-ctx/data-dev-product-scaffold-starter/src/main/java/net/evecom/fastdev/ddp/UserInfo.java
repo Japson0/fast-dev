@@ -14,16 +14,16 @@ public class UserInfo implements Serializable {
 
 
     /**
-     * User id
+     * 用户ID
      */
     private Long userId;
     /**
-     * Username
+     * 账号信息
      */
     private String username;
 
     /**
-     * 租户
+     * 租户ID
      */
     private Long tenantId;
 
@@ -37,7 +37,7 @@ public class UserInfo implements Serializable {
     private boolean admin;
 
     /**
-     * Roles
+     * 角色编码列表
      */
     private String roles[];
     /**

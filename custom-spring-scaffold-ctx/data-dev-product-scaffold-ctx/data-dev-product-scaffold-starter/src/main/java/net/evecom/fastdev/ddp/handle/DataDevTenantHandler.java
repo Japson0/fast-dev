@@ -40,6 +40,11 @@ public class DataDevTenantHandler implements TenantLineHandler {
 
     @Override
     public boolean ignoreTable(String tableName) {
+
+        //超管忽略
+        if (UserContext.isAdmin()) {
+            return false;
+        }
         return ignoreTable.contains(tableName);
     }
 

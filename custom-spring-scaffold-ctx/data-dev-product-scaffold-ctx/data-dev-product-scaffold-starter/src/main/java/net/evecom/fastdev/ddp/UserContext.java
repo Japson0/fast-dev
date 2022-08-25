@@ -55,15 +55,20 @@ public class UserContext {
         return userInfo != null ? userInfo.getUserId() : null;
     }
 
+    public static String getUserName() {
+        UserInfo userInfo = USER_INFO_LOCAL.get();
+        return userInfo != null ? userInfo.getUsername() : null;
+    }
+
     public static Long getTenantId() {
         UserInfo userInfo = USER_INFO_LOCAL.get();
         return userInfo != null ? userInfo.getTenantId() : null;
     }
 
-    public static String getUserName() {
-        UserInfo userInfo = USER_INFO_LOCAL.get();
-        return userInfo != null ? userInfo.getUsername() : null;
+    public static boolean isAdmin() {
+        return getUserInfo().isAdmin();
     }
+
 
     public static UserInfo getUserInfo() {
         UserInfo userInfo = USER_INFO_LOCAL.get();
