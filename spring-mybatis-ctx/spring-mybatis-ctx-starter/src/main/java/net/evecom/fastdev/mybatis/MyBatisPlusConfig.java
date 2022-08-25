@@ -15,8 +15,10 @@ import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.extension.incrementer.*;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import net.evecom.fastdev.mybatis.config.MybatisCtxProperties;
 import net.evecom.fastdev.mybatis.encrypt.EncryptCertificate;
 import net.evecom.fastdev.mybatis.injector.method.InsertBatch;
@@ -120,6 +122,19 @@ public class MyBatisPlusConfig {
                 return methodList;
             }
         };
+    }
+
+    /**
+     * 租户插件
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年08月25日
+     *
+     * @author Japson Huang
+     */
+    @Bean
+    @ConditionalOnBean(TenantLineHandler.class)
+    public InnerInterceptor tenantLineInnerInterceptor(TenantLineHandler tenantLineHandler) {
+        return new TenantLineInnerInterceptor(tenantLineHandler);
     }
 
     @Bean

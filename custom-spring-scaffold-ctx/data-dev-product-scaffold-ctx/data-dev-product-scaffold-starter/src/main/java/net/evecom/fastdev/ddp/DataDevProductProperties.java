@@ -18,6 +18,12 @@ public class DataDevProductProperties {
      */
     private Debug debug;
 
+    /**
+     * 租户忽略的表信息
+     */
+    private String[] ignoreTenantTable;
+
+
     public Debug getDebug() {
         return debug;
     }
@@ -26,10 +32,31 @@ public class DataDevProductProperties {
         this.debug = debug;
     }
 
+    public String[] getIgnoreTenantTable() {
+        return ignoreTenantTable;
+    }
+
+    public void setIgnoreTenantTable(String[] ignoreTenantTable) {
+        this.ignoreTenantTable = ignoreTenantTable;
+    }
+
+    /**
+     * debugger模式
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年08月25日
+     *
+     * @author Japson Huang
+     */
     public static class Debug {
 
+        /**
+         * 是否开启
+         */
         private boolean enable;
 
+        /**
+         * 用户信息
+         */
         private DebuggerUser user;
 
         public boolean isEnable() {
@@ -52,7 +79,7 @@ public class DataDevProductProperties {
     public static class DebuggerUser extends UserInfo {
 
         public DebuggerUser() {
-            super(null, null);
+            super();
         }
     }
 }

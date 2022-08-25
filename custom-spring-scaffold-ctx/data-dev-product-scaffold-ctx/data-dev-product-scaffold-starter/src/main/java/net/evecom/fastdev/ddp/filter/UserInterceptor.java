@@ -23,21 +23,15 @@ import javax.servlet.http.HttpServletResponse;
 public class UserInterceptor implements HandlerInterceptor {
 
     /**
-     * userName
+     * jwt载荷
      */
-    public final static String USE_ID_KEY = "X-UserId";
-
-    /**
-     * appid
-     */
-    public static final String TENANT_ID_KEY = "X-TenantId";
+    public static final String JWT_PAYLOAD = "jwt_payload";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String userId = request.getHeader(USE_ID_KEY);
-        String tenantIdKey = request.getHeader(TENANT_ID_KEY);
+        String jwt = request.getHeader(JWT_PAYLOAD);
 
-        UserContext.setUserInfo(Long.parseLong(userId), Long.parseLong(tenantIdKey));
+        UserContext.setUserInfo(jwt);
         return true;
     }
 

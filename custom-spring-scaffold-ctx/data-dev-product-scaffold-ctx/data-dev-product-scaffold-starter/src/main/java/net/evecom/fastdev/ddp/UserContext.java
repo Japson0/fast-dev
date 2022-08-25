@@ -6,10 +6,12 @@
 package net.evecom.fastdev.ddp;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.extra.spring.SpringUtil;
 import net.evecom.fastdev.boot.utils.JacksonUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import net.evecom.fastdev.common.exception.NoUserInfoException;
+import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.Objects;
 
 /**
  * <P><B>用户工具类:</B></P>
@@ -31,10 +33,16 @@ public class UserContext {
      */
     private static final IllegalAccessError ILLEGAL_ACCESS_ERROR = new IllegalAccessError("该接口无用户信息");
 
+    /**
+     * redis
+     */
+    private final static RedisTemplate<String, UserResource> REDIS_TEMPLATE = SpringUtil.getBean(RedisTemplate.class);
 
-    public static void setUserInfo(Long account, Long tenantId) {
-        UserInfo userInfo = new UserInfo(account, tenantId);
-        USER_INFO_LOCAL.set(userInfo);
+    public static void setUserInfo(String jwtClaims) {
+        if (jwtClaims != null) {
+            UserInfo userInfo = new UserInfo(Objects.requireNonNull(JacksonUtils.toBean(jwtClaims, JwtClaims.class)));
+            USER_INFO_LOCAL.set(userInfo);
+        }
     }
 
 
@@ -53,7 +61,8 @@ public class UserContext {
     }
 
     public static String getUserName() {
-        return getUserInfo().getUsername();
+        UserInfo userInfo = USER_INFO_LOCAL.get();
+        return userInfo != null ? userInfo.getUsername() : null;
     }
 
     public static UserInfo getUserInfo() {
@@ -71,17 +80,13 @@ public class UserContext {
 
 
     private static void initUserInfo(UserInfo userInfo) {
-        if (userInfo.getUserId() == null) {
+        if (userInfo.getUserId() == null && userInfo.getClientId() == null) {
             throw ILLEGAL_ACCESS_ERROR;
         }
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes)
-                RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
-            String jwt = requestAttributes.getRequest().getHeader("jwt_payload");
-            if (StringUtils.isEmpty(jwt)) {
-                throw ILLEGAL_ACCESS_ERROR;
-            }
-            USER_INFO_LOCAL.get().init(JacksonUtils.toBean(jwt, JwtClaims.class));
+        UserResource userResource = REDIS_TEMPLATE.opsForValue().get(userInfo.getClientId() + "_" + userInfo.getUserId());
+        if (userResource == null) {
+            throw NoUserInfoException.getInstance();
         }
+        USER_INFO_LOCAL.get().init(userResource);
     }
 }
