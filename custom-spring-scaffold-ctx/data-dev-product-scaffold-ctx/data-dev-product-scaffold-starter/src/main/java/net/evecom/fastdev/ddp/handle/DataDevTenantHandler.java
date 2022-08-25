@@ -7,8 +7,9 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * <P><B租户插件:</B></P>
@@ -23,10 +24,14 @@ public class DataDevTenantHandler implements TenantLineHandler {
     /**
      * 列表信息
      */
-    public final Set<String> ignoreTable;
+    public final Collection<String> ignoreTable;
 
     public DataDevTenantHandler(String[] ignoreTable) {
-        this.ignoreTable = new HashSet<>(Arrays.asList(ignoreTable));
+        if (ignoreTable == null) {
+            this.ignoreTable = Collections.emptyList();
+        } else {
+            this.ignoreTable = new HashSet<>(Arrays.asList(ignoreTable));
+        }
     }
 
     @Override
@@ -40,7 +45,6 @@ public class DataDevTenantHandler implements TenantLineHandler {
 
     @Override
     public boolean ignoreTable(String tableName) {
-
         //超管忽略
         if (UserContext.isAdmin()) {
             return false;
