@@ -23,6 +23,8 @@
         <module>spring-swagger-ctx/spring-swagger-ctx-annotation</module>
         <module>spring-scaffold-ctx/spring-framework-scaffold-starter</module>
         <module>spring-scaffold-ctx/spring-framework-cloud-scaffold-starter</module>
+        <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-starter</module>
+        <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-annotation</module>
     </modules>
 
     <properties>
@@ -46,6 +48,17 @@
         <dependencies>
             <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
 
+            <dependency>
+                <groupId>net.evecom</groupId>
+                <artifactId>data-dev-product-scaffold-annotation</artifactId>
+                <version>${fast-dev.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.evecom</groupId>
+                <artifactId>data-dev-product-scaffold-starter</artifactId>
+                <version>${fast-dev.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>net.evecom</groupId>
@@ -156,5 +169,36 @@
                 <version>${jasypt-core.version}</version>
             </dependency>
         </dependencies>
+
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>data-maven-releases</id>
+            <name>Releases</name>
+            <url>http://172.16.40.114:8081/repository/maven-releases/</url>
+        </repository>
+        <!-- 发布到快照版本的仓库，即测试版本仓库 -->
+        <snapshotRepository>
+            <id>data-maven-snapshots</id>
+            <url>http://172.16.40.114:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

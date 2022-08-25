@@ -47,9 +47,15 @@ public class RestResponse<T> {
     private final static RestResponse RENDER_SUCCESS = new RestResponse(true, CommonError.SUCCEED.getCode());
 
 
+    public RestResponse() {
+    }
+
     public RestResponse(boolean success, String code) {
-        this.success = success;
-        this.code = code;
+        this(success, code, null);
+    }
+
+    public RestResponse(boolean success, String code, T data) {
+        this(success, code, data, null);
     }
 
     public RestResponse(boolean success, String code, T data, String errorMessage) {

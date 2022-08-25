@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import net.evecom.fastdev.mybatis.annotation.OrderInfo;
 import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
@@ -54,7 +55,7 @@ public class PageConditionDTO<P> extends PageConditionQuery<P> implements IPage 
     /**
      * 是否需要查总数
      */
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean searchCount = true;
 
     /**
