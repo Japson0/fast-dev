@@ -5,9 +5,11 @@
 
 package net.evecom.fastdev.boot.template;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import net.evecom.fastdev.common.annotation.Insert;
 import net.evecom.fastdev.common.annotation.Update;
 import net.evecom.fastdev.common.model.RestResponse;
+import net.evecom.fastdev.mybatis.PageConditionDTO;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +30,7 @@ public class BaseController<ID extends Serializable, T extends BaseEntity<ID>> i
     /**
      * 逻辑层
      */
-    private final BaseService<ID, T> baseService;
+    protected final BaseService<ID, T> baseService;
 
     public BaseController(BaseService<ID, T> baseService) {
         this.baseService = baseService;
@@ -69,8 +71,6 @@ public class BaseController<ID extends Serializable, T extends BaseEntity<ID>> i
      * @author Japson Huang
      */
     public RestResponse delete(@PathVariable ID id) {
-
-
         return RestResponse.UD4ResCount(baseService.deleteById(id));
     }
 
@@ -84,6 +84,18 @@ public class BaseController<ID extends Serializable, T extends BaseEntity<ID>> i
     @Override
     public RestResponse<T> get(ID id) {
         return RestResponse.renderSuccess(baseService.getById(id));
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param conditionDTO
+     * @param <P>
+     * @return
+     */
+    @Override
+    public <P> RestResponse<IPage<T>> getPage(PageConditionDTO<P> conditionDTO) {
+        return RestResponse.renderSuccess(baseService.getPage(conditionDTO));
     }
 
 }

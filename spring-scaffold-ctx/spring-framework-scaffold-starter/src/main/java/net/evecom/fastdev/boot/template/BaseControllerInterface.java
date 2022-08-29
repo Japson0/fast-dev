@@ -5,8 +5,10 @@
 
 package net.evecom.fastdev.boot.template;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
 import net.evecom.fastdev.common.model.RestResponse;
+import net.evecom.fastdev.mybatis.PageConditionDTO;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,4 +63,15 @@ public interface BaseControllerInterface<ID extends Serializable, T extends Base
     @GetMapping("{id}")
     @ApiOperation("查询")
     RestResponse<T> get(@PathVariable ID id);
+
+    /**
+     * 分页查询
+     *
+     * @param condition
+     * @param <P>
+     * @return
+     */
+    @PostMapping(value = "page")
+    @ApiOperation("分页查询")
+    <P> RestResponse<IPage<T>> getPage(@RequestBody PageConditionDTO<P> condition);
 }

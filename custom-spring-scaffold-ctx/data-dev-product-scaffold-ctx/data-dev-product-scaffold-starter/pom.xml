@@ -34,7 +34,17 @@
             <groupId>net.evecom</groupId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.glassfish/javax.el -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>${dubbo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-context</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
     </dependencies>
 </project>

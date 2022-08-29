@@ -41,6 +41,7 @@
         <knife4j.version>2.0.9</knife4j.version>
         <jasypt.version>3.0.4</jasypt.version>
         <jasypt-core.version>1.9.3</jasypt-core.version>
+        <dubbo.version>2.6.12</dubbo.version>
     </properties>
 
     <dependencyManagement>
@@ -201,4 +202,11 @@
             <url>http://172.16.40.114:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+    <repositories>
+        <repository>
+            <id>nexus-aliyun</id>
+            <name>Nexus aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
 </project>

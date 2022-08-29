@@ -30,7 +30,6 @@ public interface BaseService<ID extends Serializable, R extends BaseEntity<ID>> 
      * @author Japson Huang
      */
     <P> IPage<R> getPage(PageConditionDTO<P> pageConditionDTO);
-
     /**
      * 根据主键查询信息
      * RevisionTrail:(Date/Author/Description)
@@ -71,4 +70,5 @@ public interface BaseService<ID extends Serializable, R extends BaseEntity<ID>> 
      * @author Japson Huang
      */
     int addById(R entity);
+
 }
