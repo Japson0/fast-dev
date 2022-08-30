@@ -15,7 +15,6 @@ import net.evecom.fastdev.ddp.charts.ChartsResponse;
 import net.evecom.fastdev.ddp.charts.table.GridData;
 import net.evecom.fastdev.mybatis.PageConditionDTO;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -45,7 +44,6 @@ public class DataDevProductBaseController<ID extends Serializable, T extends Bas
      * @param <P>
      * @return
      */
-    @PostMapping("gridPage")
     @ApiOperation("分页查询并返回表头")
     public <P> RestResponse<ChartsResponse<GridData<IPage<T>>>> getPageForGrid(DataDevProductPageConditionQuery<P> conditionDTO) {
         return RestResponse.renderSuccess(ChartsResponse.tableResponse(baseService.getPage(conditionDTO), clazz));
