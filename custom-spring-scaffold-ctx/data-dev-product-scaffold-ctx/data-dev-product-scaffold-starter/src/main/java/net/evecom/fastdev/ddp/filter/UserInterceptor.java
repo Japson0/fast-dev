@@ -30,7 +30,6 @@ public class UserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String jwt = request.getHeader(JWT_PAYLOAD);
-
         UserContext.setUserInfo(jwt);
         return true;
     }

@@ -6,10 +6,12 @@
 package net.evecom.fastdev.mybatis.annotation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +27,6 @@ import java.util.Map;
 @ApiModel(value = "分页数据结构")
 public class PageConditionQuery<P> {
 
-
     /**
      * 序列化
      */
@@ -35,7 +36,7 @@ public class PageConditionQuery<P> {
      * 开始页从0开始
      */
     @ApiModelProperty(value = "当前页")
-    @JsonProperty("current")
+    @JsonProperty("page")
     protected long pCurrent;
 
     /**
@@ -48,7 +49,7 @@ public class PageConditionQuery<P> {
      * 实体类参数对象
      */
     @ApiModelProperty(value = "条件构造器", name = "condition")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "queryParams", access = JsonProperty.Access.WRITE_ONLY)
     protected P condition;
 
     /**
@@ -85,6 +86,14 @@ public class PageConditionQuery<P> {
      */
     @JsonProperty("searchCount")
     private boolean pSearchCount = true;
+    /**
+     * 排序-降序
+     */
+    protected static final String DESC = "DESC";
+    /**
+     * 排序-升序
+     */
+    protected static final String ASC = "ASC";
 
     public long getpCurrent() {
         return pCurrent;

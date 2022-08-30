@@ -48,6 +48,7 @@ public class GridTableUtil {
      * @created 2017 /05/26 10:09:22 Create grid table list.
      */
     public static Collection<GridTableInfo> createGridTable(Class<?> sourceObject, Class<?> group) {
+
         GroupClass[] groupClass = CACHE_TABLE.computeIfAbsent(sourceObject, c -> {
             try {
                 Field[] fields = sourceObject.getDeclaredFields();

@@ -29,7 +29,6 @@ import java.util.*;
 @ApiModel(value = "分页数据结构")
 public class PageConditionDTO<P> extends PageConditionQuery<P> implements IPage {
 
-
     /**
      * 序列化
      */
