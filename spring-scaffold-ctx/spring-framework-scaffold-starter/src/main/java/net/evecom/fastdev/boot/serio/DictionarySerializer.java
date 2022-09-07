@@ -18,6 +18,7 @@ import net.evecom.fastdev.common.serio.DicSerializerFormat;
 import org.springframework.beans.BeansException;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ import java.util.Map;
  * @author Japson Huang
  * @version1.0
  */
-public class DictionarySerializer extends DicSerializerFormat<String> implements ContextualSerializer {
+public class DictionarySerializer extends DicSerializerFormat<Object> implements ContextualSerializer {
     /**
      * 缓存
      */
@@ -44,9 +45,9 @@ public class DictionarySerializer extends DicSerializerFormat<String> implements
      */
     private final static DictionarySerializer NULL_SERVICE_SERIALIZE = new DictionarySerializer() {
         @Override
-        public void serialize(String value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
             if (value != null) {
-                write(gen, value, value);
+                write(gen, value.toString(), value.toString());
             }
         }
     };
@@ -65,18 +66,36 @@ public class DictionarySerializer extends DicSerializerFormat<String> implements
     private String typeCode;
 
     @Override
-    public void serialize(String value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
 
-        if (value != null) {
-            String dicStr = dictionaryService.getDicStr(typeCode, value);
-            write(gen, dicStr == null ? value : dicStr, value);
+        if (value.getClass() == String.class) {
+            String dicStr = dictionaryService.getDicStr(typeCode, value.toString());
+            write(gen, dicStr == null ? value.toString() : dicStr, value.toString());
+        } else if (value.getClass().isArray()) {
+            gen.writeStartArray();
+            for (String v : (String[]) value) {
+                String dicStr = dictionaryService.getDicStr(typeCode, v);
+                write(gen, dicStr == null ? v : dicStr, v);
+            }
+            gen.writeEndArray();
+        } else {
+            gen.writeStartArray();
+            for (String v : (Collection<String>) value) {
+                String dicStr = dictionaryService.getDicStr(typeCode, v);
+                write(gen, dicStr == null ? v : dicStr, v);
+            }
+            gen.writeEndArray();
         }
+//        if (value != null) {
+//            String dicStr = dictionaryService.getDicStr(typeCode, value);
+//            write(gen, dicStr == null ? value : dicStr, value);
+//        }
     }
 
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) throws JsonMappingException {
-        if (property != null && dictionaryService != null) {
+        if (property != null && dictionaryService != null && canDiction(property)) {
             Dictionary dictionary = property.getAnnotation(Dictionary.class);
             if (dictionary != null) {
                 String typeCode = dictionary.value();
@@ -93,5 +112,13 @@ public class DictionarySerializer extends DicSerializerFormat<String> implements
             }
         }
         return NULL_SERVICE_SERIALIZE;
+    }
+
+    public boolean canDiction(BeanProperty property) {
+        if (property.getType().getRawClass() == String.class) {
+            return true;
+        } else {
+            return property.getType().getContentType().getRawClass() == String.class;
+        }
     }
 }

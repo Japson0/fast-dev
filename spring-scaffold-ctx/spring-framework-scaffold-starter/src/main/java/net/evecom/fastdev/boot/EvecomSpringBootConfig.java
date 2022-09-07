@@ -1,7 +1,11 @@
 package net.evecom.fastdev.boot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.evecom.fastdev.boot.controller.CacheController;
+import net.evecom.fastdev.boot.controller.EnumController;
 import net.evecom.fastdev.boot.handle.*;
+import net.evecom.fastdev.cache.redis.CacheHandle;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -52,6 +56,17 @@ public class EvecomSpringBootConfig {
                                           WebTransSecurityServer webTransSecurityServer,
                                           List<ResourceClean> resourceCleans) {
         return new EvecomSpringBootMvcSpringConfig(evecomSpringBootProperies, webTransSecurityServer, resourceCleans);
+    }
+
+    @Bean
+    public EnumController enumController() {
+        return new EnumController();
+    }
+
+    @Bean
+    @ConditionalOnBean(CacheHandle.class)
+    public CacheController cacheController(CacheHandle cacheHandle) {
+        return new CacheController(cacheHandle);
     }
 
     /**

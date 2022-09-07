@@ -25,7 +25,7 @@ public class RestResponse<T> {
      * 请求是否成功
      */
     @ApiModelProperty(value = "是否成功")
-    private boolean success;
+    private boolean result;
     /**
      * 成功或者失败的code错误码
      */
@@ -39,8 +39,8 @@ public class RestResponse<T> {
     /**
      * 请求失败返回的提示信息，给前端进行页面展示的信息
      */
-    @ApiModelProperty(value = "返回错误信息描述")
-    private String errorMessage;
+    @ApiModelProperty(value = "返回信息描述")
+    private String message;
     /**
      * 成功
      */
@@ -59,10 +59,10 @@ public class RestResponse<T> {
     }
 
     public RestResponse(boolean success, String code, T data, String errorMessage) {
-        this.success = success;
+        this.result = success;
         this.code = code;
         this.data = data;
-        this.errorMessage = errorMessage;
+        this.message = errorMessage;
     }
 
     /**
@@ -87,6 +87,10 @@ public class RestResponse<T> {
         return new RestResponse<>(true, CommonError.SUCCEED.getCode(), data, null);
     }
 
+    public static RestResponse renderSuccess(String message) {
+        return new RestResponse(true, CommonError.SUCCEED.getCode(), null, message);
+    }
+
     /**
      * @param errorCode
      * @return
@@ -109,6 +113,18 @@ public class RestResponse<T> {
     }
 
     /**
+     * 返回错误信息，自定义错误码 Revision Trail: (Date/Author/Description) 2019/5/9 Timer He
+     * CREATE
+     *
+     * @param errorMessage
+     * @return
+     * @author Timer He
+     */
+    public static <T> RestResponse<T> renderError(String errorMessage) {
+        return renderError(CommonError.USER_RESOURCE_EXCEPTION.getCode(), errorMessage);
+    }
+
+    /**
      * 用户资源异常
      * RevisionTrail:(Date/Author/Description)
      * 2021年07月26日
@@ -127,7 +143,7 @@ public class RestResponse<T> {
      * @author Japson Huang
      */
     public static RestResponse renderUserResourceError(String message) {
-        return RestResponse.renderError(CommonError.USER_RESOURCE_EXCEPTION).setErrorMessage(message);
+        return RestResponse.renderError(CommonError.USER_RESOURCE_EXCEPTION).setMessage(message);
     }
 
     /**
@@ -147,12 +163,12 @@ public class RestResponse<T> {
         return RestResponse.renderSuccess();
     }
 
-    public boolean isSuccess() {
-        return success;
+    public boolean isResult() {
+        return result;
     }
 
-    public RestResponse<T> setSuccess(boolean success) {
-        this.success = success;
+    public RestResponse<T> setResult(boolean result) {
+        this.result = result;
         return this;
     }
 
@@ -174,18 +190,18 @@ public class RestResponse<T> {
         return this;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public RestResponse<T> setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public RestResponse<T> setMessage(String message) {
+        this.message = message;
         return this;
     }
 
     @Override
     public String toString() {
-        return "RestResponse{" + "success=" + success + ", code='" + code + '\'' + ", data=" + data + ", errorMessage="
-                + errorMessage + '}';
+        return "RestResponse{" + "success=" + result + ", code='" + code + '\'' + ", data=" + data + ", errorMessage="
+                + message + '}';
     }
 }

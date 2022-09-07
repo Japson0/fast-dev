@@ -7,9 +7,13 @@ package net.evecom.fastdev.common.serio;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <P><B>Description:</B></P>
@@ -19,15 +23,25 @@ import java.io.IOException;
  * @author Japson Huang
  * @version1.0
  */
-public class DictionaryDeserializer extends DicDeserializerFormat<String> {
+public class DictionaryDeserializer extends DicDeserializerFormat<Object> {
 
     @Override
-    public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        Object value = getValue(p);
-        if (value != null) {
-            return value.toString();
+    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+
+        if (p.getCurrentToken() == JsonToken.START_ARRAY) {
+            List<Object> values = new ArrayList<>();
+            while (p.nextToken() != JsonToken.END_ARRAY) {
+                Object value = getValue(p);
+                values.add(value);
+            }
+            return values;
         } else {
-            return null;
+            return getValue(p);
         }
+    }
+
+    @Override
+    public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException {
+        return super.deserializeWithType(p, ctxt, typeDeserializer);
     }
 }
