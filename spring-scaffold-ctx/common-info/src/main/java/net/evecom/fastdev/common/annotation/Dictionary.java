@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
  * @version1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @JacksonAnnotationsInside
 @JsonDeserialize(using = DictionaryDeserializer.class)
 public @interface Dictionary {
