@@ -6,9 +6,7 @@
 package net.evecom.fastdev.boot.template;
 
 import cn.hutool.core.util.TypeUtil;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import net.evecom.fastdev.common.exception.ResourceException;
-import net.evecom.fastdev.mybatis.PageConditionDTO;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
 import net.evecom.fastdev.mybatis.injector.BaseMapperExtend;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,32 +40,6 @@ public class LogicBaseServiceImpl<ID extends Serializable, R extends BaseEntity<
         super(baseMapper);
         this.baseMapper = baseMapper;
         clazz = (Class<R>) TypeUtil.getTypeArgument(this.getClass(), 1);
-    }
-
-    @Override
-    public <P> IPage<R> getPage(PageConditionDTO<P> pageConditionDTO) {
-        Assert.notNull(pageConditionDTO, "pageConditionDTO must not be null");
-        return baseMapper.selectPage(pageConditionDTO,
-                pageConditionDTO.buildQueryWrapper());
-    }
-
-
-    @Override
-    public R getById(ID id) {
-        Assert.notNull(id, "id must not be null");
-        return baseMapper.selectById(id);
-    }
-
-    @Override
-    @Transactional
-    public int updateById(R t, boolean allColumns) {
-        Assert.notNull(t, "object must not be null");
-        Assert.notNull(t.getId(), "object.id must not be null");
-        if (allColumns) {
-            return baseMapper.updateAllColumnById(t);
-        } else {
-            return baseMapper.updateById(t);
-        }
     }
 
     /**

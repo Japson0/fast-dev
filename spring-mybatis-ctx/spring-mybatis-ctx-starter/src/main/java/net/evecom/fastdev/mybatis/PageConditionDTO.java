@@ -241,6 +241,17 @@ public class PageConditionDTO<P> extends PageConditionQuery<P> implements IPage 
         return this;
     }
 
+    public PageConditionDTO() {
+    }
+
+    public PageConditionDTO(PageConditionQuery<P> pageConditionQuery) {
+        this.pCurrent = pageConditionQuery.getpCurrent();
+        this.pSize = pageConditionQuery.getpSize();
+        this.condition = pageConditionQuery.getCondition();
+        this.extend = pageConditionQuery.getExtend();
+        this.orderInfos = pageConditionQuery.getOrderInfos();
+        this.setpSearchCount(pageConditionQuery.ispSearchCount());
+    }
 
     @Override
     public boolean equals(Object o) {

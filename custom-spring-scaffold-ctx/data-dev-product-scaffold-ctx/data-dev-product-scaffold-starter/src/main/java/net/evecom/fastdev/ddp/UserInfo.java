@@ -12,7 +12,10 @@ import java.io.Serializable;
  */
 public class UserInfo implements Serializable {
 
-
+    /**
+     * 序列号
+     */
+    private static final long serialVersionUID = -5742599041333505960L;
     /**
      * 用户ID
      */
@@ -150,6 +153,7 @@ public class UserInfo implements Serializable {
     public void setInit(boolean init) {
         this.init = init;
     }
+
 }
 
 

@@ -1,6 +1,6 @@
 package net.evecom.fastdev.mybatis.sqlparser;
 
-import net.evecom.fastdev.mybatis.encrypt.CryptAble;
+import net.evecom.fastdev.mybatis.annotation.CryptAble;
 import net.evecom.fastdev.mybatis.encrypt.EncryptCertificate;
 import net.evecom.fastdev.mybatis.encrypt.EncryptInspector;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;

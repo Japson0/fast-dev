@@ -26,7 +26,7 @@ public class UserContext {
     /**
      * 用户信息
      */
-    private final static ThreadLocal<UserInfo> USER_INFO_LOCAL = new ThreadLocal<>();
+    private final static ThreadLocal<UserInfo> USER_INFO_LOCAL;
 
     /**
      * 无用户信息错误
@@ -36,7 +36,31 @@ public class UserContext {
     /**
      * redis
      */
-    private final static RedisTemplate<String, UserResource> REDIS_TEMPLATE = SpringUtil.getBean(RedisTemplate.class);
+    private final static RedisTemplate<String, UserResource> REDIS_TEMPLATE;
+
+    private UserContext() {
+    }
+
+    static {
+        DataDevProductProperties properties = null;
+        try {
+            properties = SpringUtil.getBean(DataDevProductProperties.class);
+        } catch (Exception ignore) {
+        }
+        if (properties != null && properties.getDebug().isEnable()) {
+            DataDevProductProperties finalProperties = properties;
+            USER_INFO_LOCAL = ThreadLocal.withInitial(() -> finalProperties.getDebug().getUser());
+        } else {
+            USER_INFO_LOCAL = new ThreadLocal<>();
+        }
+        RedisTemplate<String, UserResource> temp;
+        try {
+            temp = SpringUtil.getBean(RedisTemplate.class);
+        } catch (Exception ignore) {
+            temp = null;
+        }
+        REDIS_TEMPLATE = temp;
+    }
 
     public static void setUserInfo(String jwtClaims) {
         if (jwtClaims != null) {
@@ -71,11 +95,16 @@ public class UserContext {
 
 
     public static UserInfo getUserInfo() {
+        UserInfo userInfo = getUserInfo(true);
+        Assert.notNull(userInfo, "---------------用户信息为空--------------");
+        return userInfo;
+    }
+
+    public static UserInfo getUserInfo(boolean init) {
         UserInfo userInfo = USER_INFO_LOCAL.get();
-        if (userInfo != null && !userInfo.isInit()) {
+        if (init && userInfo != null && !userInfo.isInit()) {
             initUserInfo(userInfo);
         }
-        Assert.notNull(userInfo, "---------------用户信息为空--------------");
         return userInfo;
     }
 

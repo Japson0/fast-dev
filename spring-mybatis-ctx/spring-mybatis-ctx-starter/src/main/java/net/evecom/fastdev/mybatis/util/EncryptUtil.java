@@ -1,6 +1,6 @@
 package net.evecom.fastdev.mybatis.util;
 
-import net.evecom.fastdev.mybatis.encrypt.CryptAble;
+import net.evecom.fastdev.mybatis.annotation.CryptAble;
 import net.evecom.fastdev.mybatis.encrypt.EncryptCertificate;
 import net.evecom.fastdev.mybatis.encrypt.EncryptInspector;
 import org.springframework.beans.BeansException;

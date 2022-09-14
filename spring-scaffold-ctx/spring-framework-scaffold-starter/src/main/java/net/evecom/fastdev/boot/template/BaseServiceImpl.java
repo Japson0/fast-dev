@@ -5,9 +5,10 @@
 
 package net.evecom.fastdev.boot.template;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import net.evecom.fastdev.common.web.BaseService;
 import net.evecom.fastdev.mybatis.PageConditionDTO;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
+import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
 import net.evecom.fastdev.mybatis.injector.BaseMapperExtend;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -34,13 +35,18 @@ public class BaseServiceImpl<ID extends Serializable, R extends BaseEntity<ID>> 
         this.baseMapper = baseMapper;
     }
 
-    @Override
-    public <P> IPage<R> getPage(PageConditionDTO<P> pageConditionDTO) {
-        Assert.notNull(pageConditionDTO, "pageConditionDTO must not be null");
-        return baseMapper.selectPage(pageConditionDTO,
-                pageConditionDTO.buildQueryWrapper());
-    }
 
+    @Override
+    public PageConditionQuery<R> getPage(PageConditionQuery<?> pageConditionDTO) {
+        Assert.notNull(pageConditionDTO, "pageConditionDTO must not be null");
+        PageConditionDTO<Object> page;
+        if (pageConditionDTO instanceof PageConditionDTO) {
+            page = (PageConditionDTO<Object>) pageConditionDTO;
+        } else {
+            page = new PageConditionDTO(pageConditionDTO);
+        }
+        return baseMapper.selectPage(page, page.buildQueryWrapper());
+    }
 
     @Override
     public R getById(ID id) {

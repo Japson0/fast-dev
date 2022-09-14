@@ -5,6 +5,10 @@
  */
 package net.evecom.fastdev.ddp.model;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 携带租户标识的父类
  *
@@ -13,8 +17,15 @@ package net.evecom.fastdev.ddp.model;
  */
 public abstract class TenantEntity extends DataEntity {
     /**
+     * 序列号
+     */
+    private static final long serialVersionUID = -4393596839845121169L;
+    /**
      * 租户字段
      */
+    @JsonIgnore
+    @TableField(
+            updateStrategy = FieldStrategy.NEVER)
     private Long tenantId;
 
 

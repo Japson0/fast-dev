@@ -1,5 +1,6 @@
 package net.evecom.fastdev.mybatis.encrypt;
 
+import net.evecom.fastdev.mybatis.annotation.EncryptType;
 import net.evecom.fastdev.mybatis.util.Sm4Util;
 
 import java.util.Map;

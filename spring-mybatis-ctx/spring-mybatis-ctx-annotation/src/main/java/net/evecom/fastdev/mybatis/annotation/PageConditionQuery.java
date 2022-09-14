@@ -5,13 +5,12 @@
  */
 package net.evecom.fastdev.mybatis.annotation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,11 +66,13 @@ public class PageConditionQuery<P> {
     /**
      * 展示的列名，为NUll则全展示
      */
+    @JsonIgnore
     protected String[] columnNames;
 
     /**
      * 排序信息
      */
+    @JsonIgnore
     protected List<OrderInfo> orderInfos;
     /**
      * 记录
@@ -166,4 +167,5 @@ public class PageConditionQuery<P> {
     public void setpSearchCount(boolean pSearchCount) {
         this.pSearchCount = pSearchCount;
     }
+
 }

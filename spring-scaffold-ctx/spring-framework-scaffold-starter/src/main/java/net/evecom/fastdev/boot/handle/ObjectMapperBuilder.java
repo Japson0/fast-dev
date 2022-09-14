@@ -58,7 +58,7 @@ public class ObjectMapperBuilder {
         /**
          * 注解序列反序列缓存
          */
-        private final static Map<Class<? extends Annotation>, Map.Entry<JsonSerializer<String>, JsonDeserializer<String>>> ANNOTATED_INTROSPECTOR;
+        private final static Map<Class<? extends Annotation>, Map.Entry<JsonSerializer<?>, JsonDeserializer<?>>> ANNOTATED_INTROSPECTOR;
 
         /**
          * 注解信息

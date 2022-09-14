@@ -75,7 +75,11 @@ public class GridTableUtil {
     }
 
     private static Collection<GridTableInfo> createTableInfo(GroupClass[] groupClass, Class<?> group) {
-        Collection<GridTableInfo> gridTableInfos = new TreeSet<>(Comparator.comparing(GridTableInfo::getViewOrder));
+        Collection<GridTableInfo> gridTableInfos = new TreeSet<>((a1, a2) -> {
+            if (a1.getViewOrder().equals(a2.getViewOrder())) {
+                return 1;
+            } else return a1.getViewOrder().compareTo(a2.getViewOrder());
+        });
         if (group == null) {
             for (GroupClass gc : groupClass) {
                 GridTableInfo gridTableInfo = new GridTableInfo();

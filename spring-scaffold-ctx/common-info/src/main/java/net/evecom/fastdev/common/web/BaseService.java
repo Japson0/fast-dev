@@ -3,11 +3,10 @@
  * EVECOM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package net.evecom.fastdev.boot.template;
+package net.evecom.fastdev.common.web;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import net.evecom.fastdev.mybatis.PageConditionDTO;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
+import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
 
 import java.io.Serializable;
 
@@ -29,7 +28,9 @@ public interface BaseService<ID extends Serializable, R extends BaseEntity<ID>> 
      * @param pageConditionDTO 分页类
      * @author Japson Huang
      */
-    <P> IPage<R> getPage(PageConditionDTO<P> pageConditionDTO);
+    PageConditionQuery<R> getPage(PageConditionQuery<?> pageConditionDTO);
+
+
     /**
      * 根据主键查询信息
      * RevisionTrail:(Date/Author/Description)

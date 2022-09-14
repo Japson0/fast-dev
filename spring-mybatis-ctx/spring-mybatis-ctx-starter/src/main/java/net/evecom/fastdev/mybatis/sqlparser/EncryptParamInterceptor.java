@@ -2,6 +2,8 @@ package net.evecom.fastdev.mybatis.sqlparser;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.parser.SqlInfo;
+import net.evecom.fastdev.mybatis.annotation.CryptAble;
+import net.evecom.fastdev.mybatis.annotation.Encrypt;
 import net.evecom.fastdev.mybatis.encrypt.*;
 import net.evecom.fastdev.mybatis.injector.BaseMapperExtend;
 import net.evecom.fastdev.mybatis.util.EncryptUtil;
