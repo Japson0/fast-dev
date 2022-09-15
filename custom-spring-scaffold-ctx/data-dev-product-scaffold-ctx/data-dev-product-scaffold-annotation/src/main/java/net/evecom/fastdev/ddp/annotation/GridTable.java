@@ -99,6 +99,11 @@ public @interface GridTable {
     String width() default "100";
 
     /**
+     * 是否是字典数据
+     */
+    boolean isDictionary() default false;
+
+    /**
      * 复用类组别
      */
     GroupTableInfo[] group() default {};

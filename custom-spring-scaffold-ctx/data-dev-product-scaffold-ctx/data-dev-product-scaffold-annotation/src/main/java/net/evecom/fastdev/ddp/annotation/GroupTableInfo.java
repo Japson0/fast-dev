@@ -75,6 +75,11 @@ public @interface GroupTableInfo {
     int colSpan() default 1;
 
     /**
+     * 是否是字典数据
+     */
+    boolean isDictionary() default false;
+
+    /**
      * 列宽
      */
     String width() default "100";
