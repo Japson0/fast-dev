@@ -22,10 +22,10 @@ import java.util.Collection;
  * @author Nick Lv
  * @created 2022/8/26 11:05
  */
-public class DataDevProductBaseController<T extends BaseEntity<Long>> extends BaseController<Long, T> {
+public class CustomBaseController<T extends BaseEntity<Long>> extends BaseController<Long, T> {
 
 
-    public DataDevProductBaseController(BaseService<Long, T> baseService) {
+    public CustomBaseController(BaseService<Long, T> baseService) {
         super(baseService);
     }
 

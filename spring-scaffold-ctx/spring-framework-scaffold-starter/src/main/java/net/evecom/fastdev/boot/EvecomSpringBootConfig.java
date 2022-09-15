@@ -59,8 +59,8 @@ public class EvecomSpringBootConfig {
     }
 
     @Bean
-    public EnumController enumController() {
-        return new EnumController();
+    public EnumController enumController(EvecomSpringBootProperies evecomSpringBootProperies) {
+        return new EnumController(evecomSpringBootProperies.getEnums().getPrefixPackage());
     }
 
     @Bean

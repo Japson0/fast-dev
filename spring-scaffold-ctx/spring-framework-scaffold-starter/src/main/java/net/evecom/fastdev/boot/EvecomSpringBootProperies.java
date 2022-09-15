@@ -18,8 +18,13 @@ public class EvecomSpringBootProperies {
      */
     private WebTransSecurityFilter webTransSecurityFilter = new WebTransSecurityFilter();
 
+    /**
+     * 枚举配置
+     */
+    private EnumsProperties enums;
+
     public static class WebTransSecurityFilter {
-        boolean enable = true;
+        private boolean enable = true;
 
         private String path = "/**";
 
@@ -46,5 +51,35 @@ public class EvecomSpringBootProperies {
 
     public void setWebTransSecurityFilter(WebTransSecurityFilter webTransSecurityFilter) {
         this.webTransSecurityFilter = webTransSecurityFilter;
+    }
+
+    public EnumsProperties getEnums() {
+        return enums;
+    }
+
+    public void setEnums(EnumsProperties enums) {
+        this.enums = enums;
+    }
+
+    /**
+     * 枚举配置
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年09月14日
+     *
+     * @author Japson Huang
+     */
+    public static class EnumsProperties {
+        /**
+         * 前缀包名
+         */
+        private String prefixPackage;
+
+        public String getPrefixPackage() {
+            return prefixPackage;
+        }
+
+        public void setPrefixPackage(String prefixPackage) {
+            this.prefixPackage = prefixPackage;
+        }
     }
 }

@@ -33,12 +33,41 @@ public class EnumController {
      */
     private final Map<String, Class<?>> nameMap = new ConcurrentHashMap<>();
 
+    /**
+     * 前缀包
+     */
+    private final String prefixPackage;
+
+    public EnumController(String prefixPackage) {
+        if (prefixPackage != null) {
+            this.prefixPackage = prefixPackage + ".";
+        } else {
+            this.prefixPackage = null;
+        }
+    }
+
     @GetMapping
     @ApiOperation(value = "根据全路径查询枚举", notes = "name是枚举类型的类全路径名称")
     @ResponseBody
     private RestResponse enumByAllName(@RequestParam("name") String name) {
         try {
             Class<?> aClass = nameMap.get(name);
+            if (aClass == null) {
+                aClass = Class.forName(name);
+                nameMap.put(name, aClass);
+            }
+            return RestResponse.renderSuccess(aClass.getEnumConstants());
+        } catch (ClassNotFoundException e) {
+            return RestResponse.renderUserResourceError("不存在对应的字典信息");
+        }
+    }
+
+    @GetMapping("name")
+    @ApiOperation(value = "根据枚举名称查询枚举")
+    @ResponseBody
+    private RestResponse enumByName(@RequestParam("name") String name) {
+        try {
+            Class<?> aClass = nameMap.get(prefixPackage + name);
             if (aClass == null) {
                 aClass = Class.forName(name);
                 nameMap.put(name, aClass);
