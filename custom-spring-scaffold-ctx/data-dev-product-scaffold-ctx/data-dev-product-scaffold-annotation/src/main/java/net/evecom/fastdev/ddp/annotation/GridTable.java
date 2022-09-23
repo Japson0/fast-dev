@@ -67,7 +67,7 @@ public @interface GridTable {
      *
      * @author Nick Lv
      */
-    int isNotDate() default 0;
+    boolean isNotDate() default false;
 
     /**
      * 日期格式化
@@ -79,7 +79,7 @@ public @interface GridTable {
      *
      * @author Nick Lv
      */
-    int canClick() default 0;
+    boolean canClick() default false;
 
     /**
      * 所占行数

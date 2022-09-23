@@ -8,11 +8,10 @@ package net.evecom.fastdev.boot.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.evecom.fastdev.common.model.RestResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -57,6 +56,25 @@ public class EnumController {
                 nameMap.put(name, aClass);
             }
             return RestResponse.renderSuccess(aClass.getEnumConstants());
+        } catch (ClassNotFoundException e) {
+            return RestResponse.renderUserResourceError("不存在对应的字典信息");
+        }
+    }
+
+    @PostMapping("batch")
+    @ResponseBody
+    public RestResponse enumByAllNames(@RequestBody List<String> names) {
+        try {
+            Map<String, Object[]> result = new HashMap<>(names.size());
+            for (String name : names) {
+                Class<?> aClass = nameMap.get(name);
+                if (aClass == null) {
+                    aClass = Class.forName(name);
+                    nameMap.put(name, aClass);
+                }
+                result.put(name, aClass.getEnumConstants());
+            }
+            return RestResponse.renderSuccess(result);
         } catch (ClassNotFoundException e) {
             return RestResponse.renderUserResourceError("不存在对应的字典信息");
         }

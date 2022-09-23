@@ -60,4 +60,5 @@ public class DataDevProductConfig implements WebMvcConfigurer {
     public TenantLineHandler tenantLineHandler() {
         return new DataDevTenantHandler(devProductProperties.getIgnoreTenantTable());
     }
+
 }

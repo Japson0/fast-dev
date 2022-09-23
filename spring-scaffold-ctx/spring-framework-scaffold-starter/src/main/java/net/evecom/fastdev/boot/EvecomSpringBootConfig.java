@@ -60,7 +60,12 @@ public class EvecomSpringBootConfig {
 
     @Bean
     public EnumController enumController(EvecomSpringBootProperies evecomSpringBootProperies) {
-        return new EnumController(evecomSpringBootProperies.getEnums().getPrefixPackage());
+        EvecomSpringBootProperies.EnumsProperties enums = evecomSpringBootProperies.getEnums();
+        String prefix = null;
+        if (enums != null) {
+            prefix = enums.getPrefixPackage();
+        }
+        return new EnumController(prefix);
     }
 
     @Bean
@@ -81,5 +86,6 @@ public class EvecomSpringBootConfig {
     public DefaultWebTransSecurityService defaultDesensitizationService() {
         return new DefaultWebTransSecurityService();
     }
+
 
 }

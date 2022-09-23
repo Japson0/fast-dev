@@ -9,6 +9,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.extra.spring.SpringUtil;
 import net.evecom.fastdev.boot.utils.JacksonUtils;
 import net.evecom.fastdev.common.exception.NoUserInfoException;
+import net.evecom.fastdev.ddp.handle.DataDevTenantHandler;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Objects;
@@ -47,7 +48,7 @@ public class UserContext {
             properties = SpringUtil.getBean(DataDevProductProperties.class);
         } catch (Exception ignore) {
         }
-        if (properties != null && properties.getDebug().isEnable()) {
+        if (properties != null && properties.getDebug() != null && properties.getDebug().isEnable()) {
             DataDevProductProperties finalProperties = properties;
             USER_INFO_LOCAL = ThreadLocal.withInitial(() -> finalProperties.getDebug().getUser());
         } else {
@@ -72,6 +73,11 @@ public class UserContext {
 
     public static void clean() {
         USER_INFO_LOCAL.remove();
+        DataDevTenantHandler.IGNORE_LOCAL.remove();
+    }
+
+    public static void ignoreTenant() {
+        DataDevTenantHandler.IGNORE_LOCAL.set(true);
     }
 
     public static Long getUserId() {
@@ -88,6 +94,7 @@ public class UserContext {
         UserInfo userInfo = USER_INFO_LOCAL.get();
         return userInfo != null ? userInfo.getTenantId() : null;
     }
+
 
     public static boolean isAdmin() {
         return getUserInfo().isAdmin();

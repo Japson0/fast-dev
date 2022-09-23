@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <P><B>基本逻辑服务层:</B></P>
@@ -71,6 +72,12 @@ public class BaseServiceImpl<ID extends Serializable, R extends BaseEntity<ID>> 
     public int deleteById(ID id) {
         Assert.notNull(id, "id must not be null");
         return baseMapper.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public int deleteById(List<ID> ids) {
+        return baseMapper.deleteBatchIds(ids);
     }
 
     @Override

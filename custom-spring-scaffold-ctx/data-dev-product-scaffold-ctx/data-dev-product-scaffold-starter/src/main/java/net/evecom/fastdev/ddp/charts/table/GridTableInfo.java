@@ -40,11 +40,11 @@ public class GridTableInfo implements Serializable {
     /**
      * 是否日期
      */
-    private Integer isNotDate;
+    private boolean notDate;
     /**
      * 是否可以被点击
      */
-    private Integer canClick;
+    private boolean canClick;
     /**
      * 所占列
      */
@@ -61,6 +61,11 @@ public class GridTableInfo implements Serializable {
      * 宽度
      */
     private String width;
+
+    /**
+     * 是否字典表
+     */
+    private boolean dictionary;
 
 
     public String getCnName() {
@@ -103,19 +108,19 @@ public class GridTableInfo implements Serializable {
         this.viewOrder = viewOrder;
     }
 
-    public Integer getIsNotDate() {
-        return isNotDate;
+    public boolean isNotDate() {
+        return notDate;
     }
 
-    public void setIsNotDate(Integer isNotDate) {
-        this.isNotDate = isNotDate;
+    public void setNotDate(boolean notDate) {
+        this.notDate = notDate;
     }
 
-    public Integer getCanClick() {
+    public boolean isCanClick() {
         return canClick;
     }
 
-    public void setCanClick(Integer canClick) {
+    public void setCanClick(boolean canClick) {
         this.canClick = canClick;
     }
 
@@ -149,6 +154,14 @@ public class GridTableInfo implements Serializable {
 
     public void setWidth(String width) {
         this.width = width;
+    }
+
+    public boolean isDictionary() {
+        return dictionary;
+    }
+
+    public void setDictionary(boolean dictionary) {
+        this.dictionary = dictionary;
     }
 }
 

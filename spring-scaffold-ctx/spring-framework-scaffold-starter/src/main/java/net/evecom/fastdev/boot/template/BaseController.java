@@ -9,9 +9,7 @@ import net.evecom.fastdev.common.annotation.Insert;
 import net.evecom.fastdev.common.annotation.Update;
 import net.evecom.fastdev.common.model.RestResponse;
 import net.evecom.fastdev.common.web.BaseService;
-import net.evecom.fastdev.mybatis.PageConditionDTO;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
-import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,16 +85,5 @@ public class BaseController<ID extends Serializable, T extends BaseEntity<ID>> i
         return RestResponse.renderSuccess(baseService.getById(id));
     }
 
-    /**
-     * 分页查询
-     *
-     * @param conditionDTO
-     * @param <P>
-     * @return
-     */
-    @Override
-    public <P> RestResponse<PageConditionQuery<? extends T>> getPage(PageConditionDTO<P> conditionDTO) {
-        return RestResponse.renderSuccess(baseService.getPage(conditionDTO));
-    }
 
 }

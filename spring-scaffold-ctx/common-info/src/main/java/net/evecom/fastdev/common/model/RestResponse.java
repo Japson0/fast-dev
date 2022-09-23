@@ -25,12 +25,12 @@ public class RestResponse<T> {
      * 请求是否成功
      */
     @ApiModelProperty(value = "是否成功")
-    private boolean result;
+    private boolean result = true;
     /**
      * 成功或者失败的code错误码
      */
     @ApiModelProperty(value = "成功或者失败的应答码", example = "00000:正确，00001，错误，99999：系统异常")
-    private String code;
+    private String code = CommonError.SUCCEED.getCode();
     /**
      * 成功时返回的数据，失败时返回具体的异常信息
      */

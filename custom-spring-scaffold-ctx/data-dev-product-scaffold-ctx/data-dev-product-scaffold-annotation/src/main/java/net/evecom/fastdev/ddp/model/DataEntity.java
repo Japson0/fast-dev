@@ -77,7 +77,6 @@ public abstract class DataEntity implements net.evecom.fastdev.mybatis.annotatio
      * 修改人名称
      */
     @TableField(value = MODIFIER_NAME, insertStrategy = FieldStrategy.NOT_NULL, updateStrategy = FieldStrategy.NOT_NULL, fill = FieldFill.INSERT_UPDATE)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonIgnore
     private String modifierName;
     /**

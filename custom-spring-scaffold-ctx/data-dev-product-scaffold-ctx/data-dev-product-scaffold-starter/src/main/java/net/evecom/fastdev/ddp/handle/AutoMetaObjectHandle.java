@@ -53,7 +53,7 @@ public class AutoMetaObjectHandle implements MetaObjectHandler {
             initValue(metaObject, TIME_CREATED_FIELD, now);
         }
         if (canSet(CREATOR_ID_FIELD, metaObject)) {
-            initValue(metaObject, CREATOR_ID, UserContext.getUserId());
+            initValue(metaObject, CREATOR_ID_FIELD, UserContext.getUserId());
         }
         if (canSet(CREATOR_NAME_FIELD, metaObject)) {
             initValue(metaObject, CREATOR_NAME_FIELD, UserContext.getUserName());

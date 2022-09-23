@@ -37,6 +37,6 @@ public interface BaseMapperExtend<T> extends BaseMapper<T> {
      *
      * @author Japson Huang
      */
-    int insertBatch(@Param(Constants.COLL) Collection<? extends T> entries);
+    int insertBatch(@Param(Constants.LIST) Collection<? extends T> entries);
 
 }

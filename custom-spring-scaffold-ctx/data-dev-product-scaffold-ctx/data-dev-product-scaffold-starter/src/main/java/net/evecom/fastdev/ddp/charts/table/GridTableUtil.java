@@ -103,11 +103,12 @@ public class GridTableUtil {
                             } else {
                                 gridTableInfo.setStyle(groupTableInfo.style());
                                 gridTableInfo.setStyleClass(groupTableInfo.styleClass());
-                                gridTableInfo.setIsNotDate(groupTableInfo.isNotDate());
+                                gridTableInfo.setNotDate(groupTableInfo.isNotDate());
                                 gridTableInfo.setViewOrder(groupTableInfo.viewOrder());
                                 gridTableInfo.setCanClick(groupTableInfo.canClick());
                                 gridTableInfo.setDateFormat(groupTableInfo.dateFormat());
                                 gridTableInfo.setWidth(groupTableInfo.width());
+                                gridTableInfo.setDictionary(gridTableInfo.isDictionary());
                             }
                             gridTableInfos.add(gridTableInfo);
                             break;
@@ -122,11 +123,12 @@ public class GridTableUtil {
     private static void render(GridTableInfo gridTableInfo, GridTable gridTable) {
         gridTableInfo.setStyle(gridTable.style());
         gridTableInfo.setStyleClass(gridTable.styleClass());
-        gridTableInfo.setIsNotDate(gridTable.isNotDate());
+        gridTableInfo.setNotDate(gridTable.isNotDate());
         gridTableInfo.setViewOrder(gridTable.viewOrder());
         gridTableInfo.setCanClick(gridTable.canClick());
         gridTableInfo.setDateFormat(gridTable.dateFormat());
         gridTableInfo.setWidth(gridTable.width());
+        gridTableInfo.setDictionary(gridTable.isDictionary());
     }
 
 

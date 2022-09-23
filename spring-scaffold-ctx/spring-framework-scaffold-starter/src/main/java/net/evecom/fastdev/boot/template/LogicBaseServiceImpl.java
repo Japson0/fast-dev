@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <P><B>基本服务层:</B></P>
@@ -50,7 +51,6 @@ public class LogicBaseServiceImpl<ID extends Serializable, R extends BaseEntity<
      * @author Japson Huang
      */
     @Override
-    @Transactional
     public int deleteById(ID id) {
         Assert.notNull(id, "id must not be null");
         try {
@@ -62,6 +62,14 @@ public class LogicBaseServiceImpl<ID extends Serializable, R extends BaseEntity<
         }
     }
 
+    @Override
+    @Transactional
+    public int deleteById(List<ID> ids) {
+        for (ID id : ids) {
+            deleteById(id);
+        }
+        return ids.size();
+    }
 
     @Override
     @Transactional

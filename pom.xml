@@ -25,6 +25,7 @@
         <module>spring-scaffold-ctx/spring-framework-cloud-scaffold-starter</module>
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-starter</module>
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-annotation</module>
+        <module>custom-spring-scaffold-ctx/data-dev.product-tool</module>
     </modules>
 
     <properties>

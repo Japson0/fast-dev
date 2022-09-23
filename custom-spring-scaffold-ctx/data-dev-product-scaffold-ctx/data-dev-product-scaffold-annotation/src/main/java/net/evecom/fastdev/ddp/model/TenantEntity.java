@@ -25,7 +25,7 @@ public abstract class TenantEntity extends DataEntity {
      */
     @JsonIgnore
     @TableField(
-            updateStrategy = FieldStrategy.NEVER)
+            updateStrategy = FieldStrategy.NEVER, insertStrategy = FieldStrategy.NEVER)
     private Long tenantId;
 
 

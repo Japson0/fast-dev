@@ -26,6 +26,11 @@ public class DataDevTenantHandler implements TenantLineHandler {
      */
     public final Collection<String> ignoreTable;
 
+    /**
+     * 动态忽略租户
+     */
+    public static final ThreadLocal<Boolean> IGNORE_LOCAL = ThreadLocal.withInitial(() -> false);
+
     public DataDevTenantHandler(String[] ignoreTable) {
         if (ignoreTable == null) {
             this.ignoreTable = Collections.emptyList();
@@ -46,8 +51,10 @@ public class DataDevTenantHandler implements TenantLineHandler {
     @Override
     public boolean ignoreTable(String tableName) {
         //超管忽略
-        if (UserContext.isAdmin()) {
-            return false;
+        if (IGNORE_LOCAL.get()) {
+            return true;
+        } else if (UserContext.isAdmin()) {
+            return true;
         }
         return ignoreTable.contains(tableName);
     }

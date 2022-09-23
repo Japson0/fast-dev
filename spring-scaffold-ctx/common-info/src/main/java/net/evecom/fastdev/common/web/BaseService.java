@@ -9,6 +9,7 @@ import net.evecom.fastdev.mybatis.annotation.BaseEntity;
 import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <P><B>Description:</B></P>
@@ -61,6 +62,15 @@ public interface BaseService<ID extends Serializable, R extends BaseEntity<ID>> 
      * @author Japson Huang
      */
     int deleteById(ID id);
+
+    /**
+     * 批量删除
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年09月19日
+     *
+     * @author Japson Huang
+     */
+    int deleteById(List<ID> ids);
 
     /**
      * 根据主键新增数据
