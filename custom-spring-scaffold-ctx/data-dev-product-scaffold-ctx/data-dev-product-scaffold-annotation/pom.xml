@@ -21,6 +21,10 @@
             <groupId>net.evecom</groupId>
             <artifactId>spring-mybaits-ctx-annotation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.evecom</groupId>
+            <artifactId>common-info</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

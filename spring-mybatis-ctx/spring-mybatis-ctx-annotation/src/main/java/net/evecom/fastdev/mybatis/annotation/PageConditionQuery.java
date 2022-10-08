@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -168,4 +170,31 @@ public class PageConditionQuery<P> {
         this.pSearchCount = pSearchCount;
     }
 
+    public PageConditionQuery<P> addOrdersFirst(OrderInfo... orderItems) {
+        if (this.orderInfos == null) {
+            this.addOrdersLast(orderItems);
+        } else {
+            List<OrderInfo> temp = new LinkedList();
+            OrderInfo[] var3 = orderItems;
+            int var4 = orderItems.length;
+
+            for (int var5 = 0; var5 < var4; ++var5) {
+                OrderInfo orderItem = var3[var5];
+                ((LinkedList) temp).addFirst(orderItem);
+            }
+
+            this.orderInfos = temp;
+        }
+
+        return this;
+    }
+
+    public PageConditionQuery<P> addOrdersLast(OrderInfo... orderItems) {
+        if (this.orderInfos == null) {
+            this.orderInfos = new LinkedList();
+        }
+
+        this.orderInfos.addAll(Arrays.asList(orderItems));
+        return this;
+    }
 }

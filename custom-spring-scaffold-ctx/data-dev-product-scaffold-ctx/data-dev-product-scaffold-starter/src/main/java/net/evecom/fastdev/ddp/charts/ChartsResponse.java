@@ -29,7 +29,7 @@ public class ChartsResponse<T> extends RestResponse<T> {
      * @param tableView 表格类
      * @author Japson Huang
      */
-    public static <T> ChartsResponse<GridData<IPage<T>>> tableResponse(IPage<T> page, Class<?> tableView) {
+    public static <T> ChartsResponse<GridData<IPage<? extends T>>> tableResponse(IPage<? extends T> page, Class<?> tableView) {
         return tableResponse(page, tableView, null);
     }
 
@@ -42,7 +42,7 @@ public class ChartsResponse<T> extends RestResponse<T> {
      * @param tableView 表格类
      * @author Japson Huang
      */
-    public static <T> ChartsResponse<GridData<PageConditionQuery<T>>> tableResponse(PageConditionQuery<T> page, Class<?> tableView) {
+    public static <T> ChartsResponse<GridData<PageConditionQuery<? extends T>>> tableResponse(PageConditionQuery<? extends T> page, Class<?> tableView) {
         return tableResponse(page, tableView, null);
     }
 
@@ -56,9 +56,9 @@ public class ChartsResponse<T> extends RestResponse<T> {
      * @param group     分组信息
      * @author Japson Huang
      */
-    public static <T> ChartsResponse<GridData<PageConditionQuery<T>>> tableResponse(PageConditionQuery<T> page, Class<?> tableView, Class<?> group) {
+    public static <T> ChartsResponse<GridData<PageConditionQuery<? extends T>>> tableResponse(PageConditionQuery<? extends T> page, Class<?> tableView, Class<?> group) {
         Collection<GridTableInfo> gridTable = GridTableUtil.createGridTable(tableView, group);
-        ChartsResponse<GridData<PageConditionQuery<T>>> result = new ChartsResponse<>();
+        ChartsResponse<GridData<PageConditionQuery<? extends T>>> result = new ChartsResponse<>();
         result.setData(new GridData<>(page, gridTable));
         return result;
     }
@@ -73,9 +73,9 @@ public class ChartsResponse<T> extends RestResponse<T> {
      * @param group     分组信息
      * @author Japson Huang
      */
-    public static <T> ChartsResponse<GridData<IPage<T>>> tableResponse(IPage<T> page, Class<?> tableView, Class<?> group) {
+    public static <T> ChartsResponse<GridData<IPage<? extends T>>> tableResponse(IPage<? extends T> page, Class<?> tableView, Class<?> group) {
         Collection<GridTableInfo> gridTable = GridTableUtil.createGridTable(tableView, group);
-        ChartsResponse<GridData<IPage<T>>> result = new ChartsResponse<>();
+        ChartsResponse<GridData<IPage<? extends T>>> result = new ChartsResponse<>();
         result.setData(new GridData<>(page, gridTable));
         return result;
     }
@@ -89,7 +89,7 @@ public class ChartsResponse<T> extends RestResponse<T> {
      * @param tableView 表格类
      * @author Japson Huang
      */
-    public static <T> ChartsResponse<GridData<Collection<T>>> tableResponse(Collection<T> data, Class<?> tableView) {
+    public static <T> ChartsResponse<GridData<Collection<? extends T>>> tableResponse(Collection<? extends T> data, Class<?> tableView) {
         return tableResponse(data, tableView, null);
     }
 
@@ -103,9 +103,9 @@ public class ChartsResponse<T> extends RestResponse<T> {
      * @param group     分组信息
      * @author Japson Huang
      */
-    public static <T> ChartsResponse<GridData<Collection<T>>> tableResponse(Collection<T> data, Class<?> tableView, Class<?> group) {
+    public static <T> ChartsResponse<GridData<Collection<? extends T>>> tableResponse(Collection<? extends T> data, Class<?> tableView, Class<?> group) {
         Collection<GridTableInfo> gridTable = GridTableUtil.createGridTable(tableView, group);
-        ChartsResponse<GridData<Collection<T>>> result = new ChartsResponse<>();
+        ChartsResponse<GridData<Collection<? extends T>>> result = new ChartsResponse<>();
         result.setData(new GridData<>(data, gridTable));
         return result;
     }

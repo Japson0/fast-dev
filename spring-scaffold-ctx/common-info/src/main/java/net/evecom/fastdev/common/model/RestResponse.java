@@ -41,6 +41,11 @@ public class RestResponse<T> {
      */
     @ApiModelProperty(value = "返回信息描述")
     private String message;
+
+    /**
+     * 链路Id
+     */
+    private String traceId;
     /**
      * 成功
      */
@@ -87,7 +92,7 @@ public class RestResponse<T> {
         return new RestResponse<>(true, CommonError.SUCCEED.getCode(), data, null);
     }
 
-    public static RestResponse renderSuccess(String message) {
+    public static RestResponse renderSuccess2Msg(String message) {
         return new RestResponse(true, CommonError.SUCCEED.getCode(), null, message);
     }
 
@@ -203,5 +208,13 @@ public class RestResponse<T> {
     public String toString() {
         return "RestResponse{" + "success=" + result + ", code='" + code + '\'' + ", data=" + data + ", errorMessage="
                 + message + '}';
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 }

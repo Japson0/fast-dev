@@ -2,10 +2,13 @@ package net.evecom.fastdev.ddp;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
+import net.evecom.fastdev.boot.handle.TraceService;
 import net.evecom.fastdev.ddp.filter.UserInterceptor;
 import net.evecom.fastdev.ddp.filter.debug.DebugUserInterceptor;
 import net.evecom.fastdev.ddp.handle.AutoMetaObjectHandle;
 import net.evecom.fastdev.ddp.handle.DataDevTenantHandler;
+import net.evecom.fastdev.ddp.handle.LoggerTracesService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -61,4 +64,9 @@ public class DataDevProductConfig implements WebMvcConfigurer {
         return new DataDevTenantHandler(devProductProperties.getIgnoreTenantTable());
     }
 
+    @ConditionalOnClass(name = "org.apache.skywalking.apm.agent.core.boot.AgentPackagePath")
+    @Bean
+    public TraceService traceService() {
+        return new LoggerTracesService();
+    }
 }

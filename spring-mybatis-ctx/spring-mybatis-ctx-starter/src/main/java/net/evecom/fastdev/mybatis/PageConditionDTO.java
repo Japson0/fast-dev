@@ -15,7 +15,10 @@ import net.evecom.fastdev.mybatis.annotation.OrderInfo;
 import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
 import net.evecom.fastdev.mybatis.util.EncryptUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -179,16 +182,9 @@ public class PageConditionDTO<P> extends PageConditionQuery<P> implements IPage 
      *
      * @author Japson Huang
      */
+    @Override
     public PageConditionDTO<P> addOrdersFirst(OrderInfo... orderItems) {
-        if (this.orderInfos == null) {
-            addOrdersLast(orderItems);
-        } else {
-            List<OrderInfo> temp = new LinkedList<>();
-            for (OrderInfo orderItem : orderItems) {
-                ((LinkedList<OrderInfo>) temp).addFirst(orderItem);
-            }
-            this.orderInfos = temp;
-        }
+        super.addOrdersFirst(orderItems);
         return this;
     }
 
@@ -199,11 +195,9 @@ public class PageConditionDTO<P> extends PageConditionQuery<P> implements IPage 
      *
      * @author Japson Huang
      */
+    @Override
     public PageConditionDTO<P> addOrdersLast(OrderInfo... orderItems) {
-        if (this.orderInfos == null) {
-            this.orderInfos = new LinkedList<>();
-        }
-        this.orderInfos.addAll(Arrays.asList(orderItems));
+        super.addOrdersLast(orderItems);
         return this;
     }
 

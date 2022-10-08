@@ -38,12 +38,20 @@ public class GlobalExceptionHandle {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandle.class);
 
+    /**
+     * 错误日志追中ID
+     */
+    private final TraceService traceService;
+
+    public GlobalExceptionHandle(TraceService traceService) {
+        this.traceService = traceService;
+    }
+
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Object customerExceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
         //系统级异常，错误码固定为-1，提示语固定为系统繁忙，请稍后再试
         RestResponse result;
-
         if (e instanceof CommonException) {
             String code = ((CommonException) e).getCode();
             if (code != null) {
@@ -73,6 +81,7 @@ public class GlobalExceptionHandle {
             result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), "系统未知异常");
             LOGGER.error("系统异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
         }
+        result.setTraceId(traceService.getTraceId());
         return result;
     }
 
@@ -93,5 +102,6 @@ public class GlobalExceptionHandle {
         }
         return message.toString();
     }
+
 
 }

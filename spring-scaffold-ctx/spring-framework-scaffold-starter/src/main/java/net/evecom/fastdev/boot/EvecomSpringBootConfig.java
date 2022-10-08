@@ -5,6 +5,7 @@ import net.evecom.fastdev.boot.controller.CacheController;
 import net.evecom.fastdev.boot.controller.EnumController;
 import net.evecom.fastdev.boot.handle.*;
 import net.evecom.fastdev.cache.redis.CacheHandle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
@@ -47,8 +48,8 @@ public class EvecomSpringBootConfig {
     }
 
     @Bean
-    public GlobalExceptionHandle globalExceptionConfig() {
-        return new GlobalExceptionHandle();
+    public GlobalExceptionHandle globalExceptionConfig(@Autowired(required = false) TraceService traceService) {
+        return new GlobalExceptionHandle(traceService == null ? () -> null : traceService);
     }
 
     @Bean

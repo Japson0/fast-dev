@@ -38,7 +38,7 @@ public class BaseServiceImpl<ID extends Serializable, R extends BaseEntity<ID>> 
 
 
     @Override
-    public PageConditionQuery<R> getPage(PageConditionQuery<?> pageConditionDTO) {
+    public PageConditionQuery<? extends R> getPage(PageConditionQuery<?> pageConditionDTO) {
         Assert.notNull(pageConditionDTO, "pageConditionDTO must not be null");
         PageConditionDTO<Object> page;
         if (pageConditionDTO instanceof PageConditionDTO) {
