@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.evecom.ddp</groupId>
+    <groupId>net.evecom</groupId>
     <artifactId>data-dev.product-tool</artifactId>
 
     <properties>
@@ -33,12 +33,12 @@
             <version>2.0.15</version>
         </dependency>
 
+
         <dependency>
             <groupId>net.tmt</groupId>
             <artifactId>aspose-words</artifactId>
             <version>16.8.0</version>
-            <systemPath>${extend.lib.path}/aspose-words-16.8.0-jdk16.jar</systemPath>
-            <scope>system</scope>
+            <classifier>jdk16</classifier>
         </dependency>
 
         <!--        压缩-->
@@ -54,4 +54,5 @@
         </dependency>
 
     </dependencies>
+
 </project>
