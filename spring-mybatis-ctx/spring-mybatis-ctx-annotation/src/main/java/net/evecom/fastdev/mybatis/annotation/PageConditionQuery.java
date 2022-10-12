@@ -37,7 +37,7 @@ public class PageConditionQuery<P> {
      * 开始页从0开始
      */
     @ApiModelProperty(value = "当前页")
-    @JsonProperty("current")
+    @JsonProperty("page")
     protected long pCurrent;
 
     /**

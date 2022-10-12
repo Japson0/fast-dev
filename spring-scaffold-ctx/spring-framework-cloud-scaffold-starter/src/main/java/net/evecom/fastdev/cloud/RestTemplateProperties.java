@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @version1.0
  */
 @ConfigurationProperties(prefix = "evecom.rest-template")
-public class RestTemplateProperites {
+public class RestTemplateProperties {
 
     /**
      * 连接超时

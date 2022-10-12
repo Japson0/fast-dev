@@ -28,16 +28,16 @@ import java.util.List;
  * @version1.0
  */
 @Configuration
-@EnableConfigurationProperties({RestTemplateProperites.class})
+@EnableConfigurationProperties({RestTemplateProperties.class})
 public class EvecomSpringCloudConfig implements WebMvcConfigurer {
 
     /**
      * resttemplate配置
      */
-    private final RestTemplateProperites restTemplateProperites;
+    private final RestTemplateProperties restTemplateProperties;
 
-    public EvecomSpringCloudConfig(RestTemplateProperites restTemplateProperites) {
-        this.restTemplateProperites = restTemplateProperites;
+    public EvecomSpringCloudConfig(RestTemplateProperties restTemplateProperties) {
+        this.restTemplateProperties = restTemplateProperties;
     }
 
     /**
@@ -59,9 +59,9 @@ public class EvecomSpringCloudConfig implements WebMvcConfigurer {
     RestTemplate restTemplate(@Autowired(required = false) ClientHttpRequestFactory factory, ObjectMapper objectMapper) {
         if (factory == null) {
             SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
-            simpleClientHttpRequestFactory.setConnectTimeout(restTemplateProperites.getConnectTimeOut());
+            simpleClientHttpRequestFactory.setConnectTimeout(restTemplateProperties.getConnectTimeOut());
             ;
-            simpleClientHttpRequestFactory.setReadTimeout(restTemplateProperites.getReadTimeOut());
+            simpleClientHttpRequestFactory.setReadTimeout(restTemplateProperties.getReadTimeOut());
             factory = simpleClientHttpRequestFactory;
         }
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();

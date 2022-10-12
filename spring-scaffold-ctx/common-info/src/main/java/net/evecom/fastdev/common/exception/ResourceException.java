@@ -18,19 +18,16 @@ public class ResourceException extends CommonException {
     private static final long serialVersionUID = -2883592666172747118L;
 
     public ResourceException(String msg) {
-        super(CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg);
+        this(null, CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg);
     }
 
-    public ResourceException(Throwable throwable, String msg) {
-        super(throwable, CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg);
+    public ResourceException(String code, String msg) {
+        this(null, code, msg);
     }
 
-    public ResourceException(Throwable throwable, String msg, Object... data) {
-        super(throwable, CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg, data);
-    }
 
-    public ResourceException(String msg, Object... data) {
-        super(CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg, data);
+    public ResourceException(Throwable throwable, String code, String msg) {
+        super(throwable, code, msg);
     }
 
 }

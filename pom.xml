@@ -26,6 +26,7 @@
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-starter</module>
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-annotation</module>
         <module>custom-spring-scaffold-ctx/data-dev.product-tool</module>
+        <module>custom-compoment/spring-hadoop-client-ctx</module>
     </modules>
 
     <properties>
@@ -107,6 +108,12 @@
             <dependency>
                 <groupId>net.evecom</groupId>
                 <artifactId>spring-cache-redis-ctx</artifactId>
+                <version>${fast-dev.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.evecom</groupId>
+                <artifactId>spring-hadoop-client-ctx</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 

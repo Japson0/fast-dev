@@ -11,15 +11,7 @@ package net.evecom.fastdev.common.exception;
 public class NotUniqueException extends CommonException {
 
     public NotUniqueException(String msg) {
-        super(CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg);
-    }
-
-    public NotUniqueException(String msg, Object... data) {
-        super(CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg, data);
-    }
-
-    public NotUniqueException(Throwable throwable, String msg, Object... data) {
-        super(throwable, CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg, data);
+        super(msg);
     }
 
 }

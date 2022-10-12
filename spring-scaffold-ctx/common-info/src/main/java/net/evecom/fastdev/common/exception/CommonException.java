@@ -21,29 +21,20 @@ public class CommonException extends RuntimeException implements Serializable {
      */
     private final String msg;
 
-    /**
-     * 异常信息
-     */
-    private Throwable throwable;
 
-
-    public CommonException(String code, String msg, Object... data) {
-        this.code = code;
-        if (data != null && data.length > 0) {
-            this.msg = String.format(msg, data);
-        } else {
-            this.msg = msg;
-        }
+    public CommonException(String msg) {
+        this(null, CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg);
     }
 
-    public CommonException(Throwable throwable, String code, String msg, Object... data) {
+    public CommonException(String code, String msg) {
+        this(null, code, msg);
+    }
+
+
+    public CommonException(Throwable throwable, String code, String msg) {
         super(throwable);
         this.code = code;
-        if (data != null && data.length > 0) {
-            this.msg = String.format(msg, data);
-        } else {
-            this.msg = msg;
-        }
+        this.msg = msg;
     }
 
 
@@ -56,7 +47,4 @@ public class CommonException extends RuntimeException implements Serializable {
         return msg;
     }
 
-    public Throwable getThrowable() {
-        return throwable;
-    }
 }
