@@ -1,12 +1,12 @@
 package net.evecom.custom.hdfs;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
 import java.util.List;
+
+import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY;
 
 /**
  * <P><B>hdfs客户端工厂:</B></P>
@@ -23,6 +23,10 @@ public class HdfsClientFactory implements FactoryBean<HdfsClient> {
      */
     private final HdfsProperties hdfsProperties;
 
+    /**
+     * haddoop配置
+     */
+
     public HdfsClientFactory(HdfsProperties hdfsProperties) {
         this.hdfsProperties = hdfsProperties;
     }
@@ -33,11 +37,11 @@ public class HdfsClientFactory implements FactoryBean<HdfsClient> {
         Configuration configuration = new Configuration();
         configuration.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
         if (mode == HdfsMode.SINGLE) {
-            configuration.set("fs.defaultFS", hdfsProperties.getNameNode());
+            configuration.set(FS_DEFAULT_NAME_KEY, hdfsProperties.getNameNode());
             System.setProperty("HADOOP_USER_NAME", hdfsProperties.getUserName());
         }
         if (mode == HdfsMode.CLUSTER) {
-            configuration.set("fs.defaultFS", "hdfs://nameservice");
+            configuration.set(FS_DEFAULT_NAME_KEY, "hdfs://nameservice");
             configuration.set("dfs.nameservices", "nameservice");
             HdfsProperties.Cluster cluster = hdfsProperties.getCluster();
             List<String> nameNode = cluster.getNameNode();
@@ -58,30 +62,14 @@ public class HdfsClientFactory implements FactoryBean<HdfsClient> {
             configuration.set("dfs.client.failover.proxy.provider.nameservice",
                     "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider");
         }
-        HdfsClient hdfsClient = new HdfsClient(configuration);
-        initAuth(configuration, hdfsClient);
-        return hdfsClient;
+        return new HdfsClient(hdfsProperties.getRootPath(), configuration);
 
     }
 
-    private void initAuth(Configuration configuration, HdfsClient client) throws IOException {
-        if (hdfsProperties.getAuthMode() == AuthMode.None) {
-            return;
-        }
-        configuration.set("hadoop.security.authentication", hdfsProperties.getAuthMode().getName());
-        if (hdfsProperties.getAuthMode() == AuthMode.Kerberos) {
-            HdfsProperties.KerberosProperties kerberos = hdfsProperties.getKerberos();
-            System.setProperty("java.security.krb5.conf", kerberos.getKrbConfPath());
-            UserGroupInformation.setConfiguration(configuration);
-            UserGroupInformation userGroupInformation = UserGroupInformation.loginUserFromKeytabAndReturnUGI("hekai/client-179.edp.com@EDP.COM", kerberos.getKeyTabPath());
-            new AuthProxy(client, userGroupInformation);
-        }
-    }
 
     @Override
     public Class<?> getObjectType() {
         return HdfsClient.class;
     }
-
 
 }

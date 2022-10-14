@@ -31,11 +31,6 @@ public class HdfsProperties {
     private HdfsMode mode;
 
     /**
-     * 认证模式
-     */
-    private AuthMode authMode = AuthMode.None;
-
-    /**
      * 登录的账号，如果是单机模式可填，否则默认是当前系统的账号
      */
     private String userName;
@@ -46,18 +41,13 @@ public class HdfsProperties {
     private Cluster cluster;
 
     /**
-     * kerberos认证
-     */
-    private KerberosProperties kerberos;
-
-    /**
      * 集群客户端
      * RevisionTrail:(Date/Author/Description)
      * 2022年10月12日
      *
      * @author Japson Huang
      */
-    public class Cluster {
+    public static class Cluster {
 
         /**
          * namenNode节点列表
@@ -73,55 +63,6 @@ public class HdfsProperties {
         }
     }
 
-    /**
-     * kerberos
-     * RevisionTrail:(Date/Author/Description)
-     * 2022年10月12日
-     *
-     * @author Japson Huang
-     */
-    public static class KerberosProperties {
-
-        /**
-         * 认证信息
-         */
-        private String principal;
-
-        /**
-         * 客户端key配置路径
-         */
-        private String keyTabPath;
-
-        /**
-         * kerberos配置路径
-         */
-        private String krbConfPath;
-
-
-        public String getKeyTabPath() {
-            return keyTabPath;
-        }
-
-        public void setKeyTabPath(String keyTabPath) {
-            this.keyTabPath = keyTabPath;
-        }
-
-        public String getKrbConfPath() {
-            return krbConfPath;
-        }
-
-        public void setKrbConfPath(String krbConfPath) {
-            this.krbConfPath = krbConfPath;
-        }
-
-        public String getPrincipal() {
-            return principal;
-        }
-
-        public void setPrincipal(String principal) {
-            this.principal = principal;
-        }
-    }
 
     public String getNameNode() {
         return nameNode;
@@ -147,14 +88,6 @@ public class HdfsProperties {
         this.mode = mode;
     }
 
-    public AuthMode getAuthMode() {
-        return authMode;
-    }
-
-    public void setAuthMode(AuthMode authMode) {
-        this.authMode = authMode;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -171,11 +104,4 @@ public class HdfsProperties {
         this.cluster = cluster;
     }
 
-    public KerberosProperties getKerberos() {
-        return kerberos;
-    }
-
-    public void setKerberos(KerberosProperties kerberos) {
-        this.kerberos = kerberos;
-    }
 }
