@@ -31,6 +31,11 @@ public class HdfsClient implements Closeable, DisposableBean {
     private final Path rootPath;
 
     /**
+     * 根路径
+     */
+    private final String rootPathName;
+
+    /**
      * 配置
      */
     private final Configuration configuration;
@@ -47,6 +52,7 @@ public class HdfsClient implements Closeable, DisposableBean {
         if (rootPath == null) {
             rootPath = "";
         }
+        this.rootPathName = rootPath;
         this.rootPath = new Path(defalutService, rootPath);
         fileSystem = FileSystem.get(this.configuration);
     }
@@ -107,6 +113,10 @@ public class HdfsClient implements Closeable, DisposableBean {
 
     public Path getRootPath() {
         return rootPath;
+    }
+
+    public String getRootPathName() {
+        return rootPathName;
     }
 
     @Override

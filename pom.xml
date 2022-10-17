@@ -43,6 +43,7 @@
         <jasypt.version>3.0.4</jasypt.version>
         <jasypt-core.version>1.9.3</jasypt-core.version>
         <bcprov.version>1.69</bcprov.version>
+        <hadoop.version>3.3.4</hadoop.version>
     </properties>
 
     <dependencyManagement>
@@ -181,6 +182,26 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15to18</artifactId>
                 <version>${bcprov.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-hdfs</artifactId>
+                <version>${hadoop.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-client</artifactId>
+                <version>${hadoop.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.apache.parquet</groupId>
+                <artifactId>parquet-hadoop</artifactId>
+                <version>1.10.1</version>
+                <optional>true</optional>
             </dependency>
 
         </dependencies>
