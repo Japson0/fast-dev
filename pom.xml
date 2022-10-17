@@ -27,6 +27,7 @@
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-annotation</module>
         <module>custom-spring-scaffold-ctx/data-dev.product-tool</module>
         <module>custom-compoment/spring-hadoop-client-ctx</module>
+        <module>custom-compoment/spring-minio-client-ctx</module>
     </modules>
 
     <properties>
