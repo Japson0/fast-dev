@@ -13,7 +13,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Nick Lv
  * @created 2022/10/17 17:11
  */
-@ConfigurationProperties(prefix = "evecom.hadoop")
+@ConfigurationProperties(prefix = "evecom.minio")
 public class MinioProperties {
     /**
      * minio服务地址

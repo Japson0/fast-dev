@@ -59,6 +59,12 @@ public class BucketManager {
         return removeBucket(driver.getServerInfo().getBucket());
     }
 
+    /**
+     * 指定桶
+     *
+     * @param bucket 桶名
+     * @return
+     */
     public Result removeBucket(String bucket) {
         try {
             if (this.checkBucketExists()) {
