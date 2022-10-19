@@ -6,23 +6,19 @@
 package net.evecom.custom.minio;
 
 import io.minio.*;
-import io.minio.errors.*;
 import io.minio.messages.Item;
 import net.evecom.custom.minio.driver.MinioDriver;
 import net.evecom.custom.minio.exception.MinioExcepition;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * FileManager
+ * minio的文件管理器
  *
  * @author Nick Lv
  * @created 2022/10/12 18:04
@@ -37,7 +33,7 @@ public class FileManager {
     /**
      * 获取文件目录
      *
-     * @param path
+     * @param path 指定名录，为桶内路径
      * @return
      */
     public List<String> listFiles(String path) {
@@ -57,10 +53,10 @@ public class FileManager {
     }
 
     /**
-     * Put object *
+     * 上传文本内容
      *
-     * @param objPath obj path
-     * @param data    data
+     * @param objPath 上传文本内容的路径
+     * @param data    文本内容
      * @throws Exception exception
      */
     public void uploadData(String objPath, String data) throws Exception {
@@ -72,8 +68,8 @@ public class FileManager {
     /**
      * 上传文件
      *
-     * @param objPath
-     * @param localFilePath
+     * @param objPath       minio文件存放路径，例如/dataset/abc.txt
+     * @param localFilePath 本地文件路径
      * @throws Exception
      */
     public void uploadFile(String objPath, String localFilePath) throws Exception {
@@ -84,8 +80,8 @@ public class FileManager {
     /**
      * 下载文件
      *
-     * @param filePath
-     * @param downloadFile
+     * @param filePath     minio文件存放路径，例如/data/abc.txt
+     * @param downloadFile 下载后的文件存放路径
      * @return
      */
     public void downloadFile(String filePath, String downloadFile) throws Exception {
@@ -98,9 +94,9 @@ public class FileManager {
     }
 
     /**
-     * Gets object *
+     * 下载文件，获取文件流
      *
-     * @param objPath obj path
+     * @param objPath minio文件的存放路径，例如/data/abc.txt
      * @return the object
      * @throws Exception exception
      */
@@ -111,8 +107,8 @@ public class FileManager {
     /**
      * 删除文件
      *
-     * @param fileName
-     * @param storagePath
+     * @param fileName    文件名称 abc.txt
+     * @param storagePath 文件存放路径 ,/data/
      * @return
      */
     protected void deleteFile(String fileName, String storagePath) throws Exception {
@@ -125,7 +121,7 @@ public class FileManager {
     /**
      * 删除对象
      *
-     * @param objPath
+     * @param objPath 文件存放路径，例如/data/abc.txt
      * @throws Exception
      */
     public void deleteFile(String objPath) throws Exception {

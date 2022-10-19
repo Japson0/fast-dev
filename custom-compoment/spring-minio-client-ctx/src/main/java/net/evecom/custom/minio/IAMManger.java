@@ -127,7 +127,7 @@ public class IAMManger {
      * @return
      */
     private String buildUrl(String uri) {
-        return driver.getServerInfo().getEndpoint() + uri;
+        return driver.getEndPoint() + uri;
     }
 
     /**
