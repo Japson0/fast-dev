@@ -6,7 +6,6 @@ import net.evecom.fastdev.ddp.UserContext;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -35,7 +34,11 @@ public class DataDevTenantHandler implements TenantLineHandler {
         if (ignoreTable == null) {
             this.ignoreTable = Collections.emptyList();
         } else {
-            this.ignoreTable = new HashSet<>(Arrays.asList(ignoreTable));
+            this.ignoreTable = new HashSet<>(ignoreTable.length);
+            for (String s : ignoreTable) {
+                this.ignoreTable.add(s.toUpperCase());
+
+            }
         }
     }
 
@@ -56,7 +59,7 @@ public class DataDevTenantHandler implements TenantLineHandler {
         } else if (UserContext.isAdmin()) {
             return true;
         }
-        return ignoreTable.contains(tableName);
+        return ignoreTable.contains(tableName.toUpperCase());
     }
 
     @Override
