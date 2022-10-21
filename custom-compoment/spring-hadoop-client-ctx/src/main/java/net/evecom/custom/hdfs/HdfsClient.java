@@ -25,10 +25,12 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME
  */
 public class HdfsClient implements Closeable, DisposableBean {
 
+
     /**
      * 根路径
      */
     private final Path rootPath;
+
 
     /**
      * 根路径
@@ -50,10 +52,12 @@ public class HdfsClient implements Closeable, DisposableBean {
         this.configuration = configuration;
         String defalutService = configuration.get(FS_DEFAULT_NAME_KEY);
         if (rootPath == null) {
-            rootPath = "";
+            rootPath = "/";
+        } else if (!rootPath.startsWith("/")) {
+            rootPath = "/" + rootPath;
         }
         this.rootPathName = rootPath;
-        this.rootPath = new Path(defalutService, rootPath);
+        this.rootPath = new Path(defalutService + rootPath);
         fileSystem = FileSystem.get(this.configuration);
     }
 
@@ -65,17 +69,30 @@ public class HdfsClient implements Closeable, DisposableBean {
      * @return the list
      * @throws IOException io exception
      */
-    public List<String> listFileNameByDirectory(String directory) throws IOException {
+    public List<String> listFileNameByDirectory(String directory) {
 
-        RemoteIterator<LocatedFileStatus> iterator = fileSystem.listFiles(new Path(rootPath, directory), false);
-        List<String> filePaths = new ArrayList<>();
-        while (iterator.hasNext()) {
-            LocatedFileStatus fileStatus = iterator.next();
-            if (fileStatus.isFile()) {
-                filePaths.add(fileStatus.getPath().getName());
+        try {
+
+            RemoteIterator<LocatedFileStatus> iterator = fileSystem.listFiles(new Path(rootPath, directory), false);
+            List<String> filePaths = new ArrayList<>();
+            while (iterator.hasNext()) {
+                LocatedFileStatus fileStatus = iterator.next();
+                if (fileStatus.isFile()) {
+                    filePaths.add(fileStatus.getPath().getName());
+                }
             }
+            return filePaths;
+        } catch (IOException i) {
+            throw new HdfsIoException(i, "hdfs:listFileNameByDirectory失败");
         }
-        return filePaths;
+    }
+
+    public void removeDir(String directory) throws IOException {
+        try {
+            fileSystem.removeAcl(new Path(rootPath, directory));
+        } catch (IOException e) {
+            throw new HdfsIoException(e, "hdfs:removeDir失败");
+        }
     }
 
     /**
@@ -87,7 +104,11 @@ public class HdfsClient implements Closeable, DisposableBean {
      */
     public List<FileStatus> list(String directory) throws IOException {
 
-        return Arrays.asList(fileSystem.listStatus(new Path(rootPath, directory)));
+        try {
+            return Arrays.asList(fileSystem.listStatus(new Path(rootPath, directory)));
+        } catch (IOException i) {
+            throw new HdfsIoException(i, "hdfs：list执行失败");
+        }
     }
 
 
