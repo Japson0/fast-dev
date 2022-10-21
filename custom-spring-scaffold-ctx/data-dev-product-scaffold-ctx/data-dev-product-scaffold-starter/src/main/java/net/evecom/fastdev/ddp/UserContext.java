@@ -50,7 +50,19 @@ public class UserContext {
         }
         if (properties != null && properties.getDebug() != null && properties.getDebug().isEnable()) {
             DataDevProductProperties finalProperties = properties;
-            USER_INFO_LOCAL = ThreadLocal.withInitial(() -> finalProperties.getDebug().getUser());
+            DataDevProductProperties.DebuggerUser user = finalProperties.getDebug().getUser();
+            user.setInit(true);
+//            USER_INFO_LOCAL = ThreadLocal.withInitial(() -> user);
+            USER_INFO_LOCAL = new ThreadLocal<UserInfo>() {
+                @Override
+                protected UserInfo initialValue() {
+                    return user;
+                }
+
+                @Override
+                public void set(UserInfo value) {
+                }
+            };
         } else {
             USER_INFO_LOCAL = new ThreadLocal<>();
         }

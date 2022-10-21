@@ -27,9 +27,57 @@ public class DubboRpcUserContentFilter implements Filter {
 
         if (RpcContext.getContext().isConsumerSide()) {
             RpcContext.getContext().setAttachment(KEY, UserContext.getUserInfo(false));
+            pushUser();
         } else {
             UserContext.setUserInfo((UserInfo) RpcContext.getContext().getObjectAttachment(KEY));
+            popUser();
         }
         return invoker.invoke(invocation);
+    }
+
+    private void pushUser() {
+        UserInfo userInfo = UserContext.getUserInfo();
+        if (RpcContext.getContext().get("username") != null) {
+            RpcContext.getContext().setAttachment("username", userInfo.getUsername());
+        }
+        if (RpcContext.getContext().get("tenantId") != null) {
+            RpcContext.getContext().setAttachment("tenantId", userInfo.getTenantId());
+        }
+        if (RpcContext.getContext().get("accessKey") != null) {
+            RpcContext.getContext().setAttachment("accessKey", userInfo.getTenantAccessKey());
+            RpcContext.getContext().setAttachment("secretKey", userInfo.getTenantSecretKey());
+        }
+        if (RpcContext.getContext().get("userId") != null) {
+            RpcContext.getContext().setAttachment("userId", userInfo.getUserId());
+        }
+        if (RpcContext.getContext().get("roles") != null) {
+            RpcContext.getContext().setAttachment("roles", userInfo.getRoles());
+        }
+    }
+
+    private void popUser() {
+        UserInfo userInfo = new UserInfo();
+        String userId = RpcContext.getContext().getAttachment("userId");
+        if (userId == null) {
+            return; //说明是新系统，这里代码主要是兼容旧系统
+        } else {
+            userInfo.setUserId(Long.valueOf(userId));
+        }
+
+        String username = RpcContext.getContext().getAttachment("username");
+        if (username != null) {
+            userInfo.setUsername(username);
+        }
+
+        String tenantId = RpcContext.getContext().getAttachment("tenantId");
+        if (tenantId != null) {
+            userInfo.setTenantId(Long.valueOf(tenantId));
+        }
+
+        String clientId = RpcContext.getContext().getAttachment("tenantId");
+        if (clientId != null) {
+            userInfo.setClientId(clientId);
+        }
+        UserContext.setUserInfo(userInfo);
     }
 }
