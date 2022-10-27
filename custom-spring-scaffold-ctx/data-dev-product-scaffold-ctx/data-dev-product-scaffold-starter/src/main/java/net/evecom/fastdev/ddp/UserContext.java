@@ -142,4 +142,15 @@ public class UserContext {
         }
         USER_INFO_LOCAL.get().init(userResource);
     }
+
+    /**
+     * 是否包含角色
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年10月27日
+     *
+     * @author Japson Huang
+     */
+    public static boolean hasRole(String role) {
+        return getUserInfo().getRoles().contains(role);
+    }
 }

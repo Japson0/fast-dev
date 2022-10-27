@@ -97,6 +97,12 @@
 
             <dependency>
                 <groupId>net.evecom</groupId>
+                <artifactId>spring-minio-client-ctx</artifactId>
+                <version>${fast-dev.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.evecom</groupId>
                 <artifactId>spring-swagger-ctx-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>

@@ -25,6 +25,10 @@ public class ResourceException extends CommonException {
         this(null, code, msg);
     }
 
+    public ResourceException(Throwable throwable, String msg) {
+        super(throwable, CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg);
+    }
+
 
     public ResourceException(Throwable throwable, String code, String msg) {
         super(throwable, code, msg);

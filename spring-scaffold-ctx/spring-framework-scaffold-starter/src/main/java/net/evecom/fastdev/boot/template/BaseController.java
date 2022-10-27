@@ -47,7 +47,12 @@ public class BaseController<ID extends Serializable, T extends BaseEntity<ID>> i
         if (entity.getId() == null) {
             throw new IllegalArgumentException("id must be not null");
         }
-        return RestResponse.UD4ResCount((baseService.updateById(entity, true)));
+        int i = baseService.updateById(entity, true);
+        if (i > 0) {
+            return RestResponse.renderSuccess2Msg("更新成功").setData(entity.getId());
+        } else {
+            return RestResponse.renderError("更新失败，不存在对应的数据");
+        }
     }
 
     /**
@@ -58,8 +63,11 @@ public class BaseController<ID extends Serializable, T extends BaseEntity<ID>> i
      * @author Japson Huang
      */
     public RestResponse insert(@Validated(Insert.class) @RequestBody T entity) {
-        baseService.addById(entity);
-        return RestResponse.renderSuccess(entity.getId());
+        if (baseService.addById(entity) > 0) {
+            return RestResponse.renderSuccess(entity.getId()).setMessage("新增成功");
+        } else {
+            return RestResponse.renderError("新增失败");
+        }
     }
 
     /**
@@ -70,7 +78,11 @@ public class BaseController<ID extends Serializable, T extends BaseEntity<ID>> i
      * @author Japson Huang
      */
     public RestResponse delete(@PathVariable ID id) {
-        return RestResponse.UD4ResCount(baseService.deleteById(id));
+        if (baseService.deleteById(id) > 0) {
+            return RestResponse.renderSuccess(id).setMessage("删除成功");
+        } else {
+            return RestResponse.renderError("删除失败，不存在对应的数据");
+        }
     }
 
     /**

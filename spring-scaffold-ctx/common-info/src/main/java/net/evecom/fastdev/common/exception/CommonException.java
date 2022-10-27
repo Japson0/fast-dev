@@ -26,10 +26,14 @@ public class CommonException extends RuntimeException implements Serializable {
         this(null, CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg);
     }
 
+
     public CommonException(String code, String msg) {
         this(null, code, msg);
     }
 
+    public CommonException(Throwable throwable, String msg) {
+        this(throwable, CommonError.USER_RESOURCE_EXCEPTION.getCode(), msg);
+    }
 
     public CommonException(Throwable throwable, String code, String msg) {
         super(throwable);

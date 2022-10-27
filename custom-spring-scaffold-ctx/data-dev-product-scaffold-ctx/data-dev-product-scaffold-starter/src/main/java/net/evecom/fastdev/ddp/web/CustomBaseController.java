@@ -68,7 +68,7 @@ public class CustomBaseController<T extends BaseEntity<Long>> extends BaseContro
     @DeleteMapping("batch")
     @ApiOperation("批量删除")
     public RestResponse deleteBatch(@RequestParam Long[] ids) {
-        return RestResponse.renderSuccess(baseService.deleteById(Arrays.asList(ids)));
+        return RestResponse.renderSuccess(baseService.deleteById(Arrays.asList(ids))).setMessage("删除成功");
     }
 
     protected boolean ignoreSchema() {

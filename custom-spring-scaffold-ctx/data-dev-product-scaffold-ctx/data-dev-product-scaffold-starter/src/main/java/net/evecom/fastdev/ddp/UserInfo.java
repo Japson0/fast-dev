@@ -1,6 +1,9 @@
 package net.evecom.fastdev.ddp;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <P><B>Description:</B></P>
@@ -42,7 +45,7 @@ public class UserInfo implements Serializable {
     /**
      * 角色编码列表
      */
-    private String roles[];
+    private Set<String> roles;
     /**
      * Access key
      */
@@ -69,13 +72,15 @@ public class UserInfo implements Serializable {
 
     public void init(UserResource userResource) {
         if (userResource.getRoles() != null) {
-            roles = new String[userResource.getRoles().size()];
-            for (int i = 0; i < userResource.getRoles().size(); i++) {
-                roles[i] = userResource.getRoles().get(i).getEnName();
-                if (!admin && "kgap_admin".equals(roles[i])) {
+            roles = new HashSet<>(userResource.getRoles().size());
+            for (RoleInfo role : userResource.getRoles()) {
+                roles.add(role.getEnName());
+                if (!admin && "kgap_admin".equals(role.getEnName())) {
                     admin = true;
                 }
             }
+        } else {
+            roles = Collections.emptySet();
         }
         this.tenantAccessKey = userResource.getTenant().getAccessKey();
         this.tenantSecretKey = userResource.getTenant().getSecretKey();
@@ -122,11 +127,11 @@ public class UserInfo implements Serializable {
         this.admin = admin;
     }
 
-    public String[] getRoles() {
+    public Set<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(String[] roles) {
+    public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
 
