@@ -95,6 +95,7 @@ public class HdfsClient implements Closeable, DisposableBean {
         }
     }
 
+
     /**
      * List file by directory list
      *
@@ -130,6 +131,17 @@ public class HdfsClient implements Closeable, DisposableBean {
             throw new HdfsIoException(e, "hdfs下载失败，源路径为:" + srcFilePath + "目标路径为" + targetFilePath);
         }
         return targetFilePath + File.separator + fileName;
+    }
+
+    /**
+     * 上传文件到HDSF
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年11月02日
+     *
+     * @author Japson Huang
+     */
+    public void uploadFile(String srcFilePath, String targetFilePath, String fileName) throws IOException {
+        fileSystem.copyFromLocalFile(new Path(srcFilePath + Path.SEPARATOR + fileName), new Path(targetFilePath));
     }
 
     public Path getRootPath() {
