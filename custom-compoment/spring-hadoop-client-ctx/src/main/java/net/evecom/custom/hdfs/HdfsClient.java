@@ -141,7 +141,8 @@ public class HdfsClient implements Closeable, DisposableBean {
      * @author Japson Huang
      */
     public void uploadFile(String srcFilePath, String targetFilePath, String fileName) throws IOException {
-        fileSystem.copyFromLocalFile(new Path(srcFilePath + Path.SEPARATOR + fileName), new Path(targetFilePath));
+        fileSystem.copyFromLocalFile(new Path(srcFilePath + Path.SEPARATOR + fileName),
+                new Path(targetFilePath + Path.SEPARATOR + fileName));
     }
 
     public Path getRootPath() {
