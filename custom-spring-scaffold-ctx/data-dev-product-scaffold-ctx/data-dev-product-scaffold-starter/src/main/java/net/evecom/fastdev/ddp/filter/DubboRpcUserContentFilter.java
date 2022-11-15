@@ -17,19 +17,17 @@ import org.apache.dubbo.rpc.*;
 @Activate(group = {CommonConstants.PROVIDER, CommonConstants.CONSUMER})
 public class DubboRpcUserContentFilter implements Filter {
 
-    /**
-     * dubbo 用户KEY
-     */
-    private final static String KEY = "DUBBO_USER_INFO";
+//    /**
+//     * dubbo 用户KEY
+//     */
+//    private final static String KEY = "DUBBO_USER_INFO";
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
 
         if (RpcContext.getContext().isConsumerSide()) {
-            RpcContext.getContext().setAttachment(KEY, UserContext.getUserInfo(false));
             pushUser();
         } else {
-            UserContext.setUserInfo((UserInfo) RpcContext.getContext().getObjectAttachment(KEY));
             popUser();
         }
         return invoker.invoke(invocation);
@@ -37,21 +35,14 @@ public class DubboRpcUserContentFilter implements Filter {
 
     private void pushUser() {
         UserInfo userInfo = UserContext.getUserInfo();
-        if (RpcContext.getContext().get("username") != null) {
+        if (userInfo != null) {
             RpcContext.getContext().setAttachment("username", userInfo.getUsername());
-        }
-        if (RpcContext.getContext().get("tenantId") != null) {
             RpcContext.getContext().setAttachment("tenantId", userInfo.getTenantId());
-        }
-        if (RpcContext.getContext().get("accessKey") != null) {
             RpcContext.getContext().setAttachment("accessKey", userInfo.getTenantAccessKey());
             RpcContext.getContext().setAttachment("secretKey", userInfo.getTenantSecretKey());
-        }
-        if (RpcContext.getContext().get("userId") != null) {
             RpcContext.getContext().setAttachment("userId", userInfo.getUserId());
-        }
-        if (RpcContext.getContext().get("roles") != null) {
             RpcContext.getContext().setAttachment("roles", userInfo.getRoles());
+            RpcContext.getContext().setAttachment("clientId", userInfo.getTenantSecretKey());
         }
     }
 
@@ -72,9 +63,10 @@ public class DubboRpcUserContentFilter implements Filter {
         String tenantId = RpcContext.getContext().getAttachment("tenantId");
         if (tenantId != null) {
             userInfo.setTenantId(Long.valueOf(tenantId));
+            userInfo.setTenantAccessKey(RpcContext.getContext().getAttachment("accessKey"));
+            userInfo.setTenantSecretKey(RpcContext.getContext().getAttachment("secretKey"));
         }
-
-        String clientId = RpcContext.getContext().getAttachment("tenantId");
+        String clientId = RpcContext.getContext().getAttachment("clientId");
         if (clientId != null) {
             userInfo.setClientId(clientId);
         }
