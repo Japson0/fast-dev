@@ -12,6 +12,7 @@ import net.evecom.custom.minio.exception.MinioExcepition;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -24,7 +25,15 @@ import java.util.List;
  * @created 2022/10/12 18:04
  */
 public class FileManager {
+    /**
+     * minio驱动信息
+     */
     private MinioDriver driver;
+
+    /**
+     * 默认桶
+     */
+    private String defaultBucket;
 
     public FileManager(MinioDriver driver) {
         this.driver = driver;
@@ -60,9 +69,19 @@ public class FileManager {
      * @throws Exception exception
      */
     public void uploadData(String objPath, String data) throws Exception {
+        uploadData(objPath, data, false);
+    }
+
+    /**
+     * 上传文本内容
+     *
+     * @param objPath 上传文本内容的路径
+     * @param data    文本内容
+     * @throws Exception exception
+     */
+    public void uploadData(String objPath, String data, boolean defaultBucket) throws Exception {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
-        driver.getClient().putObject(PutObjectArgs.builder().bucket(driver.getServerInfo().getBucket()).object(objPath).stream(
-                inputStream, inputStream.available(), -1).build());
+        uploadFile(objPath, inputStream, defaultBucket);
     }
 
     /**
@@ -73,7 +92,74 @@ public class FileManager {
      * @throws Exception
      */
     public void uploadFile(String objPath, String localFilePath) throws Exception {
-        driver.getClient().uploadObject(UploadObjectArgs.builder().bucket(this.driver.getServerInfo().getBucket()).filename(localFilePath).object(objPath).build());
+        uploadFile(objPath, localFilePath, false);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param objPath       minio文件存放路径，例如/dataset/abc.txt
+     * @param localFilePath 本地文件路径
+     * @throws Exception
+     */
+    public void uploadFile(String objPath, String localFilePath, boolean defaultBucket) throws Exception {
+
+        uploadFile(objPath, new File(localFilePath), defaultBucket);
+    }
+
+    /**
+     * 上传文件流
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年12月30日
+     *
+     * @author Japson Huang
+     */
+    public void uploadFile(String objPath, InputStream inputStream) throws Exception {
+        uploadFile(objPath, inputStream, false);
+    }
+
+
+    /**
+     * 上传文件流
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年12月30日
+     *
+     * @author Japson Huang
+     */
+    public void uploadFile(String objPath, InputStream inputStream, boolean defaultBucket) throws Exception {
+        driver.getClient().putObject(PutObjectArgs.builder()
+                .bucket(defaultBucket ? this.defaultBucket : driver.getServerInfo().getBucket())
+                .object(objPath)
+                .stream(inputStream, inputStream.available(), -1).build());
+    }
+
+    /**
+     * 上传文件
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年12月30日
+     *
+     * @author Japson Huang
+     */
+    public void uploadFile(String objPath, File file) throws Exception {
+        uploadFile(objPath, file);
+    }
+
+    /**
+     * 上传文件
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年12月30日
+     *
+     * @author Japson Huang
+     */
+    public void uploadFile(String objPath, File file, boolean defaultBucket) throws Exception {
+        if (file.exists()) {
+            driver.getClient().uploadObject(UploadObjectArgs.builder()
+                    .bucket(defaultBucket ? this.defaultBucket : this.driver.getServerInfo().getBucket())
+                    .filename(file.getAbsolutePath())
+                    .object(objPath).build());
+        } else {
+            throw new FileNotFoundException("minio上传失败，原因：找不到对应的本地文件");
+        }
     }
 
 
@@ -85,13 +171,54 @@ public class FileManager {
      * @return
      */
     public void downloadFile(String filePath, String downloadFile) throws Exception {
+        downloadFile(filePath, downloadFile, false);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param filePath     minio文件存放路径，例如/data/abc.txt
+     * @param downloadFile 下载后的文件存放路径
+     * @return
+     */
+    public void downloadFile(String filePath, String downloadFile, boolean defaultBucket) throws Exception {
+        downloadFile(filePath, new File(downloadFile), defaultBucket);
+    }
+
+    /**
+     * 下载文件
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年12月30日
+     *
+     * @author Japson Huang
+     */
+    public void downloadFile(String filePath, File targetFile) throws Exception {
+        downloadFile(filePath, targetFile, false);
+    }
+
+    /**
+     * 下载文件
+     * RevisionTrail:(Date/Author/Description)
+     * 2022年12月30日
+     *
+     * @author Japson Huang
+     */
+    public void downloadFile(String filePath, File targetFile, boolean defaultBucket) throws Exception {
+        if (!targetFile.getParentFile().exists()) {
+            boolean mkdirs = targetFile.getParentFile().mkdirs();
+            if (!mkdirs) {
+                throw new UnsupportedOperationException(targetFile.getParent() + "路径不存在，" +
+                        "无法创建路径，请检查是否拥有创建目录的权限!");
+            }
+        }
         driver.getClient().downloadObject(
                 DownloadObjectArgs.builder()
-                        .bucket(driver.getServerInfo().getBucket())
+                        .bucket(defaultBucket ? this.defaultBucket : driver.getServerInfo().getBucket())
                         .object(filePath)
-                        .filename(downloadFile)
+                        .filename(targetFile.getAbsolutePath())
                         .build());
     }
+
 
     /**
      * 下载文件，获取文件流
@@ -101,7 +228,21 @@ public class FileManager {
      * @throws Exception exception
      */
     public InputStream downloadFile(String objPath) throws Exception {
-        return driver.getClient().getObject(GetObjectArgs.builder().bucket(driver.getServerInfo().getBucket()).object(objPath).build());
+        return downloadFile(objPath, false);
+    }
+
+    /**
+     * 下载文件，获取文件流
+     *
+     * @param objPath minio文件的存放路径，例如/data/abc.txt
+     * @return the object
+     * @throws Exception exception
+     */
+    public InputStream downloadFile(String objPath, boolean defaultBucket) throws Exception {
+
+        return driver.getClient().getObject(GetObjectArgs.builder()
+                .bucket(defaultBucket ? this.defaultBucket : driver.getServerInfo().getBucket())
+                .object(objPath).build());
     }
 
     /**

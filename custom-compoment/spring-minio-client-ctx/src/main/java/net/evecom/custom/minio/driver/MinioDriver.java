@@ -41,6 +41,9 @@ public class MinioDriver {
     }
 
     public MinioClient getClient() {
+        if (client == null) {
+            initClient();
+        }
         return client;
     }
 
@@ -52,7 +55,6 @@ public class MinioDriver {
         this.serverInfo = serverInfo;
         this.endPoint = properties.getEndpoint();
         this.region = properties.getRegion();
-        this.initClient();
     }
 
 
@@ -66,6 +68,7 @@ public class MinioDriver {
                 .region(region)
                 .build();
     }
+
 
 }
 

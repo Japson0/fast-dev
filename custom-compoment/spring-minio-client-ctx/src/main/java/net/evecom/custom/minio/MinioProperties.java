@@ -26,6 +26,11 @@ public class MinioProperties {
      */
     private String region = "us-east-1";
 
+    /**
+     * 默认桶信息
+     */
+    private String defaultBucket = "common";
+
     public String getEndpoint() {
         return endpoint;
     }
@@ -40,6 +45,14 @@ public class MinioProperties {
 
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    public String getDefaultBucket() {
+        return defaultBucket;
+    }
+
+    public void setDefaultBucket(String defaultBucket) {
+        this.defaultBucket = defaultBucket;
     }
 }
 

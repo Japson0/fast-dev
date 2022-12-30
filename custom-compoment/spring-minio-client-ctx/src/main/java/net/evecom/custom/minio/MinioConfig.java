@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -36,6 +37,7 @@ public class MinioConfig {
      */
     @Bean
     @ConditionalOnExpression("#{environment['evecom.minio.endpoint']!=null}")
+    @Lazy
     public FileManager fileManager(MinioDriver minioDriver) {
         return new FileManager(minioDriver);
     }
@@ -46,6 +48,7 @@ public class MinioConfig {
      */
     @Bean
     @ConditionalOnExpression("#{environment['evecom.minio.endpoint']!=null}")
+    @Lazy
     public BucketManager bucketManager(MinioDriver minioDriver) {
         return new BucketManager(minioDriver);
     }
