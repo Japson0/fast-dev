@@ -5,26 +5,16 @@
  */
 package net.evecom.custom.minio;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.evecom.custom.minio.driver.MinioDriver;
 import net.evecom.custom.minio.exception.MinioExcepition;
 import net.evecom.custom.minio.policy.DefaultPolicy;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.*;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.Asserts;
-import org.apache.http.util.EntityUtils;
+import okhttp3.*;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +26,22 @@ import java.util.stream.Collectors;
 public class IAMManger {
 
     private MinioDriver driver;
+
+    /**
+     * contentType
+     */
+    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
+
+    /**
+     * 客户端
+     */
+    private final static OkHttpClient CLIENT = new OkHttpClient();
+
+    /**
+     * 序列化器
+     */
+    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
 
     public IAMManger(MinioDriver driver) {
         this.driver = driver;
@@ -50,22 +56,17 @@ public class IAMManger {
      * @throws IOException
      */
     private void setCookie() throws IOException {
-        HttpPost httpPost = new HttpPost(buildUrl("/api/v1/login"));
+        Request.Builder requestBuilder = new Request.Builder().url(buildUrl("/api/v1/login"));
         Map<String, Object> param = new HashMap<>();
         param.put("accessKey", driver.getServerInfo().getUsername());
         param.put("secretKey", driver.getServerInfo().getPassword());
-        StringEntity stringEntity = new StringEntity(JSON.toJSONString(param), StandardCharsets.UTF_8);
-        stringEntity.setContentEncoding(StandardCharsets.UTF_8.toString());
-        stringEntity.setContentType("application/json");
-        httpPost.setEntity(stringEntity);
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse httpResponse = httpClient.execute(httpPost)) {
-            HttpEntity entity = httpResponse.getEntity();
-            if (HttpStatus.SC_CREATED == httpResponse.getStatusLine().getStatusCode()) {
-                this.cookie = httpResponse.getFirstHeader("Set-Cookie").getValue();
-            } else {
-                throw new RuntimeException("登录对象存储服务器minio异常");
-            }
+        requestBuilder.post(RequestBody.create(param.toString(), MEDIA_TYPE));
+        Response response = CLIENT.newCall(requestBuilder.build())
+                .execute();
+        if (response.isSuccessful()) {
+            this.cookie = response.header("Set-Cookie");
+        } else {
+            throw new RuntimeException("登录对象存储服务器minio异常");
         }
 
     }
@@ -86,10 +87,8 @@ public class IAMManger {
             param.put("secretKey", password);
             param.put("groups", groups);
             param.put("policies", policies);
-            CloseableHttpResponse httpResponse = this.sendHttpPostMethod(buildUrl("/api/v1/users"), param);
-            Asserts.check(httpResponse != null, "发送请求异常");
-            HttpEntity entity = httpResponse.getEntity();
-            return HttpStatus.SC_CREATED == httpResponse.getStatusLine().getStatusCode();
+            Response httpResponse = this.sendHttpPostMethod(buildUrl("/api/v1/users"), param);
+            return httpResponse.isSuccessful();
         } catch (Exception e) {
             throw new MinioExcepition(e.getCause(), "创建用户失败");
         }
@@ -102,19 +101,16 @@ public class IAMManger {
      * @return
      */
     public boolean updateUserPolicies(String username, List<String> policies) {
-        HttpPut httpPut = new HttpPut(buildUrl("/api/v1/set-policy/" + policies.stream().collect(Collectors.joining(","))));
-        httpPut.setHeader("Cookie", cookie);
-        Map<String, Object> param = new HashMap<>();
+        Map<String, Object> param = new HashMap<>(2);
         param.put("entityName", username);
         param.put("entityType", "user");
-        StringEntity stringEntity = new StringEntity(JSON.toJSONString(param), StandardCharsets.UTF_8);
-        stringEntity.setContentEncoding(StandardCharsets.UTF_8.toString());
-        stringEntity.setContentType("application/json");
-        httpPut.setEntity(stringEntity);
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse httpResponse = httpClient.execute(httpPut)) {
-            HttpEntity entity = httpResponse.getEntity();
-            return HttpStatus.SC_NO_CONTENT == httpResponse.getStatusLine().getStatusCode();
+        try {
+            Request request = new Request.Builder()
+                    .url(buildUrl("/api/v1/set-policy/" + policies.stream().collect(Collectors.joining(","))))
+                    .header("Cookie", this.cookie)
+                    .put(RequestBody.create(OBJECT_MAPPER.writeValueAsBytes(param), MEDIA_TYPE))
+                    .build();
+            return CLIENT.newCall(request).execute().isSuccessful();
         } catch (Exception e) {
             throw new MinioExcepition(e.getCause(), "修改用户访问策略异常");
         }
@@ -137,13 +133,13 @@ public class IAMManger {
      * @return the boolean
      */
     public boolean deleteUser(String username) {
-        HttpDelete httpDelete = new HttpDelete(buildUrl("/api/v1/user?name=" + username));
-        httpDelete.setHeader("Cookie", cookie);
-
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse httpResponse = httpClient.execute(httpDelete)) {
-            HttpEntity entity = httpResponse.getEntity();
-            return HttpStatus.SC_NO_CONTENT == httpResponse.getStatusLine().getStatusCode();
+        Request request = new Request.Builder()
+                .url(buildUrl("/api/v1/user?name=" + username))
+                .header("Cookie", this.cookie)
+                .delete()
+                .build();
+        try {
+            return CLIENT.newCall(request).execute().isSuccessful();
         } catch (Exception e) {
             throw new MinioExcepition(e.getCause(), "删除用户失败");
         }
@@ -156,7 +152,11 @@ public class IAMManger {
      * @return
      */
     public String createDefaultIAMPolicy() {
-        return this.createIAMPolicy(JSONObject.toJSONString(DefaultPolicy.defaultPolicy(this.driver.getServerInfo().getBucket())));
+        try {
+            return this.createIAMPolicy(OBJECT_MAPPER.writeValueAsString(DefaultPolicy.defaultPolicy(this.driver.getServerInfo().getBucket())));
+        } catch (JsonProcessingException e) {
+            throw new MinioExcepition(e, "序列化失败");
+        }
     }
 
     /**
@@ -170,10 +170,8 @@ public class IAMManger {
             Map<String, Object> param = new HashMap<>();
             param.put("name", driver.getServerInfo().getUsername());
             param.put("policy", iamPolicy);
-            CloseableHttpResponse httpResponse = this.sendHttpPostMethod(buildUrl("/api/v1/policies"), param);
-            Asserts.check(httpResponse != null, "发送请求异常");
-            HttpEntity entity = httpResponse.getEntity();
-            if (HttpStatus.SC_CREATED == httpResponse.getStatusLine().getStatusCode()) {
+            Response httpResponse = this.sendHttpPostMethod(buildUrl("/api/v1/policies"), param);
+            if (httpResponse.isSuccessful()) {
                 return this.driver.getServerInfo().getBucket();
             }
         } catch (Exception e) {
@@ -199,15 +197,15 @@ public class IAMManger {
      * @return
      */
     protected boolean deleteVisitPolicy(String policyName) {
-        HttpDelete httpDelete = new HttpDelete(buildUrl("/api/v1/policy?name=" + policyName));
-        httpDelete.setHeader("Cookie", cookie);
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse httpResponse = httpClient.execute(httpDelete)) {
-            HttpEntity entity = httpResponse.getEntity();
-            return HttpStatus.SC_NO_CONTENT == httpResponse.getStatusLine().getStatusCode();
+        Request request = new Request.Builder()
+                .url(buildUrl("/api/v1/policy?name=" + policyName))
+                .header("Cookie", this.cookie)
+                .build();
+        try {
+            Response response = CLIENT.newCall(request).execute();
+            return response.isSuccessful();
         } catch (Exception e) {
             throw new MinioExcepition(e.getCause(), "删除用户访问策略失败");
-
         }
     }
 
@@ -218,22 +216,20 @@ public class IAMManger {
      * @return
      */
     protected boolean setQuota(Long amount) {
-        HttpPut httpPut = new HttpPut(buildUrl("/api/v1/buckets/" + this.driver.getServerInfo() + "/quota"));
-        httpPut.setHeader("Cookie", cookie);
         Map<String, Object> param = new HashMap<>();
         param.put("amount", amount);
         param.put("enabled", true);
         param.put("quota_type", "hard");
-        StringEntity stringEntity = new StringEntity(JSON.toJSONString(param), StandardCharsets.UTF_8);
-        stringEntity.setContentEncoding(StandardCharsets.UTF_8.toString());
-        stringEntity.setContentType("application/json");
-        httpPut.setEntity(stringEntity);
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse httpResponse = httpClient.execute(httpPut)) {
-            HttpEntity entity = httpResponse.getEntity();
-            return HttpStatus.SC_OK == httpResponse.getStatusLine().getStatusCode();
+        try {
+            Request request = new Request.Builder()
+                    .url(buildUrl("/api/v1/buckets/" + this.driver.getServerInfo() + "/quota"))
+                    .header("Cookie", this.cookie)
+                    .put(RequestBody.create(OBJECT_MAPPER.writeValueAsBytes(param), MEDIA_TYPE))
+                    .build();
+            return CLIENT.newCall(request).execute().isSuccessful();
         } catch (Exception e) {
             throw new MinioExcepition(e.getCause(), "设置桶容量异常");
+
         }
     }
 
@@ -243,20 +239,17 @@ public class IAMManger {
      * @return
      */
     public boolean cancelQuota() {
-        HttpPut httpPut = new HttpPut(buildUrl("/api/v1/buckets/" + this.driver.getServerInfo() + "/quota"));
-        httpPut.setHeader("Cookie", cookie);
         Map<String, Object> param = new HashMap<>();
         param.put("amount", 0);
         param.put("enabled", false);
         param.put("quota_type", "hard");
-        StringEntity stringEntity = new StringEntity(JSON.toJSONString(param), StandardCharsets.UTF_8);
-        stringEntity.setContentEncoding(StandardCharsets.UTF_8.toString());
-        stringEntity.setContentType("application/json");
-        httpPut.setEntity(stringEntity);
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse httpResponse = httpClient.execute(httpPut)) {
-            HttpEntity entity = httpResponse.getEntity();
-            return HttpStatus.SC_OK == httpResponse.getStatusLine().getStatusCode();
+        try {
+            Request request = new Request.Builder()
+                    .url(buildUrl("/api/v1/buckets/" + this.driver.getServerInfo() + "/quota"))
+                    .header("Cookie", this.cookie)
+                    .put(RequestBody.create(OBJECT_MAPPER.writeValueAsBytes(param), MEDIA_TYPE))
+                    .build();
+            return CLIENT.newCall(request).execute().isSuccessful();
         } catch (Exception e) {
             throw new MinioExcepition(e.getCause(), "修改用户失败");
         }
@@ -268,22 +261,27 @@ public class IAMManger {
      * @return
      */
     protected List<String> getVisitPolicies() {
-        HttpGet httpGet = new HttpGet(buildUrl("/api/v1/policies"));
-        httpGet.setHeader("Cookie", cookie);
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse httpResponse = httpClient.execute(httpGet)) {
-            HttpEntity entity = httpResponse.getEntity();
-            if (HttpStatus.SC_OK == httpResponse.getStatusLine().getStatusCode()) {
-                JSONObject policies = JSONObject.parseObject(EntityUtils.toString(entity));
-                return policies.getJSONArray("policies").stream().map(item -> {
-                    JSONObject policy = (JSONObject) item;
-                    return policy.getString("name");
-                }).collect(Collectors.toList());
+        try {
+            Request request = new Request.Builder()
+                    .url(buildUrl("/api/v1/policies"))
+                    .header("Cookie", this.cookie)
+                    .build();
+            Response response = CLIENT.newCall(request).execute();
+            if (response.isSuccessful()) {
+                JsonNode jsonNode = OBJECT_MAPPER.readTree(response.body().bytes());
+                JsonNode policies = jsonNode.get("policies");
+                if (policies.isArray()) {
+                    List<String> result = new ArrayList<>(policies.size());
+                    for (JsonNode policy : policies) {
+                        result.add(policy.get("name").asText());
+                    }
+                    return result;
+                }
             }
+            return Collections.emptyList();
         } catch (Exception e) {
             throw new MinioExcepition(e.getCause(), "获取所有的用户访问策略异常");
         }
-        return new ArrayList<>();
     }
 
 
@@ -295,16 +293,15 @@ public class IAMManger {
      * @return
      * @throws IOException
      */
-    private CloseableHttpResponse sendHttpPostMethod(String url, Map<String, Object> param) throws IOException {
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("Cookie", cookie);
-        StringEntity stringEntity = new StringEntity(JSONObject.toJSONString(param), StandardCharsets.UTF_8);
-        stringEntity.setContentEncoding(StandardCharsets.UTF_8.toString());
-        stringEntity.setContentType("application/json");
-        httpPost.setEntity(stringEntity);
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
-            return httpResponse;
+    private Response sendHttpPostMethod(String url, Map<String, Object> param) throws IOException {
+
+        Request request = new Request.Builder().url(url)
+                .header("Cookie", this.cookie)
+                .post(RequestBody.create(OBJECT_MAPPER.writeValueAsBytes(param), MEDIA_TYPE))
+                .build();
+        try {
+            Response response = CLIENT.newCall(request).execute();
+            return response;
         } catch (Exception e) {
             throw new MinioExcepition(e.getCause(), "发送http请求异常");
         }
