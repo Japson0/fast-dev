@@ -41,8 +41,8 @@ public class HdfsClientFactory implements FactoryBean<HdfsClient> {
             System.setProperty("HADOOP_USER_NAME", hdfsProperties.getUserName());
         }
         if (mode == HdfsMode.CLUSTER) {
-            configuration.set(FS_DEFAULT_NAME_KEY, "hdfs://nameservice");
-            configuration.set("dfs.nameservices", "nameservice");
+            configuration.set(FS_DEFAULT_NAME_KEY, "hdfs://" + hdfsProperties.getCluster().getNameService());
+            configuration.set("dfs.nameservices", hdfsProperties.getCluster().getNameService());
             HdfsProperties.Cluster cluster = hdfsProperties.getCluster();
             List<String> nameNode = cluster.getNameNode();
             Assert.notEmpty(nameNode, "hdfs nameNode must not be null!");

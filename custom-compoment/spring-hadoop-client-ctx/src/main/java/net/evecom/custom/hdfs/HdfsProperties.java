@@ -50,6 +50,10 @@ public class HdfsProperties {
     public static class Cluster {
 
         /**
+         * 群节点key
+         */
+        private String nameService = "nameservice";
+        /**
          * namenNode节点列表
          */
         private List<String> nameNode;
@@ -60,6 +64,14 @@ public class HdfsProperties {
 
         public void setNameNode(List<String> nameNode) {
             this.nameNode = nameNode;
+        }
+
+        public String getNameService() {
+            return nameService;
+        }
+
+        public void setNameService(String nameService) {
+            this.nameService = nameService;
         }
     }
 

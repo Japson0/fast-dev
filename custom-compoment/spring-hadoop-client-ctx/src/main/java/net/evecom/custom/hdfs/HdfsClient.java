@@ -51,14 +51,14 @@ public class HdfsClient implements Closeable, DisposableBean {
 
     public HdfsClient(String rootPath, Configuration configuration) throws IOException {
         this.configuration = configuration;
-        String defalutService = configuration.get(FS_DEFAULT_NAME_KEY);
+        String defaultService = configuration.get(FS_DEFAULT_NAME_KEY);
         if (rootPath == null) {
             rootPath = "/";
         } else if (!rootPath.startsWith("/")) {
             rootPath = "/" + rootPath;
         }
         this.rootPathName = rootPath;
-        this.rootPath = new Path(defalutService + rootPath);
+        this.rootPath = new Path(defaultService + rootPath);
         fileSystem = FileSystem.get(this.configuration);
     }
 
