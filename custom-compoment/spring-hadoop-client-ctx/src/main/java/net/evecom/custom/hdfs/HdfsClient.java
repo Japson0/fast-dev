@@ -4,6 +4,7 @@ package net.evecom.custom.hdfs;
 import net.evecom.custom.hdfs.exception.HdfsIoException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.permission.FsPermission;
 import org.springframework.beans.factory.DisposableBean;
 
 import java.io.Closeable;
@@ -87,6 +88,13 @@ public class HdfsClient implements Closeable, DisposableBean {
         }
     }
 
+    /**
+     * 删除目录
+     * RevisionTrail:(Date/Author/Description)
+     * 2023年02月09日
+     *
+     * @author Japson Huang
+     */
     public void removeDir(String directory) throws IOException {
         try {
             fileSystem.removeAcl(new Path(rootPath, directory));
@@ -131,6 +139,28 @@ public class HdfsClient implements Closeable, DisposableBean {
             throw new HdfsIoException(e, "hdfs下载失败，源路径为:" + srcFilePath + "目标路径为" + targetFilePath);
         }
         return targetFilePath + File.separator + fileName;
+    }
+
+    /**
+     * 创建目录
+     * RevisionTrail:(Date/Author/Description)
+     * 2023年02月09日
+     *
+     * @author Japson Huang
+     */
+    public void mkdirs(String dir) throws IOException {
+        fileSystem.mkdirs(new Path(dir));
+    }
+
+    /**
+     * 创建目录
+     * RevisionTrail:(Date/Author/Description)
+     * 2023年02月09日
+     *
+     * @author Japson Huang
+     */
+    public void mkdirs(String dir, FsPermission fsPermission) throws IOException {
+        fileSystem.mkdirs(new Path(dir), fsPermission);
     }
 
     /**
