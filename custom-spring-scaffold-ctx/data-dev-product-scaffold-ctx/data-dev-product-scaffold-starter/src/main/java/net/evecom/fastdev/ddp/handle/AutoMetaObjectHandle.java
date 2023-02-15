@@ -58,6 +58,9 @@ public class AutoMetaObjectHandle implements MetaObjectHandler {
         if (canSet(CREATOR_NAME_FIELD, metaObject)) {
             initValue(metaObject, CREATOR_NAME_FIELD, UserContext.getUserName());
         }
+        if (canSet(TIME_MODIFIED_FIELD, metaObject)) {
+            initValue(metaObject, TIME_MODIFIED_FIELD, new Timestamp(SystemClock.now()));
+        }
     }
 
 
@@ -79,6 +82,7 @@ public class AutoMetaObjectHandle implements MetaObjectHandler {
         if (canSet(MODIFIER_NAME_FIELD, metaObject)) {
             initValue(metaObject, MODIFIER_NAME_FIELD, UserContext.getUserName());
         }
+
     }
 
 

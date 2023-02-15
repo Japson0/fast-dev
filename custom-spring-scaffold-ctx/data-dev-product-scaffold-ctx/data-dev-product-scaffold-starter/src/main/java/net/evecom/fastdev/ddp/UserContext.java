@@ -9,10 +9,14 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.extra.spring.SpringUtil;
 import net.evecom.fastdev.boot.utils.JacksonUtils;
 import net.evecom.fastdev.common.exception.NoUserInfoException;
+import net.evecom.fastdev.common.exception.ResourceException;
 import net.evecom.fastdev.ddp.handle.DataDevTenantHandler;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * <P><B>用户工具类:</B></P>
@@ -37,7 +41,7 @@ public class UserContext {
     /**
      * redis
      */
-    private final static RedisTemplate<String, UserResource> REDIS_TEMPLATE;
+    private static final Function<String, UserResource> USER_RESOURCE_FUNCTION;
 
     private UserContext() {
     }
@@ -66,13 +70,29 @@ public class UserContext {
         } else {
             USER_INFO_LOCAL = new ThreadLocal<>();
         }
-        RedisTemplate<String, UserResource> temp;
+        RedisTemplate<String, String> temp;
         try {
-            temp = SpringUtil.getBean(RedisTemplate.class);
+            LettuceConnectionFactory lettuceConnectionFactory = SpringUtil.getBean(LettuceConnectionFactory.class);
+            temp = new RedisTemplate<>();
+            temp.setKeySerializer(RedisSerializer.string());
+            temp.setValueSerializer(RedisSerializer.string());
+            temp.setConnectionFactory(lettuceConnectionFactory);
+            temp.afterPropertiesSet();
         } catch (Exception ignore) {
             temp = null;
         }
-        REDIS_TEMPLATE = temp;
+        RedisTemplate<String, String> redisTemplate = temp;
+        USER_RESOURCE_FUNCTION = (key) -> {
+            if (redisTemplate == null) {
+                throw new ResourceException("未初始化用户资源接口");
+            }
+            String userJson = redisTemplate.opsForValue().get(key);
+            if (userJson == null) {
+                throw NoUserInfoException.getInstance();
+            }
+            return JacksonUtils.toBean(userJson, UserResource.class);
+        };
+
     }
 
     public static void setUserInfo(String jwtClaims) {
@@ -136,7 +156,7 @@ public class UserContext {
         if (userInfo.getUserId() == null && userInfo.getClientId() == null) {
             throw ILLEGAL_ACCESS_ERROR;
         }
-        UserResource userResource = REDIS_TEMPLATE.opsForValue().get(userInfo.getClientId() + "_" + userInfo.getUserId());
+        UserResource userResource = USER_RESOURCE_FUNCTION.apply(userInfo.getClientId() + "_" + userInfo.getUsername());
         if (userResource == null) {
             throw NoUserInfoException.getInstance();
         }

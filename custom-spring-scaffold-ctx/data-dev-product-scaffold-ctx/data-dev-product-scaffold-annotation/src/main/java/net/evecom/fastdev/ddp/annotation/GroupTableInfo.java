@@ -16,6 +16,16 @@ public @interface GroupTableInfo {
     Class<?> group();
 
     /**
+     * 中文名.
+     */
+    String cnName() default "";
+
+    /**
+     * 属性名
+     */
+    String enName() default "";
+
+    /**
      * 是否继承主属性样式
      */
     boolean extend() default true;
@@ -74,10 +84,6 @@ public @interface GroupTableInfo {
      */
     int colSpan() default 1;
 
-    /**
-     * 是否是字典数据
-     */
-    boolean isDictionary() default false;
 
     /**
      * 列宽

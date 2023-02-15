@@ -20,7 +20,7 @@ import java.io.Serializable;
  * @author Japson Huang
  * @version1.0
  */
-public interface BaseControllerInterface<ID extends Serializable, T extends BaseEntity<ID>> {
+public interface BaseControllerInterface<ID extends Serializable, T extends BaseEntity<ID>, DTO extends T> {
 
     /**
      * 更新操作，全覆盖
@@ -31,7 +31,7 @@ public interface BaseControllerInterface<ID extends Serializable, T extends Base
      */
     @PutMapping
     @ApiOperation("更新")
-    RestResponse update(@RequestBody T entity);
+    RestResponse update(@RequestBody DTO entity);
 
     /**
      * 新增操作
@@ -42,7 +42,7 @@ public interface BaseControllerInterface<ID extends Serializable, T extends Base
      */
     @PostMapping
     @ApiOperation("新增")
-    RestResponse insert(@RequestBody T entity);
+    RestResponse insert(@RequestBody DTO entity);
 
     /**
      * 删除操作

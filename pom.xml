@@ -28,6 +28,7 @@
         <module>custom-spring-scaffold-ctx/data-dev.product-tool</module>
         <module>custom-compoment/spring-hadoop-client-ctx</module>
         <module>custom-compoment/spring-minio-client-ctx</module>
+        <module>custom-compoment/spring-elasticsearch</module>
     </modules>
 
     <properties>
@@ -45,6 +46,7 @@
         <jasypt-core.version>1.9.3</jasypt-core.version>
         <bcprov.version>1.69</bcprov.version>
         <hadoop.version>3.3.4</hadoop.version>
+        <okhttp3.version>4.8.1</okhttp3.version>
     </properties>
 
     <dependencyManagement>
@@ -220,6 +222,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>

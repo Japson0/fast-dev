@@ -8,6 +8,7 @@ package net.evecom.fastdev.mybatis;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -15,10 +16,8 @@ import net.evecom.fastdev.mybatis.annotation.OrderInfo;
 import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
 import net.evecom.fastdev.mybatis.util.EncryptUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Predicate;
 
 
 /**
@@ -88,6 +87,9 @@ public class PageConditionDTO<P> extends PageConditionQuery<P> implements IPage 
             }
             if (columnNames != null && columnNames.length > 0) {
                 queryWrapper.select(columnNames);
+            } else if (excludeColumnNames != null && excludeColumnNames.length > 0) {
+                Set<String> set = new HashSet<>(Arrays.asList(excludeColumnNames));
+                queryWrapper.select((Predicate<TableFieldInfo>) tableFieldInfo -> set.contains(tableFieldInfo.getProperty()));
             }
         }
         return queryWrapper == null ? NULL_WRAPPER : queryWrapper;

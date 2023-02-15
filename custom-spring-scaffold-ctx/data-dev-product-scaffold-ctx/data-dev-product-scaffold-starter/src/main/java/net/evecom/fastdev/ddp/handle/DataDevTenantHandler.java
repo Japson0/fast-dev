@@ -5,6 +5,7 @@ import net.evecom.fastdev.common.exception.NoUserInfoException;
 import net.evecom.fastdev.ddp.UserContext;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
+import org.apache.ibatis.binding.MapperRegistry;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +26,9 @@ public class DataDevTenantHandler implements TenantLineHandler {
      */
     public final Collection<String> ignoreTable;
 
+
+    private MapperRegistry mapperRegistry;
+
     /**
      * 动态忽略租户
      */
@@ -37,10 +41,10 @@ public class DataDevTenantHandler implements TenantLineHandler {
             this.ignoreTable = new HashSet<>(ignoreTable.length);
             for (String s : ignoreTable) {
                 this.ignoreTable.add(s.toUpperCase());
-
             }
         }
     }
+
 
     @Override
     public Expression getTenantId() {
@@ -53,9 +57,13 @@ public class DataDevTenantHandler implements TenantLineHandler {
 
     @Override
     public boolean ignoreTable(String tableName) {
-        //超管忽略
+        //如果租户为空，则忽略，这种情况主要是出现在定时任务调用，获取数据的接口比如根据ID获取明细
+        if (UserContext.getTenantId() == null) {
+            return true;
+        }
         if (IGNORE_LOCAL.get()) {
             return true;
+            //超管忽略
         } else if (UserContext.isAdmin()) {
             return true;
         }
@@ -66,4 +74,5 @@ public class DataDevTenantHandler implements TenantLineHandler {
     public String getTenantIdColumn() {
         return "tenant_id";
     }
+
 }
