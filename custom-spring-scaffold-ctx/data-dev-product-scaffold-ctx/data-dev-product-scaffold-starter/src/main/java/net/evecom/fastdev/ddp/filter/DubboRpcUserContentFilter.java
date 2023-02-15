@@ -7,7 +7,7 @@ import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
 
 /**
- * <P><B>Description:</B></P>
+ * <P><B>dubbo用户信息过滤器:</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2022年08月30日 CREATE
  *
@@ -34,8 +34,9 @@ public class DubboRpcUserContentFilter implements Filter {
     }
 
     private void pushUser() {
-        UserInfo userInfo = UserContext.getUserInfo();
-        if (userInfo != null) {
+        Long userId = UserContext.getUserId();
+        if (userId != null) {
+            UserInfo userInfo = UserContext.getUserInfo();
             RpcContext.getContext().setAttachment("username", userInfo.getUsername());
             RpcContext.getContext().setAttachment("tenantId", userInfo.getTenantId());
             RpcContext.getContext().setAttachment("accessKey", userInfo.getTenantAccessKey());

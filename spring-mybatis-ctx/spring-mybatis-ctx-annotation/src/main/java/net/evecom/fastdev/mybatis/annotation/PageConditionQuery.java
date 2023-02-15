@@ -72,6 +72,11 @@ public class PageConditionQuery<P> {
     protected String[] columnNames;
 
     /**
+     * 需要排除的列明，如果columnNames有数据，则此字段无效
+     */
+    @JsonIgnore
+    protected String[] excludeColumnNames;
+    /**
      * 排序信息
      */
     @JsonIgnore
@@ -146,6 +151,14 @@ public class PageConditionQuery<P> {
         this.columnNames = columnNames;
     }
 
+    public String[] getExcludeColumnNames() {
+        return excludeColumnNames;
+    }
+
+    public void setExcludeColumnNames(String[] excludeColumnNames) {
+        this.excludeColumnNames = excludeColumnNames;
+    }
+
     public List<OrderInfo> getOrderInfos() {
         return orderInfos;
     }
@@ -197,4 +210,5 @@ public class PageConditionQuery<P> {
         this.orderInfos.addAll(Arrays.asList(orderItems));
         return this;
     }
+
 }

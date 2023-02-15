@@ -19,6 +19,10 @@ public class DataDevProductProperties {
     private Debug debug;
 
     /**
+     * 自动忽略租户插件
+     */
+    private boolean autoIgnoreTenant;
+    /**
      * 租户忽略的表信息
      */
     private String[] ignoreTenantTable;
@@ -81,5 +85,13 @@ public class DataDevProductProperties {
         public DebuggerUser() {
             super();
         }
+    }
+
+    public boolean isAutoIgnoreTenant() {
+        return autoIgnoreTenant;
+    }
+
+    public void setAutoIgnoreTenant(boolean autoIgnoreTenant) {
+        this.autoIgnoreTenant = autoIgnoreTenant;
     }
 }

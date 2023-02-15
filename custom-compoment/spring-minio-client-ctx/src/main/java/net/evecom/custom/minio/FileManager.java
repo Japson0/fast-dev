@@ -35,8 +35,9 @@ public class FileManager {
      */
     private String defaultBucket;
 
-    public FileManager(MinioDriver driver) {
+    public FileManager(MinioDriver driver, String defaultBucket) {
         this.driver = driver;
+        this.defaultBucket = defaultBucket;
     }
 
     /**

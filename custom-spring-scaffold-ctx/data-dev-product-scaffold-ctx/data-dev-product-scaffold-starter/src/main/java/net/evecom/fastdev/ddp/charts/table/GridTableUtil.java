@@ -80,41 +80,45 @@ public class GridTableUtil {
                 return 1;
             } else return a1.getViewOrder().compareTo(a2.getViewOrder());
         });
-        if (group == null) {
-            for (GroupClass gc : groupClass) {
+        for (GroupClass gc : groupClass) {
+            GroupTableInfo[] groups = gc.gridTables.group();
+            if (groups.length > 0) {
+                for (GroupTableInfo groupTableInfo : groups) {
+                    if (groupTableInfo.group() == group) {
+                        GridTableInfo gridTableInfo = new GridTableInfo();
+                        if (!org.springframework.util.StringUtils.isEmpty(groupTableInfo.cnName())) {
+                            gridTableInfo.setCnName(groupTableInfo.cnName());
+                        } else {
+                            gridTableInfo.setCnName(gc.gridTables.cnName());
+                        }
+                        if (!org.springframework.util.StringUtils.isEmpty(groupTableInfo.enName())) {
+                            gridTableInfo.setEnName(groupTableInfo.enName());
+                        } else {
+                            gridTableInfo.setEnName(gc.gridTables.enName());
+                        }
+                        if (groupTableInfo.extend()) {
+                            render(gridTableInfo, gc.gridTables);
+                        } else {
+                            gridTableInfo.setStyle(groupTableInfo.style());
+                            gridTableInfo.setStyleClass(groupTableInfo.styleClass());
+                            gridTableInfo.setNotDate(groupTableInfo.isNotDate());
+                            gridTableInfo.setViewOrder(groupTableInfo.viewOrder());
+                            gridTableInfo.setCanClick(groupTableInfo.canClick());
+                            gridTableInfo.setDateFormat(groupTableInfo.dateFormat());
+                            gridTableInfo.setWidth(groupTableInfo.width());
+                            gridTableInfo.setDictionary(gridTableInfo.isDictionary());
+                        }
+                        gridTableInfos.add(gridTableInfo);
+                        break;
+                    }
+                }
+            } else {
                 GridTableInfo gridTableInfo = new GridTableInfo();
                 GridTable gridTable = gc.gridTables;
                 gridTableInfo.setCnName(gridTable.cnName());
                 gridTableInfo.setEnName(gc.enName);
                 render(gridTableInfo, gridTable);
                 gridTableInfos.add(gridTableInfo);
-            }
-        } else {
-            for (GroupClass gc : groupClass) {
-                GroupTableInfo[] groups = gc.gridTables.group();
-                if (groups.length > 0) {
-                    for (GroupTableInfo groupTableInfo : groups) {
-                        if (groupTableInfo.group() == group) {
-                            GridTableInfo gridTableInfo = new GridTableInfo();
-                            gridTableInfo.setCnName(gridTableInfo.getCnName());
-                            gridTableInfo.setEnName(gc.enName);
-                            if (groupTableInfo.extend()) {
-                                render(gridTableInfo, gc.gridTables);
-                            } else {
-                                gridTableInfo.setStyle(groupTableInfo.style());
-                                gridTableInfo.setStyleClass(groupTableInfo.styleClass());
-                                gridTableInfo.setNotDate(groupTableInfo.isNotDate());
-                                gridTableInfo.setViewOrder(groupTableInfo.viewOrder());
-                                gridTableInfo.setCanClick(groupTableInfo.canClick());
-                                gridTableInfo.setDateFormat(groupTableInfo.dateFormat());
-                                gridTableInfo.setWidth(groupTableInfo.width());
-                                gridTableInfo.setDictionary(gridTableInfo.isDictionary());
-                            }
-                            gridTableInfos.add(gridTableInfo);
-                            break;
-                        }
-                    }
-                }
             }
         }
         return gridTableInfos;

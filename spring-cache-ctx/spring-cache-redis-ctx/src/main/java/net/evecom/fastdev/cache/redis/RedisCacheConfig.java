@@ -96,11 +96,11 @@ public class RedisCacheConfig extends CacheProperties {
 
     @Bean
     @Primary
-    public RedisTemplate<Object, Object> redisTemplate(
+    public RedisTemplate redisTemplate(
             LettuceConnectionFactory lettuceConnectionFactory) {
-        RedisTemplate<Object, Object> template = new RedisTemplate<>();
+        RedisTemplate template = new RedisTemplate<>();
         template.setKeySerializer(RedisSerializer.string());
-        template.setValueSerializer(RedisSerializer.java());
+        template.setValueSerializer(RedisSerializer.json());
 //        template.setValueSerializer(ProtoBufSerializationRedisSerializer.getInstance());
         template.setConnectionFactory(lettuceConnectionFactory);
         return template;

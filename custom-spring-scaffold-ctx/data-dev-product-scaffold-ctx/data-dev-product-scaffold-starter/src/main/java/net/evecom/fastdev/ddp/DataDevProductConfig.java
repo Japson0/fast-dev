@@ -8,7 +8,6 @@ import net.evecom.fastdev.ddp.filter.debug.DebugUserInterceptor;
 import net.evecom.fastdev.ddp.handle.AutoMetaObjectHandle;
 import net.evecom.fastdev.ddp.handle.DataDevTenantHandler;
 import net.evecom.fastdev.ddp.handle.LoggerTracesService;
-import org.apache.dubbo.config.Constants;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,10 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.annotation.PostConstruct;
-
 /**
- * <P><B>Description:</B></P>
+ * <P><B>研发二部配置:</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2022年08月24日 CREATE
  *
@@ -28,7 +25,7 @@ import javax.annotation.PostConstruct;
  * @version1.0
  */
 @Configuration
-@EnableConfigurationProperties({DataDevProductProperties.class, DubboProperties.class})
+@EnableConfigurationProperties(DataDevProductProperties.class)
 public class DataDevProductConfig implements WebMvcConfigurer {
 
     /**
@@ -36,11 +33,9 @@ public class DataDevProductConfig implements WebMvcConfigurer {
      */
     private final DataDevProductProperties devProductProperties;
 
-    private final DubboProperties dubboProperties;
 
-    public DataDevProductConfig(DataDevProductProperties superviseProperties, DubboProperties dubboProperties) {
+    public DataDevProductConfig(DataDevProductProperties superviseProperties) {
         this.devProductProperties = superviseProperties;
-        this.dubboProperties = dubboProperties;
     }
 
     @Override
@@ -76,15 +71,4 @@ public class DataDevProductConfig implements WebMvcConfigurer {
         return new LoggerTracesService();
     }
 
-
-    @PostConstruct
-    public void initDubbo() {
-
-        if (dubboProperties.getIp() != null) {
-            System.setProperty(Constants.DUBBO_IP_TO_REGISTRY, dubboProperties.getIp());
-        }
-        if (dubboProperties.getPort() != null) {
-            System.setProperty(Constants.DUBBO_PORT_TO_REGISTRY, String.valueOf(dubboProperties.getPort()));
-        }
-    }
 }

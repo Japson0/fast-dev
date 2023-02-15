@@ -16,6 +16,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <minio.version>8.3.0</minio.version>
+        <okhttp3.version>4.3.1</okhttp3.version>
     </properties>
 
 
@@ -41,11 +42,6 @@
             <version>${minio.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.8.1</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
+
 </project>
