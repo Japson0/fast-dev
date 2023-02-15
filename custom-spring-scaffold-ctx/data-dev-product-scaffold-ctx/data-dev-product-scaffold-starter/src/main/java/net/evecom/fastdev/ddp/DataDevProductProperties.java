@@ -19,6 +19,10 @@ public class DataDevProductProperties {
     private Debug debug;
 
     /**
+     * 是否开启租户
+     */
+    private boolean enableTenant=true;
+    /**
      * 租户忽略的表信息
      */
     private String[] ignoreTenantTable;
@@ -30,6 +34,14 @@ public class DataDevProductProperties {
 
     public void setDebug(Debug debug) {
         this.debug = debug;
+    }
+
+    public boolean isEnableTenant() {
+        return enableTenant;
+    }
+
+    public void setEnableTenant(boolean enableTenant) {
+        this.enableTenant = enableTenant;
     }
 
     public String[] getIgnoreTenantTable() {

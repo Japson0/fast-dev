@@ -11,6 +11,7 @@ import net.evecom.fastdev.ddp.handle.LoggerTracesService;
 import org.apache.dubbo.config.Constants;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,6 +67,7 @@ public class DataDevProductConfig implements WebMvcConfigurer {
 
 
     @Bean
+    @ConditionalOnProperty(prefix = "evecom.product",name = "enableTenant",havingValue = "true",matchIfMissing = true)
     public TenantLineHandler tenantLineHandler() {
         return new DataDevTenantHandler(devProductProperties.getIgnoreTenantTable());
     }
