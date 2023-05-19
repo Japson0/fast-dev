@@ -9,6 +9,7 @@ import net.evecom.fastdev.common.exception.CommonException;
 import net.evecom.fastdev.common.model.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -43,7 +44,7 @@ public class GlobalExceptionHandle {
      */
     private final TraceService traceService;
 
-    public GlobalExceptionHandle(TraceService traceService) {
+    public GlobalExceptionHandle(@Autowired(required = false) TraceService traceService) {
         this.traceService = traceService;
     }
 
@@ -81,7 +82,9 @@ public class GlobalExceptionHandle {
             result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), "系统未知异常");
             LOGGER.error("系统异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
         }
-        result.setTraceId(traceService.getTraceId());
+        if(traceService!=null){
+            result.setTraceId(traceService.getTraceId());
+        }
         return result;
     }
 
