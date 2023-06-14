@@ -18,6 +18,7 @@ public class ElasticSearchProperties {
      */
     private boolean enable = true;
 
+    @Deprecated
     private String clusterName;
 
     private String clusterNodes;
@@ -28,11 +29,11 @@ public class ElasticSearchProperties {
 
     private String password;
 
-    private Integer maxRetryTimeout = 10000;
-
-    private Integer connectTimeout = 10000;
-
-    private Integer socketTimeout = 30000;
+//    private Integer maxRetryTimeout = 10000;
+//
+//    private Integer connectTimeout = 10000;
+//
+//    private Integer socketTimeout = 30000;
 
     private Integer threadCount = 10;
 
@@ -74,30 +75,6 @@ public class ElasticSearchProperties {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Integer getMaxRetryTimeout() {
-        return maxRetryTimeout;
-    }
-
-    public void setMaxRetryTimeout(Integer maxRetryTimeout) {
-        this.maxRetryTimeout = maxRetryTimeout;
-    }
-
-    public Integer getConnectTimeout() {
-        return connectTimeout;
-    }
-
-    public void setConnectTimeout(Integer connectTimeout) {
-        this.connectTimeout = connectTimeout;
-    }
-
-    public Integer getSocketTimeout() {
-        return socketTimeout;
-    }
-
-    public void setSocketTimeout(Integer socketTimeout) {
-        this.socketTimeout = socketTimeout;
     }
 
     public Integer getThreadCount() {

@@ -77,7 +77,10 @@ public class RestClientFactory implements FactoryBean<ElasticsearchClient>, Init
 
 
         RestClientBuilder builder = RestClient.builder(buildHttpHost())
+
                 .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder
+                        .setMaxConnTotal(elasticSearchProperties.getThreadCount())
+                        .setDefaultConnectionConfig()
 //                        .setSSLContext(finalSslContext)
 //                        .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
                         .setDefaultCredentialsProvider(credentialsProvider));
