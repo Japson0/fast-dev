@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * @author Japson Huang
  * @version1.0
  */
-public class MatchPhrasePrefixConfigConsumer implements Consumer<MatchPhrasePrefixQuery.Builder> {
+public class MatchPhrasePrefixConfigConsumer extends EOperateFunc<MatchPhrasePrefixQuery.Builder> {
 
     /**
      * MatchPhrasePrefixConfig
@@ -31,7 +31,7 @@ public class MatchPhrasePrefixConfigConsumer implements Consumer<MatchPhrasePref
     }
 
     @Override
-    public void accept(MatchPhrasePrefixQuery.Builder queryBuilder) {
+    public void init(MatchPhrasePrefixQuery.Builder queryBuilder) {
         if (!EmptyUtils.isNull(matchPhraseConfig.slop())) {
             queryBuilder.slop(matchPhraseConfig.slop());
         }

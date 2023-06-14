@@ -5,13 +5,13 @@
 
 package net.evecom.elastic.pojo;
 
-import co.elastic.clients.elasticsearch._types.query_dsl.QueryBase;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryVariant;
 import co.elastic.clients.elasticsearch.core.search.Highlight;
 import co.elastic.clients.elasticsearch.core.search.HighlightField;
 import co.elastic.clients.util.ObjectBuilder;
 import net.evecom.elastic.annotations.*;
 import net.evecom.elastic.enums.ElasticOperator;
+import net.evecom.elastic.func.EOperateFunc;
 import net.evecom.elastic.func.MatchConfigConsumer;
 import net.evecom.elastic.func.MatchPhraseConfigConsumer;
 import net.evecom.elastic.func.MatchPhrasePrefixConfigConsumer;
@@ -22,7 +22,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * <P><B>ES内省解析类:</B></P>
@@ -35,10 +34,6 @@ import java.util.function.Consumer;
 public class EInspectation<T> {
 
     /**
-     * 空高亮
-     */
-    private static final Highlight EMPTY_HIGH = new Highlight.Builder().build();
-    /**
      * 类型
      */
     private final Class<T> clazz;
@@ -46,8 +41,6 @@ public class EInspectation<T> {
      * 属性
      */
     private final List<EFieldProperty> properties;
-
-    private final Map<String, EFieldProperty> propertiesMap;
     /**
      * 需要返回哪些值
      */
@@ -112,7 +105,7 @@ public class EInspectation<T> {
             ElasticQueryField queryField = eFieldProperty.elasticQueryField;
             ESearchValue eSearchValue = new ESearchValue(queryField.name(), invokeValue, queryField.operator()
                     , queryField.order(), queryField.boolType(), queryField.boost());
-            Consumer<ObjectBuilder<? extends QueryVariant>> config = eFieldProperty.getConfig(queryField.operator());
+            EOperateFunc<? extends ObjectBuilder<?>> config = eFieldProperty.getConfig(queryField.operator());
             if (config != null) {
                 ObjectBuilder<? extends QueryVariant> objectBuilder = eSearchValue.objectBuilder();
                 config.accept(objectBuilder);
@@ -144,7 +137,7 @@ public class EInspectation<T> {
                         this.highlightBuilder = null;
                     } else {
                         Highlight.Builder builder = new Highlight.Builder();
-                        builder.fields(lightFieldSet);
+                        highlightBuilder=builder.fields(lightFieldSet).build();
                     }
                 }
             }
@@ -172,7 +165,7 @@ public class EInspectation<T> {
         /**
          * 配置列表
          */
-        private Map<ElasticOperator, Consumer<? extends ObjectBuilder<? extends QueryBase>>> configMap;
+        private  Map<ElasticOperator, EOperateFunc<? extends ObjectBuilder<?>>> configMap;
 
 
         public EFieldProperty(Method readMethod, ElasticQueryField elasticQueryField) {
@@ -191,7 +184,7 @@ public class EInspectation<T> {
         EFieldProperty init(Field field) {
             higLight = field.getAnnotation(HigLight.class);
             Annotation[] annotations = field.getAnnotations();
-            Map<ElasticOperator, Consumer<? extends ObjectBuilder<? extends QueryBase>>> annotationMap = new HashMap<>();
+            Map<ElasticOperator, EOperateFunc<? extends ObjectBuilder<?>>> annotationMap = new HashMap<>();
             for (Annotation annotation : annotations) {
                 Class<? extends Annotation> aClass = annotation.annotationType();
                 if (aClass == HigLight.class) {
@@ -219,9 +212,8 @@ public class EInspectation<T> {
                 throw new IllegalArgumentException(e);
             }
         }
-
-        public Consumer<ObjectBuilder<? extends QueryVariant>> getConfig(ElasticOperator elasticOperator) {
-            return configMap != null ? (Consumer<ObjectBuilder<? extends QueryVariant>>) configMap.get(elasticOperator) : null;
+        public EOperateFunc<? extends ObjectBuilder<?>> getConfig(ElasticOperator elasticOperator) {
+            return configMap != null ? configMap.get(elasticOperator) : null;
         }
     }
 

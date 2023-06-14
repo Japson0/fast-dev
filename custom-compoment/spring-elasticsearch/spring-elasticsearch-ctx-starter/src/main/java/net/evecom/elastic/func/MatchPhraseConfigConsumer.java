@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  * @author Japson Huang
  * @version1.0
  */
-public class MatchPhraseConfigConsumer implements Consumer<MatchPhrasePrefixQuery.Builder> {
+public class MatchPhraseConfigConsumer extends EOperateFunc<MatchPhrasePrefixQuery.Builder> {
 
     /**
      * MatchPhraseConfig
@@ -32,7 +32,7 @@ public class MatchPhraseConfigConsumer implements Consumer<MatchPhrasePrefixQuer
     }
 
     @Override
-    public void accept(MatchPhrasePrefixQuery.Builder queryBuilder) {
+    public void init(MatchPhrasePrefixQuery.Builder queryBuilder) {
         if (!EmptyUtils.isNull(matchPhraseConfig.slop())) {
             queryBuilder.slop(matchPhraseConfig.slop());
         }

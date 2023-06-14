@@ -6,7 +6,10 @@
 package net.evecom.elastic.service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.MsearchRequest;
+import co.elastic.clients.elasticsearch.core.MsearchResponse;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import net.evecom.elastic.annotations.ElasticQueryIndex;
@@ -15,9 +18,6 @@ import net.evecom.elastic.indexbuilder.ElasticQueryIndicesBuild;
 import net.evecom.elastic.model.EPageRequest;
 import net.evecom.elastic.pojo.EsBaseEntity;
 import net.evecom.elastic.pojo.EsQueryWrapper;
-import org.elasticsearch.action.search.MultiSearchRequest;
-import org.elasticsearch.action.search.MultiSearchResponse;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
 
 import java.io.IOException;
 import java.util.Map;
@@ -65,7 +65,7 @@ public interface ElasticSearch {
      * @param request        分页类
      * @author Japson Huang
      */
-    <T> EPageRequest<Map<String, Object>> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<?> request);
+    <T> EPageRequest<Map> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<Map> request);
 
     /**
      * 获取分页数据
@@ -77,7 +77,7 @@ public interface ElasticSearch {
      * @param elasticQueryIndicesBuild 索引处理器
      * @author Japson Huang
      */
-    <T> EPageRequest<Map<String, Object>> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<?> request,
+    <T> EPageRequest<Map> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<Map> request,
                                                           ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild);
 
     /**
@@ -145,7 +145,7 @@ public interface ElasticSearch {
      * @param refresh 是否马上刷新segment
      * @author Japson Huang
      */
-    <T extends EsBaseEntity> void updateById(boolean refresh, T... object);
+    <T extends EsBaseEntity> String[] updateById(boolean refresh, T... object);
 
     /**
      * 更新数据
@@ -155,7 +155,7 @@ public interface ElasticSearch {
      * @param refresh 是否马上刷新segment
      * @author Japson Huang
      */
-    <T extends EsBaseEntity> void updateById(boolean refresh, String index, T... object);
+    <T extends EsBaseEntity> String[] updateById(boolean refresh, String index, T... object);
 
     /**
      * 更新数据
@@ -165,7 +165,7 @@ public interface ElasticSearch {
      * @param indexBuild 索引构造器
      * @author Japson Huang
      */
-    <T extends EsBaseEntity> void updateById(boolean refresh, ElasticIndexBuild<T> indexBuild, T... object);
+    <T extends EsBaseEntity> String[] updateById(boolean refresh, ElasticIndexBuild<T> indexBuild, T... object);
 
     /**
      * 根据查询更新数据
@@ -223,7 +223,7 @@ public interface ElasticSearch {
      *
      * @author Japson Huang
      */
-    SearchResponse executeSearchRequest(SearchRequest request) throws IOException;
+    <T>SearchResponse<T> executeSearchRequest(SearchRequest request,Class<T> responseClass) throws IOException;
 
 
     /**
@@ -232,7 +232,7 @@ public interface ElasticSearch {
      * @param request
      * @return
      */
-    MultiSearchResponse executeMultiSearchRequest(MultiSearchRequest request) throws IOException;
+     <T> MsearchResponse<T> executeMultiSearchRequest(MsearchRequest request, Class<T> responseClass) throws IOException;
 
     /*
      * es 数据统计
@@ -245,7 +245,7 @@ public interface ElasticSearch {
      */
     <T> SearchResponse executeSearchRequest(
             EsQueryWrapper<T> esQueryWrapper,
-            ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild, AggregationBuilder... aggs);
+            ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild, Aggregation aggs);
 
     /**
      * 根据ID去查询

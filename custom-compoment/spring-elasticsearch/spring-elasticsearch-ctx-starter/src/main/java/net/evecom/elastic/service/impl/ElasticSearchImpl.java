@@ -6,7 +6,10 @@
 package net.evecom.elastic.service.impl;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.*;
+import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.Refresh;
+import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.query_dsl.IdsQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
@@ -31,22 +34,11 @@ import net.evecom.elastic.model.EPageRequest;
 import net.evecom.elastic.model.ESort;
 import net.evecom.elastic.pojo.EsBaseEntity;
 import net.evecom.elastic.pojo.EsQueryWrapper;
+import net.evecom.elastic.result.CommonAnalysis;
+import net.evecom.elastic.result.HighLightAnalysis;
+import net.evecom.elastic.result.ResultAnalysis;
+import net.evecom.elastic.result.ResultType;
 import net.evecom.elastic.service.ElasticSearch;
-import net.evecom.fastdev.elastics.utils.ESConverUtils;
-import org.elasticsearch.action.bulk.BulkItemResponse;
-import org.elasticsearch.action.search.MultiSearchRequest;
-import org.elasticsearch.action.search.MultiSearchResponse;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.rest.RestStatus;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.transport.ActionNotFoundTransportException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cglib.beans.BeanMap;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
@@ -66,15 +58,18 @@ public class ElasticSearchImpl implements ElasticSearch {
 
 
     /**
-     * 日志
+     * ID处理，这里是将ID赋值到原数据
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ElasticSearchImpl.class);
-
     private static final BiConsumer<BulkResponse, EsBaseEntity[]> ID_HANDLE = (bulkItemResponses, object) -> {
-        BulkItemResponse[] items = bulkItemResponses.getItems();
-        for (int i = 0; i < items.length; i++) {
-            if (items[i].status() == RestStatus.OK) {
-                object[i].setId(items[i].getId());
+        List<BulkResponseItem> items = bulkItemResponses.items();
+        for (BulkResponseItem item : items) {
+            if(item.error()==null){
+
+            }
+        }
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).error()==null) {
+                object[i].setId(items.get(i).id());
             }
         }
     };
@@ -105,27 +100,33 @@ public class ElasticSearchImpl implements ElasticSearch {
     }
 
     @Override
-    public <T> EPageRequest<Map<String, Object>> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest request) {
+    public <T> EPageRequest<Map> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<Map> request) {
         return this.search2MapByObj(esQueryWrapper, request, null);
     }
 
     @Override
-    public <T> EPageRequest<Map<String, Object>> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest request,
-                                                                 ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild) {
+    public <T> EPageRequest<Map> search2MapByObj(EsQueryWrapper<T> esQueryWrapper,
+                                                 EPageRequest<Map> request,
+                                                 ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild) {
 
         String[] indices = this.buildIndices(esQueryWrapper, esQueryWrapper.getElasticClass(), elasticQueryIndicesBuild);
 
-        return this.buildResponse(esQueryWrapper.buildSearchSourceBuilder(), esQueryWrapper.getHighlightBuilder(), indices, esQueryWrapper.getSource(), request, Map.class);
+        return this.buildResponse(esQueryWrapper.buildSearchSourceBuilder(),
+                esQueryWrapper.getHighlightBuilder(),
+                indices, esQueryWrapper.getSource(),
+                request, Map.class);
     }
 
 
     @Override
-    public Long countBySearchSource(QueryBuilder queryBuilder, String... indices) {
+    public Long countBySearchSource(Query query, String... indices) {
 
-        CountRequest countRequest = new CountRequest(indices, queryBuilder);
+        CountRequest.Builder countRequest = new CountRequest.Builder();
+        countRequest.index(Arrays.asList(indices));
+        countRequest.query(query);
         try {
-            CountResponse count = client.count(countRequest, RequestOptions.DEFAULT);
-            return count.getCount();
+            CountResponse count = client.count(countRequest.build());
+            return count.count();
         } catch (IOException e) {
             return 0L;
         }
@@ -156,46 +157,47 @@ public class ElasticSearchImpl implements ElasticSearch {
             String alias = getIndex(object[0]);
             String[] indices = indicesBuild.isAlias() ? getIndexByAlias(alias) : new String[]{alias};
             if (object.length > 1) {
-                BulkRequest bulkRequest = new BulkRequest();
-                bulkRequest.setRefreshPolicy(refresh ? WriteRequest.RefreshPolicy.IMMEDIATE :
-                        WriteRequest.RefreshPolicy.NONE);
+                BulkRequest.Builder bulkRequest = new BulkRequest.Builder();
+                bulkRequest.refresh(refresh ? Refresh.True :
+                        Refresh.False);
+                List<BulkOperation> bulkOperations=new ArrayList<>(object.length);
                 for (T t : object) {
-                    IndexRequest request = new IndexRequest(indicesBuild.buildIndices(t, alias, indices));
-                    request.create(true);
-                    request.id(t.getId());
-                    request.source(ESConverUtils.trans2Json(t), XContentType.JSON);
-                    bulkRequest.add(request);
+                    BulkOperation.Builder builder = new BulkOperation.Builder();
+                    builder.create(r->{
+                        r.index(indicesBuild.buildIndices(t, alias, indices));
+                        r.id(t.getId());
+                        r.document(t);
+                        return r;
+                    });
+                    bulkOperations.add(builder.build());
                 }
-                BulkResponse bulk = client.bulk(bulkRequest, RequestOptions.DEFAULT);
+                bulkRequest.operations(bulkOperations);
+                BulkResponse bulk = client.bulk(bulkRequest.build());
                 ID_HANDLE.accept(bulk, object);
             } else {
-                IndexRequest request = new IndexRequest(indicesBuild.buildIndices(object[0], alias, indices));
-                request.create(true);
+                CreateRequest.Builder<T> request=new CreateRequest.Builder<>();
                 request.id(object[0].getId());
-                request.setRefreshPolicy(refresh ? WriteRequest.RefreshPolicy.IMMEDIATE :
-                        WriteRequest.RefreshPolicy.NONE);
-                request.source(ESConverUtils.trans2Json(object[0]), XContentType.JSON);
-                IndexResponse response = client.index(request, RequestOptions.DEFAULT);
-                RestStatus status = response.status();
-                if (status != RestStatus.CREATED) {
-                    throw new ActionNotFoundTransportException(response.toString());
-                }
-                object[0].setId(response.getId());
+                request.index(indicesBuild.buildIndices(object[0], alias, indices));
+                request.refresh(refresh ? Refresh.True :
+                        Refresh.False);
+                request.document(object[0]);
+                CreateResponse response = client.create(request.build());
+                object[0].setId(response.id());
             }
         } catch (Exception e) {
-            throw new ElasticsearchException("ES插入失败:{}", e.getMessage());
+            throw new ElasticException("ES新增数据失败",e);
         }
     }
 
 
     @Override
-    public <T extends EsBaseEntity> void updateById(boolean refresh, T... object) {
-        updateById(refresh, getIndex(object[0]), object);
+    public <T extends EsBaseEntity> String[] updateById(boolean refresh, T... object) {
+        return updateById(refresh, getIndex(object[0]), object);
     }
 
-    public <T extends EsBaseEntity> void updateById(boolean refresh, String index, T... object) {
+    public <T extends EsBaseEntity> String[] updateById(boolean refresh, String index, T... object) {
         Assert.notEmpty(object, "数组不允许为空");
-        updateById(refresh, (o, a1, a2) -> index, object);
+        return updateById(refresh, (o, a1, a2) -> index, object);
     }
 
     public <T extends EsBaseEntity> String[] updateById(boolean refresh, ElasticIndexBuild<T> indexBuild, T... object) {
@@ -215,25 +217,25 @@ public class ElasticSearchImpl implements ElasticSearch {
                         .build();
                 return successId(client.bulk(bulkRequest), null);
             } else {
-                new UpdateRequest.Builder<T, T>().doc(object[0])
-                UpdateRequest updateRequest = new UpdateRequest(indexBuild.buildIndices(object[0], alias, indices), object[0].getId());
-                updateRequest.doc(ESConverUtils.trans2Json(object[0]), XContentType.JSON);
-                updateRequest.setRefreshPolicy(refresh ? WriteRequest.RefreshPolicy.IMMEDIATE :
-                        WriteRequest.RefreshPolicy.NONE);
-                UpdateResponse response = client.update(updateRequest, RequestOptions.DEFAULT);
-                if (response.status() != RestStatus.OK) {
-                    throw new ActionNotFoundTransportException(response.toString());
-                }
+                UpdateRequest.Builder<T, T> updateRequest = new UpdateRequest.Builder<>();
+                updateRequest.index(indexBuild.buildIndices(object[0], alias, indices));
+                updateRequest.id(object[0].getId());
+                updateRequest.docAsUpsert(true);
+                updateRequest.doc(object[0]);
+                updateRequest.refresh(refresh==true?Refresh.True:Refresh.False);
+                UpdateRequest<T, T> build = updateRequest.build();
+                UpdateResponse response = client.update(build,(Class<T>) object[0].getClass());
+                return new String[]{response.id()};
             }
 
         } catch (Exception e) {
-            throw new ElasticsearchException("ES更新数据失败:{}", e.getMessage());
+            throw new ElasticException("ES更新数据失败:",e);
         }
     }
 
 
     @Override
-    public <T extends EsBaseEntity> void updateByQuery(boolean refresh, EsQueryWrapper queryWrapper, T object) {
+    public <T extends EsBaseEntity> void updateByQuery(boolean refresh, EsQueryWrapper<T> queryWrapper, T object) {
         throw new UnsupportedOperationException("暂不支持，感觉没必要");
     }
 
@@ -262,7 +264,7 @@ public class ElasticSearchImpl implements ElasticSearch {
                         .index(index)
                         .refresh(refresh ? Refresh.True : Refresh.False)
                         .build();
-                DeleteResponse delete = client.delete(deleteRequest);
+                client.delete(deleteRequest);
                 return id;
             }
         } catch (Exception e) {
@@ -299,37 +301,29 @@ public class ElasticSearchImpl implements ElasticSearch {
 
 
     @Override
-    public SearchResponse executeSearchRequest(SearchRequest request) throws IOException {
-        return client.search(request, RequestOptions.DEFAULT);
+    public <T> SearchResponse<T> executeSearchRequest(SearchRequest request,Class<T> responseClass) throws IOException {
+        return client.search(request,responseClass);
     }
 
-    public MultiSearchResponse executeMultiSearchRequest(MultiSearchRequest request) throws IOException {
-        return client.msearch(request, RequestOptions.DEFAULT);
+    public <T> MsearchResponse<T> executeMultiSearchRequest(MsearchRequest request,Class<T> responseClass) throws IOException {
+        return client.msearch(request,responseClass);
     }
+
 
     @Override
     public <T> SearchResponse executeSearchRequest(
             EsQueryWrapper<T> esQueryWrapper,
-            ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild, Aggregation... aggs) {
+            ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild, Aggregation agg) {
         String[] indices = this.buildIndices(esQueryWrapper, esQueryWrapper.getElasticClass(), elasticQueryIndicesBuild);
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(indices);
-        QueryBuilder queryBuilder = esQueryWrapper.buildSearchSourceBuilder();
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(queryBuilder);
-        searchSourceBuilder.size(0);
-        for (AggregationBuilder agg : aggs) {
-            searchSourceBuilder.aggregation(agg);
-        }
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse response;
+        SearchRequest.Builder searchRequest = new SearchRequest.Builder();
+        searchRequest.index(Arrays.asList(indices));
+        Query query = esQueryWrapper.buildSearchSourceBuilder();
+        searchRequest.query(query);
+        searchRequest.size(0);
+        searchRequest.aggregations(agg.aggregations());
 
-        try {
-            response = client.search(searchRequest, RequestOptions.DEFAULT);
-        } catch (Exception ex) {
-            return null;
-        }
-        return response;
+        //TODO 暂时放着
+        return null;
     }
 
     @Override
@@ -410,21 +404,12 @@ public class ElasticSearchImpl implements ElasticSearch {
             String[] columns,
             EPageRequest<R> request,
             Class<R> responseType) {
+        Assert.notNull(request,"分页信息不允许为空");
         if (request.getSize() <= 0) {
             request.setRecords(Collections.emptyList());
             return request;
         }
 
-
-        long total = -1;
-        if (request.isSearchCount()) {
-            total = countBySearchSource(query, indices);
-            request.setTotal(total);
-            if (total == 0) {
-                request.setRecords(Collections.emptyList());
-                return request;
-            }
-        }
         SearchRequest.Builder searchRequest = new SearchRequest.Builder()
                 .index(Arrays.asList(indices))
                 .from(request.getOffset())
@@ -446,19 +431,27 @@ public class ElasticSearchImpl implements ElasticSearch {
         try {
             SearchResponse<R> response = client.search(searchRequest.build(), responseType);
             HitsMetadata<R> hitsMetadata = response.hits();
-            if (total == -1) {
-                TotalHits totalHits = hitsMetadata.total();
-                request.setTotal(totalHits.value());
-                request.setTotalRel(totalHits.relation() == TotalHitsRelation.Gte ? TotalHitRelation.GTE : TotalHitRelation.EQ);
-            }
             List<R> records = new ArrayList<>(hitsMetadata.hits().size());
             Function<Hit<R>, R> analysisRecord = analysisRecord(responseType, highlight);
             for (Hit<R> hit : hitsMetadata.hits()) {
-                records.add(analysisRecord.apply(hit));
+                R record = analysisRecord.apply(hit);
+                records.add(record);
             }
             request.setRecords(records);
+            //处理请求总数
+            TotalHits totalHits = hitsMetadata.total();
+            if(totalHits.relation()==TotalHitsRelation.Eq){
+                request.setTotal(totalHits.value());
+                request.setTotalRel(TotalHitRelation.EQ);
+            }else if(request.isSearchCount()){
+                request.setTotal(countBySearchSource(query, indices));
+                request.setTotalRel(TotalHitRelation.EQ);
+            }else{
+                request.setTotal(totalHits.value());
+                request.setTotalRel(totalHits.relation() == TotalHitsRelation.Gte ? TotalHitRelation.GTE : TotalHitRelation.EQ);
+            }
         } catch (Exception e) {
-            throw new ElasticException("elasticClient查询失败", e);
+            throw new ElasticException("ES查询失败", e);
         }
         return request;
     }
@@ -467,28 +460,26 @@ public class ElasticSearchImpl implements ElasticSearch {
         return client;
     }
 
+
     private <R> Function<Hit<R>, R> analysisRecord(Class<R> rClass, Highlight highlight) {
-        if (highlight == null) {
-            return Hit::source;
-        } else {
-            boolean isMap = Map.class.isAssignableFrom(rClass);
-            return (h -> {
-                if (h.highlight().isEmpty()) return h.source();
-                R r = h.source();
-                if (isMap) {
-                    Map<String, Object> temp = (Map<String, Object>) r;
-                    for (Map.Entry<String, List<String>> entry : h.highlight().entrySet()) {
-                        temp.put(entry.getKey(), entry.getValue().get(0));
-                    }
-                } else {
-                    BeanMap beanMap = BeanMap.create(h.source());
-                    for (Map.Entry<String, List<String>> entry : h.highlight().entrySet()) {
-                        beanMap.put(entry.getKey(), entry.getValue().get(0));
-                    }
-                    r = (R) beanMap.getBean();
+        ResultType type = ResultType.getType(rClass);
+        List<ResultAnalysis<R>> analyses=new ArrayList<>(2);
+        if(type==ResultType.ENTITY){
+            analyses.add(new CommonAnalysis(type));
+        }
+        if(highlight!=null){
+            analyses.add(new HighLightAnalysis(highlight,type));
+        }
+        if(analyses.size()>0){
+            return (f)->{
+                R source = f.source();
+                for (ResultAnalysis<R> analysis : analyses) {
+                    source=analysis.apply(source,f);
                 }
-                return r;
-            });
+                return source;
+            };
+        }else{
+            return Hit::source;
         }
     }
 
@@ -512,7 +503,6 @@ public class ElasticSearchImpl implements ElasticSearch {
             for (String s : errorId) {
                 errIds.append(s).append(",");
             }
-            LOGGER.warn("批量操作失败，失败ID有：{},其中一个失败原因为：{}", errIds, errorMessage);
             return result.toArray(new String[0]);
         } else {
             if (ids == null) {

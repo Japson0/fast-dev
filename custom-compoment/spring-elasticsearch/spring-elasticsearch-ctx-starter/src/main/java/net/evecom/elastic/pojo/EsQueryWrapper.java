@@ -44,6 +44,10 @@ public class EsQueryWrapper<T> {
      */
     private EInspectation<T> eInspectation;
 
+    /**
+     * 默认高亮
+     */
+    private boolean highLight=true;
 
     public EsQueryWrapper(T obj) {
         Assert.notNull(obj, "obj must not be mull!");
@@ -135,6 +139,15 @@ public class EsQueryWrapper<T> {
         return eInspectation.getElasticClass();
     }
 
+    public boolean isHighLight() {
+        return highLight;
+    }
+
+    public EsQueryWrapper<T> setHighLight(boolean highLight) {
+        this.highLight = highLight;
+        return this;
+    }
+
     public String[] getSource() {
         return eInspectation.getSource();
     }
@@ -185,7 +198,7 @@ public class EsQueryWrapper<T> {
 
 
     public Highlight getHighlightBuilder() {
-        return eInspectation.highlightBuilder();
+        return highLight ?eInspectation.highlightBuilder():null;
     }
 
     private Map<ElasticBoolType, List<Query>> convertBean2Query(Collection<ESearchValue> searchValues) {

@@ -1,4 +1,4 @@
-package net.evecom.elastic;
+package net.evecom.elastic.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -13,6 +13,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "elastic")
 public class ElasticSearchProperties {
 
+    /**
+     * 是否开启
+     */
     private boolean enable = true;
 
     private String clusterName;

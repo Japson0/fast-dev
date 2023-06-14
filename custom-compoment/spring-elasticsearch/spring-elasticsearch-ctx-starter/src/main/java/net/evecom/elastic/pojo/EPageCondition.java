@@ -5,6 +5,8 @@
 
 package net.evecom.elastic.pojo;
 
+import net.evecom.elastic.model.EPageRequest;
+
 /**
  * <P><B>ES分页搜索器:</B></P>
  * RevisionTrail:(Date/Author/Description)
@@ -13,16 +15,13 @@ package net.evecom.elastic.pojo;
  * @author Japson Huang
  * @version1.0
  */
-public class EPageCondition<T, R extends EsBaseEntity> extends EPageRequest<R> {
+public class EPageCondition<T, R> extends EPageRequest<R> {
 
     /**
      * 查询条件
      */
     private T condition;
 
-    public EsQueryWrapper<T> buildQueryWrapper(Class<?> group) {
-        return new EsQueryWrapper<>(condition, group);
-    }
 
     public EsQueryWrapper<T> buildQueryWrapper() {
         return new EsQueryWrapper<>(condition);

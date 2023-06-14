@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * @author Japson Huang
  * @version1.0
  */
-public class MatchConfigConsumer implements Consumer<MatchQuery.Builder> {
+public class MatchConfigConsumer extends EOperateFunc<MatchQuery.Builder> {
 
     /**
      * matchConfig
@@ -33,7 +33,7 @@ public class MatchConfigConsumer implements Consumer<MatchQuery.Builder> {
     }
 
     @Override
-    public void accept(MatchQuery.Builder query) {
+    public void init(MatchQuery.Builder query) {
 
         query.operator(matchConfig.operator() == Operator.AND ? co.elastic.clients.elasticsearch._types.query_dsl.Operator.And
                 : co.elastic.clients.elasticsearch._types.query_dsl.Operator.Or);

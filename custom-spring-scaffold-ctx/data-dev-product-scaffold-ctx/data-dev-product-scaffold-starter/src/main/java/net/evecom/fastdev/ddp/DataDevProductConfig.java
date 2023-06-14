@@ -62,7 +62,7 @@ public class DataDevProductConfig implements WebMvcConfigurer {
 
 
     @Bean
-    @ConditionalOnProperty(prefix = "evecom.product",name = "enableTenant",havingValue = "true",matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "evecom.product",name = "enable-tenant",havingValue = "true",matchIfMissing = true)
     public TenantLineHandler tenantLineHandler() {
         return new DataDevTenantHandler(devProductProperties.getIgnoreTenantTable());
     }

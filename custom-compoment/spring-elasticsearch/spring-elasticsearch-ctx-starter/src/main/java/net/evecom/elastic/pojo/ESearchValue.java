@@ -177,9 +177,9 @@ public class ESearchValue implements Serializable {
             } else {
                 return FieldValue.of(((Number) value).longValue());
             }
-        } else if (value == String.class) {
+        } else if (value.getClass() == String.class) {
             return FieldValue.of(value.toString());
-        } else if (value == Boolean.class) {
+        } else if (value.getClass() == Boolean.class) {
             return FieldValue.of((Boolean) value);
         } else {
             throw new IllegalArgumentException("不支持的ES查询参数类型");
