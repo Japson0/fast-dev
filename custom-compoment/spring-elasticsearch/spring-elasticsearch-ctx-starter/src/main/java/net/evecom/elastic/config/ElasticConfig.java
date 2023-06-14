@@ -4,6 +4,7 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import net.evecom.elastic.RestClientFactory;
 import net.evecom.elastic.service.ElasticSearch;
 import net.evecom.elastic.service.impl.ElasticSearchImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @EnableConfigurationProperties(ElasticSearchProperties.class)
 @Configuration
+@ConditionalOnProperty(prefix = "elastic",value = "enable",havingValue = "true",matchIfMissing = true)
 public class ElasticConfig {
 
     /**

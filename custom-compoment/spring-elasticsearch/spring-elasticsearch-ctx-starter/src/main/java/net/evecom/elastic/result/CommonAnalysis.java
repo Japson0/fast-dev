@@ -1,9 +1,7 @@
 package net.evecom.elastic.result;
 
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import net.evecom.elastic.pojo.EsBaseEntity;
-
-import java.util.function.BiFunction;
+import net.evecom.elastic.model.EsBaseEntity;
 
 /**
  * <P><B>普通分析类:</B></P>

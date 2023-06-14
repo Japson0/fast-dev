@@ -1,6 +1,6 @@
 package net.evecom.elastic.result;
 
-import net.evecom.elastic.pojo.EsBaseEntity;
+import net.evecom.elastic.model.EsBaseEntity;
 
 import java.util.Map;
 

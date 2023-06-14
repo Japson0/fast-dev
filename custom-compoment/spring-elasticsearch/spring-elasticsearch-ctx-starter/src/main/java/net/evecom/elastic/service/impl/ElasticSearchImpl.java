@@ -32,7 +32,7 @@ import net.evecom.elastic.indexbuilder.ElasticIndexBuild;
 import net.evecom.elastic.indexbuilder.ElasticQueryIndicesBuild;
 import net.evecom.elastic.model.EPageRequest;
 import net.evecom.elastic.model.ESort;
-import net.evecom.elastic.pojo.EsBaseEntity;
+import net.evecom.elastic.model.EsBaseEntity;
 import net.evecom.elastic.pojo.EsQueryWrapper;
 import net.evecom.elastic.result.CommonAnalysis;
 import net.evecom.elastic.result.HighLightAnalysis;
@@ -404,12 +404,14 @@ public class ElasticSearchImpl implements ElasticSearch {
             String[] columns,
             EPageRequest<R> request,
             Class<R> responseType) {
-        Assert.notNull(request,"分页信息不允许为空");
+        if(request==null){
+            request=new EPageRequest<>();
+        }
+
         if (request.getSize() <= 0) {
             request.setRecords(Collections.emptyList());
             return request;
         }
-
         SearchRequest.Builder searchRequest = new SearchRequest.Builder()
                 .index(Arrays.asList(indices))
                 .from(request.getOffset())

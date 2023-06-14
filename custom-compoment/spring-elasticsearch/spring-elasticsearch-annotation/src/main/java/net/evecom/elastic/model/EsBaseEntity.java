@@ -3,7 +3,7 @@
  * EVECOM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package net.evecom.elastic.pojo;
+package net.evecom.elastic.model;
 
 /**
  * <P><B>es基础类:</B></P>

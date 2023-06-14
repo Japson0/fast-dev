@@ -16,7 +16,7 @@ import net.evecom.elastic.annotations.ElasticQueryIndex;
 import net.evecom.elastic.indexbuilder.ElasticIndexBuild;
 import net.evecom.elastic.indexbuilder.ElasticQueryIndicesBuild;
 import net.evecom.elastic.model.EPageRequest;
-import net.evecom.elastic.pojo.EsBaseEntity;
+import net.evecom.elastic.model.EsBaseEntity;
 import net.evecom.elastic.pojo.EsQueryWrapper;
 
 import java.io.IOException;

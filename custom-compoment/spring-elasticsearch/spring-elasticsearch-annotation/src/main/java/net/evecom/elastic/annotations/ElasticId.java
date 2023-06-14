@@ -8,6 +8,7 @@ package net.evecom.elastic.annotations;
  * @author Japson Huang
  * @version1.0
  */
+@Deprecated
 public @interface ElasticId {
 
 
