@@ -5,7 +5,7 @@
  */
 package net.evecom.elastic.indexbuilder;
 
-import net.evecom.elastic.pojo.EsQueryWrapper;
+import net.evecom.elastic.pojo.EQueryWrapper;
 
 /**
  * <P><B>查询索引构建器:</B></P>
@@ -23,12 +23,12 @@ public interface ElasticQueryIndicesBuild<T> {
      * RevisionTrail:(Date/Author/Description)
      * 2020年09月25日
      *
-     * @param esQueryWrapper 查询类
-     * @param alias          别名
-     * @param indices        索引数组
+     * @param eQueryWrapper 查询类
+     * @param alias         别名
+     * @param indices       索引数组
      * @return 索引数组
      * @author Japson Huang
      */
-    String[] buildIndices(EsQueryWrapper<T> esQueryWrapper, String alias, String[] indices);
+    String[] buildIndices(EQueryWrapper eQueryWrapper, String alias, String[] indices);
 
 }

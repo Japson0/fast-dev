@@ -60,6 +60,11 @@ public class ESearchValue implements Serializable {
 
 
     public ESearchValue(String name, Object value, ElasticOperator elasticOperator,
+                        ElasticBoolType elasticBoolType) {
+        this(name, value, elasticOperator, Integer.MAX_VALUE, elasticBoolType, 1);
+    }
+
+    public ESearchValue(String name, Object value, ElasticOperator elasticOperator,
                         int order, ElasticBoolType elasticBoolType) {
         this(name, value, elasticOperator, order, elasticBoolType, 1);
     }

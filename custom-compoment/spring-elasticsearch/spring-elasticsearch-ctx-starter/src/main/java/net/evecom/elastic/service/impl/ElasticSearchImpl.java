@@ -24,7 +24,6 @@ import co.elastic.clients.elasticsearch.indices.GetAliasRequest;
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
 import net.evecom.elastic.annotations.ElasticIndex;
-import net.evecom.elastic.annotations.ElasticQueryIndex;
 import net.evecom.elastic.enums.OrderType;
 import net.evecom.elastic.enums.TotalHitRelation;
 import net.evecom.elastic.exception.ElasticException;
@@ -33,7 +32,8 @@ import net.evecom.elastic.indexbuilder.ElasticQueryIndicesBuild;
 import net.evecom.elastic.model.EPageRequest;
 import net.evecom.elastic.model.ESort;
 import net.evecom.elastic.model.EsBaseEntity;
-import net.evecom.elastic.pojo.EsQueryWrapper;
+import net.evecom.elastic.pojo.EObjectQueryWrapper;
+import net.evecom.elastic.pojo.EQueryWrapper;
 import net.evecom.elastic.result.CommonAnalysis;
 import net.evecom.elastic.result.HighLightAnalysis;
 import net.evecom.elastic.result.ResultAnalysis;
@@ -84,36 +84,36 @@ public class ElasticSearchImpl implements ElasticSearch {
     }
 
     @Override
-    public <T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<R> request,
+    public <T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EQueryWrapper eQueryWrapper, EPageRequest<R> request,
                                                                    Class<R> responseType) {
-        return this.searchByObj(esQueryWrapper, request, null, responseType);
+        return this.searchByObj(eQueryWrapper, request, null, responseType);
     }
 
     @Override
-    public <T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<R> request,
+    public <T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EQueryWrapper eQueryWrapper, EPageRequest<R> request,
                                                                    ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild, Class<R> responseType) {
 
-        String[] indices = this.buildIndices(esQueryWrapper, esQueryWrapper.getElasticClass(), elasticQueryIndicesBuild);
+        String[] indices = this.buildIndices(eQueryWrapper, elasticQueryIndicesBuild);
 
-        return this.buildResponse(esQueryWrapper.buildSearchSourceBuilder(), esQueryWrapper.getHighlightBuilder(),
-                indices, esQueryWrapper.getSource(), request, responseType);
+        return this.buildResponse(eQueryWrapper.buildSearchSourceBuilder(), eQueryWrapper.getHighlightBuilder(),
+                indices, eQueryWrapper.getColumn(), request, responseType);
     }
 
     @Override
-    public <T> EPageRequest<Map> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<Map> request) {
-        return this.search2MapByObj(esQueryWrapper, request, null);
+    public <T> EPageRequest<Map> search2MapByObj(EQueryWrapper eQueryWrapper, EPageRequest<Map> request) {
+        return this.search2MapByObj(eQueryWrapper, request, null);
     }
 
     @Override
-    public <T> EPageRequest<Map> search2MapByObj(EsQueryWrapper<T> esQueryWrapper,
+    public <T> EPageRequest<Map> search2MapByObj(EQueryWrapper eQueryWrapper,
                                                  EPageRequest<Map> request,
                                                  ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild) {
 
-        String[] indices = this.buildIndices(esQueryWrapper, esQueryWrapper.getElasticClass(), elasticQueryIndicesBuild);
+        String[] indices = this.buildIndices(eQueryWrapper, elasticQueryIndicesBuild);
 
-        return this.buildResponse(esQueryWrapper.buildSearchSourceBuilder(),
-                esQueryWrapper.getHighlightBuilder(),
-                indices, esQueryWrapper.getSource(),
+        return this.buildResponse(eQueryWrapper.buildSearchSourceBuilder(),
+                eQueryWrapper.getHighlightBuilder(),
+                indices, eQueryWrapper.getColumn(),
                 request, Map.class);
     }
 
@@ -133,10 +133,10 @@ public class ElasticSearchImpl implements ElasticSearch {
     }
 
     @Override
-    public <T> Long countByObj(EsQueryWrapper<T> esQueryWrapper, ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild) {
+    public <T> Long countByObj(EQueryWrapper eQueryWrapper, ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild) {
 
-        String[] indices = this.buildIndices(esQueryWrapper, esQueryWrapper.getElasticClass(), elasticQueryIndicesBuild);
-        return this.countBySearchSource(esQueryWrapper.buildSearchSourceBuilder(), indices);
+        String[] indices = this.buildIndices(eQueryWrapper, elasticQueryIndicesBuild);
+        return this.countBySearchSource(eQueryWrapper.buildSearchSourceBuilder(), indices);
     }
 
 
@@ -235,7 +235,7 @@ public class ElasticSearchImpl implements ElasticSearch {
 
 
     @Override
-    public <T extends EsBaseEntity> void updateByQuery(boolean refresh, EsQueryWrapper<T> queryWrapper, T object) {
+    public <T extends EsBaseEntity> void updateByQuery(boolean refresh, EObjectQueryWrapper<T> queryWrapper, T object) {
         throw new UnsupportedOperationException("暂不支持，感觉没必要");
     }
 
@@ -272,7 +272,7 @@ public class ElasticSearchImpl implements ElasticSearch {
         }
     }
 
-    public void deleteByQuery(boolean refresh, EsQueryWrapper<?> queryWrapper, String... indices) {
+    public void deleteByQuery(boolean refresh, EObjectQueryWrapper<?> queryWrapper, String... indices) {
         if (indices.length == 0) {
             String index = queryWrapper.getElasticClass().index();
             Assert.notNull(index, "不存在索引信息");
@@ -312,12 +312,12 @@ public class ElasticSearchImpl implements ElasticSearch {
 
     @Override
     public <T> SearchResponse executeSearchRequest(
-            EsQueryWrapper<T> esQueryWrapper,
+            EObjectQueryWrapper<T> eObjectQueryWrapper,
             ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild, Aggregation agg) {
-        String[] indices = this.buildIndices(esQueryWrapper, esQueryWrapper.getElasticClass(), elasticQueryIndicesBuild);
+        String[] indices = this.buildIndices(eObjectQueryWrapper, elasticQueryIndicesBuild);
         SearchRequest.Builder searchRequest = new SearchRequest.Builder();
         searchRequest.index(Arrays.asList(indices));
-        Query query = esQueryWrapper.buildSearchSourceBuilder();
+        Query query = eObjectQueryWrapper.buildSearchSourceBuilder();
         searchRequest.query(query);
         searchRequest.size(0);
         searchRequest.aggregations(agg.aggregations());
@@ -355,16 +355,15 @@ public class ElasticSearchImpl implements ElasticSearch {
 
 
     @Override
-    public <T> String[] buildIndices(EsQueryWrapper<T> esQueryWrapper, ElasticQueryIndex elasticQueryIndex, ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild) {
-        Assert.notNull(esQueryWrapper, "Search obj must be not null!");
-        Assert.notNull(elasticQueryIndex, "Search obj must has @ElasticQueryIndex!");
-        String index = elasticQueryIndex.index();
+    public <T> String[] buildIndices(EQueryWrapper eQueryWrapper, ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild) {
+        Assert.notNull(eQueryWrapper, "Search obj must be not null!");
+        String index = eQueryWrapper.getIndex();
         String[] indexs = null;
-        if (elasticQueryIndex.isAlias()) {
+        if (eQueryWrapper.isAlias()) {
             indexs = this.getIndices(index);
         }
         if (elasticQueryIndicesBuild != null) {
-            indexs = elasticQueryIndicesBuild.buildIndices(esQueryWrapper, index, indexs);
+            indexs = elasticQueryIndicesBuild.buildIndices(eQueryWrapper, index, indexs);
         }
         if (indexs == null) {
             indexs = new String[]{index};

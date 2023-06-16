@@ -6,7 +6,7 @@
 package net.evecom.elastic.indexbuilder.defaultbuilder;
 
 import net.evecom.elastic.indexbuilder.ElasticQueryIndicesBuild;
-import net.evecom.elastic.pojo.EsQueryWrapper;
+import net.evecom.elastic.pojo.EQueryWrapper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,9 +24,7 @@ import java.util.List;
 public class ElasticIndicesBuilds {
 
     public static ElasticQueryIndicesBuild timeBuilder(Date begin, Date end) {
-        return (EsQueryWrapper obj, String alias, String[] indices) -> {
-            return timeBuilder(alias, indices, begin, end);
-        };
+        return (EQueryWrapper obj, String alias, String[] indices) -> timeBuilder(alias, indices, begin, end);
     }
 
 

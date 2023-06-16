@@ -23,8 +23,8 @@ public class EPageCondition<T, R> extends EPageRequest<R> {
     private T condition;
 
 
-    public EsQueryWrapper<T> buildQueryWrapper() {
-        return new EsQueryWrapper<>(condition);
+    public EObjectQueryWrapper<T> buildQueryWrapper() {
+        return new EObjectQueryWrapper<>(condition);
     }
 
     public EPageRequest<R> request() {

@@ -5,12 +5,8 @@
  */
 package net.evecom.elastic.pojo;
 
-import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.MatchAllQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.search.Highlight;
 import net.evecom.elastic.annotations.ElasticQueryIndex;
-import net.evecom.elastic.enums.ElasticBoolType;
 import org.springframework.util.Assert;
 
 import java.util.*;
@@ -23,7 +19,7 @@ import java.util.*;
  * @author Japson Huang
  * @version1.0
  */
-public class EsQueryWrapper<T> {
+public class EObjectQueryWrapper<T> extends AbstractQueryWrapper {
 
 
     private static final Map<Class, EInspectation> CACHE_INSPECTATION = new HashMap<>();
@@ -49,14 +45,14 @@ public class EsQueryWrapper<T> {
      */
     private boolean highLight=true;
 
-    public EsQueryWrapper(T obj) {
+    public EObjectQueryWrapper(T obj) {
         Assert.notNull(obj, "obj must not be mull!");
         init(obj.getClass());
         this.searchObj = obj;
         this.includes = eInspectation.getSource();
     }
 
-    public EsQueryWrapper(Class<T> clazz) {
+    public EObjectQueryWrapper(Class<T> clazz) {
         init(clazz);
     }
 
@@ -89,41 +85,19 @@ public class EsQueryWrapper<T> {
     }
 
 
-    /**
-     * 构造查询类
-     * RevisionTrail:(Date/Author/Description)
-     * 2022年01月20日
-     *
-     * @author Japson Huang
-     */
-    public Query buildSearchSourceBuilder() {
-        Query.Builder queryBuilder = new Query.Builder();
-        List<ESearchValue> searchValue = getSearchValue();
-        if (searchValue.isEmpty()) {
-            queryBuilder.matchAll(new MatchAllQuery.Builder().build());
-        } else {
-            Map<ElasticBoolType, List<Query>> queryBuildersMap = convertBean2Query(searchValue);
-            BoolQuery.Builder boolBuilder = new BoolQuery.Builder();
+    @Override
+    public String[] getColumn() {
+        return getElasticClass().source();
+    }
 
-            List<Query> filterBuilder = queryBuildersMap.get(ElasticBoolType.FILTER);
-            if (filterBuilder != null) {
-                boolBuilder.filter(filterBuilder);
-            }
-            List<Query> mustBuilder = queryBuildersMap.get(ElasticBoolType.MUST);
-            if (mustBuilder != null) {
-                boolBuilder.must(mustBuilder);
-            }
-            List<Query> mustNotBuilder = queryBuildersMap.get(ElasticBoolType.MUST_NOT);
-            if (mustNotBuilder != null) {
-                boolBuilder.mustNot(mustNotBuilder);
-            }
-            List<Query> shouldBuilder = queryBuildersMap.get(ElasticBoolType.SHOULD);
-            if (shouldBuilder != null) {
-                boolBuilder.should(shouldBuilder);
-            }
-            queryBuilder.bool(boolBuilder.build());
-        }
-        return queryBuilder.build();
+    @Override
+    public String getIndex() {
+        return getElasticClass().index();
+    }
+
+    @Override
+    public boolean isAlias() {
+        return getElasticClass().isAlias();
     }
 
     public T getSearchObj() {
@@ -143,7 +117,7 @@ public class EsQueryWrapper<T> {
         return highLight;
     }
 
-    public EsQueryWrapper<T> setHighLight(boolean highLight) {
+    public EObjectQueryWrapper<T> setHighLight(boolean highLight) {
         this.highLight = highLight;
         return this;
     }
@@ -152,12 +126,12 @@ public class EsQueryWrapper<T> {
         return eInspectation.getSource();
     }
 
-    public EsQueryWrapper<T> operator(ESearchValue eSearchValue) {
+    public EObjectQueryWrapper<T> operator(ESearchValue eSearchValue) {
         this.searchValues.add(eSearchValue);
         return this;
     }
 
-    public EsQueryWrapper<T> operator(Collection<ESearchValue> eSearchValue) {
+    public EObjectQueryWrapper<T> operator(Collection<ESearchValue> eSearchValue) {
         this.searchValues.addAll(eSearchValue);
         return this;
     }
@@ -196,21 +170,9 @@ public class EsQueryWrapper<T> {
         return result;
     }
 
-
+    @Override
     public Highlight getHighlightBuilder() {
         return highLight ?eInspectation.highlightBuilder():null;
-    }
-
-    private Map<ElasticBoolType, List<Query>> convertBean2Query(Collection<ESearchValue> searchValues) {
-        Map<ElasticBoolType, List<Query>> ans = new HashMap<>();
-        for (ESearchValue searchValue : searchValues) {
-            ElasticBoolType boolType = searchValue.getElasticBoolType();
-            Object value = searchValue.getValue();
-            if (value == null) continue;
-            ans.computeIfAbsent(boolType, s -> new ArrayList<>()).add(new Query(searchValue.objectBuilder().build()));
-        }
-
-        return ans;
     }
 
 

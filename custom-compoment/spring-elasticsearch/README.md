@@ -150,21 +150,32 @@ GET es_test/_search
 */
 @Test
 public void search(){
-    Student student = new Student();
-    student.setName("王");
-    EPageRequest<Student> pageRequest=new EPageCondition<>();
-    pageRequest.setSize(20);
-    EsQueryWrapper<Student> studentEsQueryWrapper = new EsQueryWrapper<>(student)。;
-    EPageRequest<Student> studentEPageRequest = elasticSearch.searchByObj(studentEsQueryWrapper, pageRequest, Student.class);
-}
+        Student student=new Student();
+        student.setName("王");
+        EPageRequest<Student> pageRequest=new EPageCondition<>();
+        pageRequest.setSize(20);
+        EsQueryWrapper<Student> studentEsQueryWrapper=new EsQueryWrapper<>(student)。;
+        EPageRequest<Student> studentEPageRequest=elasticSearch.searchByObj(studentEsQueryWrapper,pageRequest,Student.class);
+        }
+
+@Test
+public void search1(){
+        Student student=new Student();
+        student.setName("王");
+        EPageRequest<Student> pageRequest=new EPageCondition<>();
+        pageRequest.setSize(20);
+        EsQueryWrapper<Student> studentEsQueryWrapper=new EsQueryWrapper<>(student)。;
+        EPageRequest<Student> studentEPageRequest=elasticSearch.searchByObj(studentEsQueryWrapper,pageRequest,Student.class);
+        }
+
 
 @Test
 public void insert(){
-    Student student1 = new Student();
-    student1.setName("李六");
-    student1.setId("12");
-    elasticSearch.insert(true, student1,student2);
-}
+        Student student1=new Student();
+        student1.setName("李六");
+        student1.setId("12");
+        elasticSearch.insert(true,student1,student2);
+        }
 
 @Test
 public void update(){
@@ -295,8 +306,8 @@ GET es_test/_search
 所以在一些接口额外定义了一个特殊的参数方法,如下面的方法中的参数`ElasticQueryIndicesBuild<T>`
 
 ```java
-<T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<R> request,
-                                                            ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild, Class<R> responseType);
+<T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EsQueryWrapper<T> eObjectQueryWrapper,EPageRequest<R> request,
+        ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild,Class<R> responseType);
 ```
 
 ### ElasticQueryIndicesBuild
@@ -312,13 +323,13 @@ public interface ElasticQueryIndicesBuild<T> {
      * RevisionTrail:(Date/Author/Description)
      * 2020年09月25日
      *
-     * @param esQueryWrapper 查询类
+     * @param eObjectQueryWrapper 查询类
      * @param alias          别名
      * @param indices        索引数组
      * @return 索引数组
      * @author Japson Huang
      */
-    String[] buildIndices(EsQueryWrapper<T> esQueryWrapper, String alias, String[] indices);
+    String[] buildIndices(EsQueryWrapper<T> eObjectQueryWrapper, String alias, String[] indices);
 
 }
 ```

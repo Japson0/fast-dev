@@ -12,12 +12,12 @@ import co.elastic.clients.elasticsearch.core.MsearchRequest;
 import co.elastic.clients.elasticsearch.core.MsearchResponse;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
-import net.evecom.elastic.annotations.ElasticQueryIndex;
 import net.evecom.elastic.indexbuilder.ElasticIndexBuild;
 import net.evecom.elastic.indexbuilder.ElasticQueryIndicesBuild;
 import net.evecom.elastic.model.EPageRequest;
 import net.evecom.elastic.model.EsBaseEntity;
-import net.evecom.elastic.pojo.EsQueryWrapper;
+import net.evecom.elastic.pojo.EObjectQueryWrapper;
+import net.evecom.elastic.pojo.EQueryWrapper;
 
 import java.io.IOException;
 import java.util.Map;
@@ -37,23 +37,23 @@ public interface ElasticSearch {
      * RevisionTrail:(Date/Author/Description)
      * 2020年08月05日
      *
-     * @param esQueryWrapper Es查询类
-     * @param request        分页类
+     * @param eQueryWrapper Es查询类
+     * @param request       分页类
      * @author Japson Huang
      */
-    <T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<R> request, Class<R> responseType);
+    <T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EQueryWrapper eQueryWrapper, EPageRequest<R> request, Class<R> responseType);
 
     /**
      * 获取分页数据
      * RevisionTrail:(Date/Author/Description)
      * 2020年08月05日
      *
-     * @param esQueryWrapper           Es查询类
+     * @param eQueryWrapper           Es查询类
      * @param request                  分页类
      * @param elasticQueryIndicesBuild 索引处理器
      * @author Japson Huang
      */
-    <T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<R> request,
+    <T, R extends EsBaseEntity> EPageRequest<R> searchByObj(EQueryWrapper eQueryWrapper, EPageRequest<R> request,
                                                             ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild, Class<R> responseType);
 
     /**
@@ -61,35 +61,34 @@ public interface ElasticSearch {
      * RevisionTrail:(Date/Author/Description)
      * 2020年08月05日
      *
-     * @param esQueryWrapper Es查询类
+     * @param eQueryWrapper Es查询类
      * @param request        分页类
      * @author Japson Huang
      */
-    <T> EPageRequest<Map> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<Map> request);
+    <T> EPageRequest<Map> search2MapByObj(EQueryWrapper eQueryWrapper, EPageRequest<Map> request);
 
     /**
      * 获取分页数据
      * RevisionTrail:(Date/Author/Description)
      * 2020年08月05日
      *
-     * @param esQueryWrapper           Es查询类
+     * @param eQueryWrapper           Es查询类
      * @param request                  分页类
      * @param elasticQueryIndicesBuild 索引处理器
      * @author Japson Huang
      */
-    <T> EPageRequest<Map> search2MapByObj(EsQueryWrapper<T> esQueryWrapper, EPageRequest<Map> request,
-                                                          ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild);
+    <T> EPageRequest<Map> search2MapByObj(EQueryWrapper eQueryWrapper, EPageRequest<Map> request,
+                                          ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild);
 
     /**
      * 根据实体类伤的@ElasticClass注解分析出索引，如果该索引名是别名，则会调用索引分隔器进行查询实际的索引
      * RevisionTrail:(Date/Author/Description)
      * 2019年12月02日
      *
-     * @param esQueryWrapper    查询类
-     * @param elasticQueryIndex see ElasticClass.class
+     * @param eQueryWrapper    查询类
      * @author Japson Huang
      */
-    <T> String[] buildIndices(EsQueryWrapper<T> esQueryWrapper, ElasticQueryIndex elasticQueryIndex, ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild);
+    <T> String[] buildIndices(EQueryWrapper eQueryWrapper, ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild);
 
     /**
      * 搜索总数
@@ -107,7 +106,7 @@ public interface ElasticSearch {
      *
      * @author Japson Huang
      */
-    <T> Long countByObj(EsQueryWrapper<T> esQueryWrapper, ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild);
+    <T> Long countByObj(EQueryWrapper eQueryWrapper, ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild);
 
     /**
      * 新增
@@ -175,7 +174,7 @@ public interface ElasticSearch {
      * @param refresh 是否马上刷新segment
      * @author Japson Huang
      */
-    <T extends EsBaseEntity> void updateByQuery(boolean refresh, EsQueryWrapper<T> queryWrapper, T object);
+    <T extends EsBaseEntity> void updateByQuery(boolean refresh, EObjectQueryWrapper<T> queryWrapper, T object);
 
     /**
      * 根据ID删除对应的索引数据
@@ -195,7 +194,7 @@ public interface ElasticSearch {
      * @param indices      索引列表，如果为空，则会调用queryWrapper上的注解的索引
      * @author Japson Huang
      */
-    void deleteByQuery(boolean refresh, EsQueryWrapper<?> queryWrapper, String... indices);
+    void deleteByQuery(boolean refresh, EObjectQueryWrapper<?> queryWrapper, String... indices);
 
     /**
      * 刷新一次index,
@@ -244,7 +243,7 @@ public interface ElasticSearch {
      * @return
      */
     <T> SearchResponse executeSearchRequest(
-            EsQueryWrapper<T> esQueryWrapper,
+            EObjectQueryWrapper<T> eObjectQueryWrapper,
             ElasticQueryIndicesBuild<T> elasticQueryIndicesBuild, Aggregation aggs);
 
     /**
