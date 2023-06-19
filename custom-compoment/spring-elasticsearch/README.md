@@ -160,12 +160,10 @@ public void search(){
 
 @Test
 public void search1(){
-        Student student=new Student();
-        student.setName("王");
-        EPageRequest<Student> pageRequest=new EPageCondition<>();
-        pageRequest.setSize(20);
-        EsQueryWrapper<Student> studentEsQueryWrapper=new EsQueryWrapper<>(student)。;
-        EPageRequest<Student> studentEPageRequest=elasticSearch.searchByObj(studentEsQueryWrapper,pageRequest,Student.class);
+        ESimpleQueryWrapper esTest = new ESimpleQueryWrapper("es_test",false);
+        ESearchValue eSearchValue=new ESearchValue("name","王", ElasticOperator.MATCH, ElasticBoolType.MUST);
+        esTest.append(eSearchValue);
+        studentEPageRequest=elasticSearch.searchByObj(esTest,pageRequest,Student.class);
         }
 
 
@@ -284,16 +282,30 @@ GET es_test/_search
 
 ## 配置
 
-| 字段         | 是否必填 | 默认值 | 说明                                                         |
-| ------------ | -------- | ------ | ------------------------------------------------------------ |
-| enable       | 否       | true   | 如果为false则不进行ES初始化装配                              |
-| clusterNodes | 是       | 无     | 节点地址，格式为ip:port,一般为查询节点，如果数组则以“，”分割 |
-| protocol     | 是       | http   | 连接协议,暂时只弄了http,如需https的话再说                    |
-| username     | 否       | 无     | 用户名                                                       |
-| password     | 否       | 无     | 密码                                                         |
-| threadCount  | 否       | 10     | 连接池大小                                                   |
+| 字段           | 是否必填 | 默认值  | 说明                                  |
+|--------------|------|------|-------------------------------------|
+| enable       | 否    | true | 如果为false则不进行ES初始化装配                 |
+| clusterNodes | 是    | 无    | 节点地址，格式为ip:port,一般为查询节点，如果数组则以“，”分割 |
+| protocol     | 是    | http | 连接协议,暂时只弄了http,如需https的话再说          |
+| username     | 否    | 无    | 用户名                                 |
+| password     | 否    | 无    | 密码                                  |
+| threadCount  | 否    | 10   | 连接池大小                               |
 
+## ESimpleQueryWrapper
 
+这个用法类似mybatis-plus的QueryWrapper
+
+```java
+public void search(){
+    EPageRequest<Student> pageRequest=new EPageCondition<>();
+    pageRequest.setSize(20);
+    ESimpleQueryWrapper esTest = new ESimpleQueryWrapper("es_test",false);
+    ESearchValue eSearchValue=new ESearchValue("name","王", ElasticOperator.MATCH, ElasticBoolType.MUST);
+    esTest.append(eSearchValue);
+
+    EPageRequest<Student> studentEPageRequest = elasticSearch.searchByObj(esTest, pageRequest, Student.class);
+}
+```
 
 ## 进阶使用
 

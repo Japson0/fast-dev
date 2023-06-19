@@ -35,6 +35,11 @@ public class ESimpleQueryWrapper extends AbstractQueryWrapper {
      */
     private List<ESearchValue> eSearchValues;
 
+    public ESimpleQueryWrapper(String index) {
+        this(index, false, null, null);
+    }
+
+
     public ESimpleQueryWrapper(String index, boolean alias) {
         this(index, alias, null, null);
     }
