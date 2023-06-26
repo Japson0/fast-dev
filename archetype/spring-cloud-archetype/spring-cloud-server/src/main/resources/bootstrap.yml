@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: local  #local是本地配置， dynamic是nacos动态配置
+  application:
+    name: kgap-resolution-server${DEV_SUFFIX:}
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #是否启用StatFilter默认值true
+
+server:
+  port: 8080   #固定端口

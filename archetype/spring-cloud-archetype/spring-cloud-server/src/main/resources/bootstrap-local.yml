@@ -1,0 +1,103 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 172.16.40.239:31011
+      config:
+        enabled: true
+        namespace: 2aab6da4-a6b9-40fe-9396-293972149c93
+      discovery:
+        namespace: 26b15921-ad2a-060a-1533-f9c4cc836fdc
+  datasource:
+    url: jdbc:mysql://172.16.40.241:3306/kg_soa
+    username: kgap
+    password: Kgap@0591*
+    hikari:
+      minimum-idle: 10   #最小连接数
+      maximum-pool-size: 20    #最大连接数
+      max-lifetime: 700000 #最长连接事件 一般比数据库的最长连接事件少机秒，
+      idle-timeout: 600000  #连接空闲事件
+      connection-timeout: 25000 #连接超时
+  redis:
+    host: 172.16.40.238
+    port: 31002
+    password: evecom@123
+    #集群模式为下面配置
+  #    cluster:
+  #      nodes: ip:port,ip:port,ip:port
+  cache:
+    type: REDIS
+    redis:
+      cache-null-values: false
+      time-to-live: 600000ms
+      use-key-prefix: true
+      key-prefix: ${spring.application.name}
+    cache-names: ONE_DAY#86400,ONE_WEEK#604800,ONE_MONTH#2592000,HALF_YEAR#15768000,ONE_YEAR#31536000
+  data:
+    mongodb:
+      host: 172.16.40.240
+      username: zingg
+      password: zingg
+      database: zingg
+      port: 31393
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    jdbc-type-for-null: 'null'
+  mapper-locations: classpath*:/mapper/*.xml
+  global-config:
+    db-config:
+      update-strategy: not_null
+      insert-strategy: not_null
+evecom:
+  graph-type: nebula
+  resttemplate:
+    read-time-out: 5000
+  swagger:
+    enable: true
+  product:
+    debug:
+      enable: false
+      user:
+        tenant-id: 11
+        username: kgap_hb
+        admin: false
+    ignore-tenant-table:
+      - KGAP_ENTITY_RESOLUTION_HISTORY
+      - KGAP_RESOLUTION_TASK_INFO
+      - KGAP_ENTITY_RESOLUTION_CLUSTER
+  hadoop:
+    auth-mode: kerberos
+    kerberos:
+      key-tab-path: C:\Users\HP\kerberos\hekai
+      krb-conf-path: C:\Users\HP\kerberos\krb5.conf
+      principal: hekai/client-179.edp.com@EDP.COM
+    hdfs:
+      mode: cluster
+      cluster:
+        name-node:
+          - cn-176.edp.com:8020
+          - cn-177.edp.com:8020
+      root-path: /kgap
+dubbo:
+  application:
+    id: ${spring.application.name}
+  protocol:
+    name: dubbo
+    port: -1
+  consumer:
+    check: false
+  provider:
+    version: 2.0.0${DEV_SUFFIX:}
+  registry:
+    address: nacos://${spring.cloud.nacos.server-addr}
+    parameters:
+      namespace: ${spring.cloud.nacos.discovery.namespace}
+
+zingg:
+  ip: 172.16.40.179
+  user: hekai
+  pass: hekai@123
+  home: /home/hekai/soft/zingg/zingg-0.3.4-SNAPSHOT
+  input:
+    url: 172.16.40.239:19459
+

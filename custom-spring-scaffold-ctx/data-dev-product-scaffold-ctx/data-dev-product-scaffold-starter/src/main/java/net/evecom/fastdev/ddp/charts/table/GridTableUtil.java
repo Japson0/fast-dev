@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see --添加类中引用的相关类和接口
  * @since Version 1.0
  */
+@Deprecated
 public class GridTableUtil {
 
     /**

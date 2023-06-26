@@ -15,6 +15,7 @@ import java.util.Collection;
  * @author Nick Lv
  * @created 2017 /7/7 11:20
  */
+@Deprecated
 public class GridData<T> implements Serializable {
     /**
      * 数据

@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_SERVER_ADD}
+        namespace: ${NACOS_CONFIG_NAMESPACE}
+        shared-configs:
+          - mybatis-plus.yaml
+          - datasource.yaml
+          - logging.yaml
+          - spring-cache.yaml
+          - spring-common.yaml
+          - evecom-conf.yaml
+          - dubbo.yaml
+        file-extension: yaml
+        group: dynamic
+      discovery:
+        server-addr: ${NACOS_SERVER_ADD}
+        namespace: ${NACOS_DISCOVERY_NAMESPACE}
+jasypt:
+  encryptor:
+    password: 请自定义密钥，避免泄露
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator

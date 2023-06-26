@@ -16,6 +16,8 @@ import java.io.Serializable;
  * @see --添加类中引用的相关类和接口
  * @since Version 1.0
  */
+@Deprecated
+
 public class GridTableInfo implements Serializable {
     /**
      * 中文名.
