@@ -17,6 +17,7 @@ import java.util.Collection;
  * @author Japson Huang
  * @version1.0
  */
+@Deprecated
 public class ChartsResponse<T> extends RestResponse<T> {
 
 
