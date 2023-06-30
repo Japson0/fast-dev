@@ -1,5 +1,28 @@
 # 快速开发框架Spring-Cloud脚手架
 
+## 微服务架构技术栈
+
+配置中心与服务发现：NACOS
+
+RPC框架：Dubbo
+
+缓存中间件：RESID
+
+SpringCloud版本：Hoxton.SR12
+
+### 快速开始
+
+#### demo工程
+
+http://172.16.40.153:4999/web/#/25/178
+
+#### 工程与包说明
+
+- [脚手架配置](http://172.16.40.153:4999/web/#/25/203)，讲解了如何快速创建cloud工程，以及对应的包目录信息。
+
+- [NACOS动态配置](http://172.16.40.153:4999/web/#/25/226)
+  ，解释了为何脚手架项目下的Spring配置为何分为`bootstrap.yml`、`boostrap-local.yml`、`bootstrap-dynamic.yml`。
+
 ## SSM架构整体流程
 
 ### controller定义
