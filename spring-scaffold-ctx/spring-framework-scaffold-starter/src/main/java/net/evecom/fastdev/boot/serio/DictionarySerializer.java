@@ -28,7 +28,7 @@ import java.util.Map;
  * 2021年11月13日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class DictionarySerializer extends DicSerializerFormat<Object> implements ContextualSerializer {
     /**

@@ -14,7 +14,7 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME
  * 2022年10月12日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class HdfsClientFactory implements FactoryBean<HdfsClient> {
 

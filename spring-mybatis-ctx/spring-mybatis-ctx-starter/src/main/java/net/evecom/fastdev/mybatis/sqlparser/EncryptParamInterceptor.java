@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2020年09月28日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Intercepts({
         @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),

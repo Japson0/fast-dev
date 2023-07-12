@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 2023年06月21日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Mapper
 public interface DemoDAO extends BaseMapperExtend<DemoEntity> {

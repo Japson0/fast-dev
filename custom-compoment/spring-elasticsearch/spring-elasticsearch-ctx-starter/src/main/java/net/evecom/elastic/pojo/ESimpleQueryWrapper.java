@@ -11,7 +11,7 @@ import java.util.List;
  * 2023年06月15日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class ESimpleQueryWrapper extends AbstractQueryWrapper {
 

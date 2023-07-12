@@ -20,7 +20,7 @@ import com.baomidou.mybatisplus.extension.injector.methods.InsertBatchSomeColumn
 
 /**
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  * @see com.baomidou.mybatisplus.extension.injector.methods.InsertBatchSomeColumn
  * 完全就是InsertBatchSomeColumn，为什么再写一个。
  * 因为InsertBatchSomeColumn是读取List参数，这里改写Collection:</B></P>

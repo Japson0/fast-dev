@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.ISqlSegment;
  * 2021年11月08日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class StrSql implements ISqlSegment {
     /**

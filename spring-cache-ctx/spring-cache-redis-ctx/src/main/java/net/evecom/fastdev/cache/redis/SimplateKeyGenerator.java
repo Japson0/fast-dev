@@ -22,7 +22,7 @@ import java.util.Set;
  * 2019年06月19日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class SimplateKeyGenerator implements KeyGenerator {
 

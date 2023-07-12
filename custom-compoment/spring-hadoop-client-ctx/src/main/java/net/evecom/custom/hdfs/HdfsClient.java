@@ -22,7 +22,7 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.FS_DEFAULT_NAME
  * 2022年10月11日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class HdfsClient implements Closeable, DisposableBean {
 

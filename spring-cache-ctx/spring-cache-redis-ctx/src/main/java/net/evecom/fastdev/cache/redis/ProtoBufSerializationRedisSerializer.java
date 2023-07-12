@@ -18,7 +18,7 @@ import org.springframework.data.redis.serializer.SerializationException;
  * 2021年08月14日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class ProtoBufSerializationRedisSerializer implements RedisSerializer<Object> {
     /**

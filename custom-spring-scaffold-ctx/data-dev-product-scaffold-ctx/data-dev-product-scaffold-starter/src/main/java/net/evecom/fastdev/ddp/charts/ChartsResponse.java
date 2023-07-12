@@ -15,7 +15,7 @@ import java.util.Collection;
  * 2022年08月24日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Deprecated
 public class ChartsResponse<T> extends RestResponse<T> {

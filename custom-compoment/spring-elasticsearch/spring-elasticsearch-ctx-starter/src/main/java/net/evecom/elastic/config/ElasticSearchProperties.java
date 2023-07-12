@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 2020年08月04日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @ConfigurationProperties(prefix = "elastic")
 public class ElasticSearchProperties {

@@ -10,7 +10,7 @@ import java.util.List;
  * 2022年10月12日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @ConfigurationProperties(prefix = "evecom.hadoop.hdfs")
 public class HdfsProperties {

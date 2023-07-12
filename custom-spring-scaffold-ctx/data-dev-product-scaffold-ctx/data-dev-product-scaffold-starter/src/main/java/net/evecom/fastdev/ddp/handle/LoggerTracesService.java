@@ -9,7 +9,7 @@ import org.apache.skywalking.apm.toolkit.trace.TraceContext;
  * 2022年09月29日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class LoggerTracesService implements TraceService {
     @Override

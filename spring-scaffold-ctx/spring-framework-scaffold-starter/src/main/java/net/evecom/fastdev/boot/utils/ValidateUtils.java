@@ -16,7 +16,7 @@ import java.util.Set;
  * 2021年12月07日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class ValidateUtils {
 

@@ -17,7 +17,7 @@ import static net.evecom.fastdev.ddp.enums.TableColumnName.*;
  * 2022年11月17日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public abstract class AbstractEntity<T extends Serializable>
         implements net.evecom.fastdev.mybatis.annotation.BaseEntity<T> {

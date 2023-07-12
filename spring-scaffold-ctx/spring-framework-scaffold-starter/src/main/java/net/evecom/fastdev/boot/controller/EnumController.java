@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2021年07月27日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @RequestMapping("enums")
 @Api(tags = "枚举类查询")

@@ -17,7 +17,7 @@ import java.util.HashSet;
  * 2022年08月25日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class DataDevTenantHandler implements TenantLineHandler {
 

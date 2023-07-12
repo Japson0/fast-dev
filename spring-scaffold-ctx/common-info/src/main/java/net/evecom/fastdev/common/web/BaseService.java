@@ -15,7 +15,7 @@ import java.io.Serializable;
  * 2021年12月03日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public interface BaseService<ID extends Serializable, R extends BaseEntity<ID>> extends BaseService4DTO<ID, R, R> {
 

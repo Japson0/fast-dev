@@ -8,7 +8,7 @@ import net.evecom.fastdev.common.model.ComEnum;
  * 2022年11月24日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public enum Require implements ComEnum<Integer> {
 

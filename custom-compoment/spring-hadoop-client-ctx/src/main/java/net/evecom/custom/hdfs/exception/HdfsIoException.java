@@ -9,7 +9,7 @@ import net.evecom.fastdev.common.exception.CommonException;
  * 2022年10月12日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class HdfsIoException extends CommonException {
 

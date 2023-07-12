@@ -21,7 +21,7 @@ import java.util.List;
  * 2021年12月09日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class DictionaryDeserializer extends DicDeserializerFormat<Object> {
 

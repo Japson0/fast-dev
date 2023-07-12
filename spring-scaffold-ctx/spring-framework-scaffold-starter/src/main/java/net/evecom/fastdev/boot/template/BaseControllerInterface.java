@@ -18,7 +18,7 @@ import java.io.Serializable;
  * 2022年01月04日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public interface BaseControllerInterface<ID extends Serializable, T extends BaseEntity<ID>, DTO extends T> {
 

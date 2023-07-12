@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * 2023年06月21日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Service
 public class DemoServiceImpl extends BaseServiceImpl<Long, DemoEntity> implements DemoService {

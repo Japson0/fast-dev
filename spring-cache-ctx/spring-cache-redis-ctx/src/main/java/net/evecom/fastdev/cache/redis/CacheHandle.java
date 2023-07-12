@@ -14,7 +14,7 @@ import org.springframework.cache.CacheManager;
  * 2021年11月23日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class CacheHandle {
 

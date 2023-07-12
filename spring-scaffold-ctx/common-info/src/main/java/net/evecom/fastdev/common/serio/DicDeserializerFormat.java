@@ -17,7 +17,7 @@ import java.io.IOException;
  * 2021年12月09日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public abstract class DicDeserializerFormat<T> extends JsonDeserializer<T> {
 

@@ -6,7 +6,7 @@ package net.evecom.elastic.enums;
  * 2023年01月05日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public enum OrderType {
 

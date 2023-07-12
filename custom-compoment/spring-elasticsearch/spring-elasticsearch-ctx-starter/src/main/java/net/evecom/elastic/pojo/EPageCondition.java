@@ -13,7 +13,7 @@ import net.evecom.elastic.model.EPageRequest;
  * 2022年01月24日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class EPageCondition<T, R> extends EPageRequest<R> {
 

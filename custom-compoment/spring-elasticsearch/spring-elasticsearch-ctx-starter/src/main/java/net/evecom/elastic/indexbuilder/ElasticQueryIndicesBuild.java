@@ -13,7 +13,7 @@ import net.evecom.elastic.pojo.EQueryWrapper;
  * 2019年05月29日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @FunctionalInterface
 public interface ElasticQueryIndicesBuild<T> {

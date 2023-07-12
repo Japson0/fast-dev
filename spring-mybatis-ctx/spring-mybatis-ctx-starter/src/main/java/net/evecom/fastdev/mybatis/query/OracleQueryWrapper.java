@@ -20,7 +20,7 @@ import net.evecom.fastdev.mybatis.util.EscapeUtil;
  * 2021年11月08日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class OracleQueryWrapper<T> extends QueryWrapper<T> {
 

@@ -12,7 +12,7 @@ import java.util.function.Consumer;
  * 2023年06月14日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public abstract class EOperateFunc<T extends ObjectBuilder<?>> implements Consumer<ObjectBuilder<? extends QueryVariant>> {
 
