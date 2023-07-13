@@ -45,7 +45,7 @@ import java.util.List;
  * 2019年05月21日 C    REATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Configuration
 @EnableConfigurationProperties(MybatisCtxProperties.class)

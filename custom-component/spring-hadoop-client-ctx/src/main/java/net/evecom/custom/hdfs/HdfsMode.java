@@ -6,7 +6,7 @@ package net.evecom.custom.hdfs;
  * 2022年10月12日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public enum HdfsMode {
 

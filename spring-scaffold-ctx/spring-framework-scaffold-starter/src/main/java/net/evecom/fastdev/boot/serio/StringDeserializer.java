@@ -19,7 +19,7 @@ import java.io.IOException;
  * 2019年07月25日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class StringDeserializer extends StdDeserializer<String> {
 

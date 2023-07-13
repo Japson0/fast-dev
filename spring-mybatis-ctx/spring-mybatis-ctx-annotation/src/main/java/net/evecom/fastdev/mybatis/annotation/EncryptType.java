@@ -11,7 +11,7 @@ package net.evecom.fastdev.mybatis.annotation;
  * 2020年10月12日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public enum EncryptType {
 

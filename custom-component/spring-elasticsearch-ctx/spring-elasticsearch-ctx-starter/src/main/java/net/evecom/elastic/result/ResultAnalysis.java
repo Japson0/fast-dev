@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
  * 2023年06月14日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public interface ResultAnalysis<R> extends BiFunction<R, Hit<R>, R> {
 }

@@ -34,7 +34,7 @@ import java.security.cert.CertificateFactory;
  * 2022年11月08日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class RestClientFactory implements FactoryBean<ElasticsearchClient>, InitializingBean, DisposableBean {
 

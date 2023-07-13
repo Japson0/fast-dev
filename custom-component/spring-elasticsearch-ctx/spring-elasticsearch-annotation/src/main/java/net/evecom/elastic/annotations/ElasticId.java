@@ -6,7 +6,7 @@ package net.evecom.elastic.annotations;
  * 2023年01月05日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Deprecated
 public @interface ElasticId {

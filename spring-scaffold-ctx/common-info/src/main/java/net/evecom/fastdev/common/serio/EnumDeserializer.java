@@ -20,7 +20,7 @@ import java.util.Map;
  * 2021年11月03日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class EnumDeserializer extends DicDeserializerFormat<ComEnum> implements ContextualDeserializer {
 

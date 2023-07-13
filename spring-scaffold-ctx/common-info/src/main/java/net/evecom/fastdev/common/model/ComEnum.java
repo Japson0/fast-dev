@@ -15,7 +15,7 @@ import java.io.Serializable;
  * 2020年08月18日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @JsonSerialize(using = EnumSerializer.class)
 @JsonDeserialize(using = EnumDeserializer.class)

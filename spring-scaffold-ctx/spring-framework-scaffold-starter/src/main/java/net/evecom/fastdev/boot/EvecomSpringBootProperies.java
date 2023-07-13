@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 2020年10月16日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @ConfigurationProperties(prefix = "evecom")
 public class EvecomSpringBootProperies {

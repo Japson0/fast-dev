@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * 2020年09月11日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

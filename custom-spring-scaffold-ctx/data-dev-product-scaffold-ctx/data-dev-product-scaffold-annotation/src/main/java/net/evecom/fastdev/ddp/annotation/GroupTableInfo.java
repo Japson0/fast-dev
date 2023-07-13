@@ -6,7 +6,7 @@ package net.evecom.fastdev.ddp.annotation;
  * 2022年08月25日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Deprecated
 public @interface GroupTableInfo {

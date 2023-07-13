@@ -26,7 +26,7 @@ import java.util.function.Predicate;
  * 2019年05月22日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @ApiModel(value = "分页数据结构")
 public class PageConditionDTO<P> extends PageConditionQuery<P> implements IPage {

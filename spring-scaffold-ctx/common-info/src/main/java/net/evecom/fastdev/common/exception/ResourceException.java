@@ -11,7 +11,7 @@ package net.evecom.fastdev.common.exception;
  * 2020年12月08日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class ResourceException extends CommonException {
 

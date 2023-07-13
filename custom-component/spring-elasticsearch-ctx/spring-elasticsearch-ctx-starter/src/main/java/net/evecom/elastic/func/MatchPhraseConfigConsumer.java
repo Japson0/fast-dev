@@ -16,7 +16,7 @@ import net.evecom.elastic.utils.EmptyUtils;
  * 2022年03月30日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class MatchPhraseConfigConsumer extends EOperateFunc<MatchPhrasePrefixQuery.Builder> {
 

@@ -11,7 +11,7 @@ package net.evecom.fastdev.common.annotation;
  * 2020年09月02日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public interface Insert {
 }

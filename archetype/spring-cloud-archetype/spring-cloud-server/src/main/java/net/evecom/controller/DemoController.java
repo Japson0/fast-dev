@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 2023年06月21日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @RestController
 @RequestMapping("demo")

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * 2023年06月14日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @EnableConfigurationProperties(ElasticSearchProperties.class)
 @Configuration

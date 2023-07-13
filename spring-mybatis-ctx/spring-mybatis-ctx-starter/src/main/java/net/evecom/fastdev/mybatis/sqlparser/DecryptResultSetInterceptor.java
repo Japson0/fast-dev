@@ -15,7 +15,7 @@ import java.util.List;
  * 2020年10月14日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Intercepts({
         @Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class})

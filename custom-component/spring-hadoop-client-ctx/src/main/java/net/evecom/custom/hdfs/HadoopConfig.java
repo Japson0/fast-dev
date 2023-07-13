@@ -16,7 +16,7 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.*;
  * 2022年10月12日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Configuration
 @EnableConfigurationProperties({HadoopProperties.class, HdfsProperties.class})

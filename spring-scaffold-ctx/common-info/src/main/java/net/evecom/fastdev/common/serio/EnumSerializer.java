@@ -12,7 +12,7 @@ import java.io.IOException;
  * 2020年06月22日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class EnumSerializer extends DicSerializerFormat<ComEnum> {
 

@@ -6,7 +6,7 @@ package net.evecom.fastdev.common.exception;
  * 2022年09月18日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class NotUniqueException extends CommonException {
 

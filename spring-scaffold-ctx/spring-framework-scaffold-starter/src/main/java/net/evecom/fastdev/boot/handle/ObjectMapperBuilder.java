@@ -26,7 +26,7 @@ import java.util.Map;
  * 2022年08月23日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class ObjectMapperBuilder {
 

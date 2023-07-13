@@ -23,7 +23,7 @@ import java.util.List;
  * 2021年11月16日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class EvecomSpringBootMvcSpringConfig implements WebMvcConfigurer {
 

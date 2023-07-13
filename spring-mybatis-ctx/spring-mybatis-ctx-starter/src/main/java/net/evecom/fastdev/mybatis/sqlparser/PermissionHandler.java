@@ -13,7 +13,7 @@ import java.util.Collection;
  * 2020年07月06日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @FunctionalInterface
 public interface PermissionHandler {

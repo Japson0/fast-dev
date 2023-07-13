@@ -11,7 +11,7 @@ package net.evecom.elastic.enums;
  * 2019年05月24日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public enum ElasticOperator {
 

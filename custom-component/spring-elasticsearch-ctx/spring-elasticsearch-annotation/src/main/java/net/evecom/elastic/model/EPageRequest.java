@@ -16,7 +16,7 @@ import java.util.List;
  * 2019年11月29日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class EPageRequest<R> implements Serializable {
 

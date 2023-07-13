@@ -17,7 +17,7 @@ import java.util.List;
  * 2022年11月24日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class BaseService4DTOImpl<ID extends Serializable, R extends BaseEntity<ID>, DTO extends R> implements BaseService4DTO<ID, R, DTO> {
 

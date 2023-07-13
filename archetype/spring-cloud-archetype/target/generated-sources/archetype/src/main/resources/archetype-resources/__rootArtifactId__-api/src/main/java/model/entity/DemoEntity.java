@@ -11,7 +11,7 @@ import net.evecom.fastdev.ddp.model.DataEntity;
  * 2023年06月21日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class DemoEntity extends DataEntity {
     @Override

@@ -17,7 +17,7 @@ import java.util.Collection;
  * 2020年07月02日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public interface BaseMapperExtend<T> extends BaseMapper<T> {
 

@@ -12,7 +12,7 @@ import org.apache.dubbo.rpc.*;
  * 2022年08月30日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @Activate(group = {CommonConstants.PROVIDER, CommonConstants.CONSUMER})
 public class DubboRpcUserContentFilter implements Filter {

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 2021年11月23日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @RequestMapping("cacheManage")
 @ResponseBody

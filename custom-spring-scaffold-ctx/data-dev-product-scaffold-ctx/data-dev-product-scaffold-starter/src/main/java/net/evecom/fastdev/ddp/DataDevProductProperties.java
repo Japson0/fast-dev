@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 2022年08月24日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 @ConfigurationProperties(prefix = "evecom.product")
 public class DataDevProductProperties {

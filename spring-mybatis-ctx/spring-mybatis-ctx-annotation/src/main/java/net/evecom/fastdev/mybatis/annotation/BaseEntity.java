@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 2020年07月20日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public interface BaseEntity<T extends Serializable> extends Serializable {
 

@@ -11,7 +11,7 @@ import java.util.Set;
  * 2022年08月24日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class UserInfo implements Serializable {
 

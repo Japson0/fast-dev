@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * 2020年07月06日 CREATE
  *
  * @author Japson Huang
- * @version1.0
+ * @version 1.0
  */
 public class PermissionData {
 
