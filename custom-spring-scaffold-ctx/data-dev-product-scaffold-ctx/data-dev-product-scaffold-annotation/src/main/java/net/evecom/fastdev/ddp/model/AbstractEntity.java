@@ -79,18 +79,6 @@ public abstract class AbstractEntity<T extends Serializable>
     @TableField(value = MODIFIER_NAME, insertStrategy = FieldStrategy.NOT_NULL, updateStrategy = FieldStrategy.NOT_NULL, fill = FieldFill.INSERT_UPDATE)
     @JsonIgnore
     private String modifierName;
-    /**
-     * Create org name
-     */
-    @JsonIgnore
-    @TableField(value = CREATE_ORG_NAME)
-    private String createOrgName;
-    /**
-     * Modify org name
-     */
-    @JsonIgnore
-    @TableField(value = MODIFY_ORG_NAME)
-    private String modifyOrgName;
 
     public Date getTimeCreated() {
         return timeCreated;
@@ -154,21 +142,5 @@ public abstract class AbstractEntity<T extends Serializable>
 
     public void setModifierName(String modifierName) {
         this.modifierName = modifierName;
-    }
-
-    public String getCreateOrgName() {
-        return createOrgName;
-    }
-
-    public void setCreateOrgName(String createOrgName) {
-        this.createOrgName = createOrgName;
-    }
-
-    public String getModifyOrgName() {
-        return modifyOrgName;
-    }
-
-    public void setModifyOrgName(String modifyOrgName) {
-        this.modifyOrgName = modifyOrgName;
     }
 }

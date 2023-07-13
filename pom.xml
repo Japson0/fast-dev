@@ -14,27 +14,23 @@
     <artifactId>fast-dev</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
+
     <modules>
-        <module>spring-mybatis-ctx/spring-mybatis-ctx-starter</module>
-        <module>spring-mybatis-ctx/spring-mybatis-ctx-annotation</module>
-        <module>spring-cache-ctx/spring-cache-redis-ctx</module>
+        <module>spring-mybatis-ctx</module>
+        <module>spring-cache-ctx</module>
         <module>spring-scaffold-ctx/common-info</module>
-        <module>spring-swagger-ctx/spring-swagger-ctx-starter</module>
-        <module>spring-swagger-ctx/spring-swagger-ctx-annotation</module>
+        <module>spring-swagger-ctx</module>
         <module>spring-scaffold-ctx/spring-framework-scaffold-starter</module>
         <module>spring-scaffold-ctx/spring-framework-cloud-scaffold-starter</module>
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-starter</module>
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-annotation</module>
-        <module>custom-spring-scaffold-ctx/data-dev.product-tool</module>
-        <module>custom-compoment/spring-hadoop-client-ctx</module>
-        <module>custom-compoment/spring-minio-client-ctx</module>
-        <module>custom-compoment/spring-elasticsearch</module>
+        <module>custom-component</module>
     </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <fast-dev.version>1.0-RELEASE</fast-dev.version>
+        <fast-dev.version>2.0-SNAPSHOT</fast-dev.version>
         <revision>${fast-dev.version}</revision>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <mybatis-mate.version>1.2.5</mybatis-mate.version>
@@ -48,6 +44,8 @@
         <bcprov.version>1.69</bcprov.version>
         <hadoop.version>3.3.4</hadoop.version>
         <okhttp3.version>4.8.1</okhttp3.version>
+        <spring-cloud-dependencies.version>Hoxton.SR12</spring-cloud-dependencies.version>
+        <spring-cloud-alibaba-dependencies.version>2.2.8.RELEASE</spring-cloud-alibaba-dependencies.version>
     </properties>
 
     <dependencyManagement>
@@ -69,7 +67,7 @@
 
             <dependency>
                 <groupId>net.evecom</groupId>
-                <artifactId>spring-mybaits-ctx-annotation</artifactId>
+                <artifactId>spring-mybatis-ctx-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
@@ -86,7 +84,6 @@
                 <version>${fast-dev.version}</version>
             </dependency>
 
-
             <dependency>
                 <groupId>net.evecom</groupId>
                 <artifactId>spring-framework-scaffold-starter</artifactId>
@@ -98,11 +95,6 @@
                 <version>${fast-dev.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>net.evecom</groupId>
-                <artifactId>spring-minio-client-ctx</artifactId>
-                <version>${fast-dev.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>net.evecom</groupId>
@@ -122,11 +114,6 @@
                 <version>${fast-dev.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>net.evecom</groupId>
-                <artifactId>spring-hadoop-client-ctx</artifactId>
-                <version>${fast-dev.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -194,25 +181,6 @@
                 <version>${bcprov.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.apache.hadoop</groupId>
-                <artifactId>hadoop-hdfs</artifactId>
-                <version>${hadoop.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.hadoop</groupId>
-                <artifactId>hadoop-client</artifactId>
-                <version>${hadoop.version}</version>
-            </dependency>
-
-
-            <dependency>
-                <groupId>org.apache.parquet</groupId>
-                <artifactId>parquet-hadoop</artifactId>
-                <version>1.10.1</version>
-                <optional>true</optional>
-            </dependency>
 
         </dependencies>
 

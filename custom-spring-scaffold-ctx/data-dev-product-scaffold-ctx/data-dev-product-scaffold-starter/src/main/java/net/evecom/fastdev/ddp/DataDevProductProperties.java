@@ -21,7 +21,12 @@ public class DataDevProductProperties {
     /**
      * 是否开启租户
      */
-    private boolean enableTenant=true;
+    private boolean enableTenant = true;
+
+    /**
+     * 是否开启模块注入。
+     */
+    private boolean enableModule = false;
     /**
      * 租户忽略的表信息
      */
@@ -50,6 +55,14 @@ public class DataDevProductProperties {
 
     public void setIgnoreTenantTable(String[] ignoreTenantTable) {
         this.ignoreTenantTable = ignoreTenantTable;
+    }
+
+    public boolean isEnableModule() {
+        return enableModule;
+    }
+
+    public void setEnableModule(boolean enableModule) {
+        this.enableModule = enableModule;
     }
 
     /**

@@ -8,10 +8,12 @@ import net.evecom.fastdev.ddp.filter.debug.DebugUserInterceptor;
 import net.evecom.fastdev.ddp.handle.AutoMetaObjectHandle;
 import net.evecom.fastdev.ddp.handle.DataDevTenantHandler;
 import net.evecom.fastdev.ddp.handle.LoggerTracesService;
+import net.evecom.fastdev.ddp.handle.ModuleBeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -73,4 +75,16 @@ public class DataDevProductConfig implements WebMvcConfigurer {
         return new LoggerTracesService();
     }
 
+    /**
+     * 模块注入处理类
+     * RevisionTrail:(Date/Author/Description)
+     * 2023年07月03日
+     *
+     * @author Japson Huang
+     */
+    @ConditionalOnProperty(prefix = "evecom.product", name = "enable-module", havingValue = "true")
+    @Bean
+    public ModuleBeanPostProcessor moduleBeanPostProcessor(ApplicationContext applicationContext) {
+        return new ModuleBeanPostProcessor(applicationContext);
+    }
 }

@@ -15,8 +15,6 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <spring-cloud-dependencies.version>Hoxton.SR12</spring-cloud-dependencies.version>
-        <spring-cloud-alibaba-dependencies.version>2.2.8.RELEASE</spring-cloud-alibaba-dependencies.version>
     </properties>
 
     <dependencies>
