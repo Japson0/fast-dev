@@ -19,10 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -73,6 +70,16 @@ public class JacksonUtils {
             objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
             objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         }
+    }
+
+    public static void main(String[] args) {
+        List<String> id = new ArrayList<>();
+        id.add("1");
+        id.add("sad");
+        String join = String.join(",", id);
+        System.out.println(join);
+        JacksonUtils.toJson(id);
+        System.out.println(id);
     }
 
     /**
@@ -174,9 +181,7 @@ public class JacksonUtils {
      * @author Timer He
      */
     public static <T> Map<String, T> toMap(String jsonString) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return mapper.readValue(jsonString, Map.class);
+        return objectMapper.readValue(jsonString, Map.class);
     }
 
     /**
