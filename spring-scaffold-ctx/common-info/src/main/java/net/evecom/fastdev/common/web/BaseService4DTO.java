@@ -26,6 +26,26 @@ public interface BaseService4DTO<ID extends Serializable, R extends BaseEntity<I
      */
     PageConditionQuery<? extends DTO> getPage(PageConditionQuery<?> pageConditionDTO);
 
+    /**
+     * 新增或更新
+     * 如果表不存在，则新增，存在则更新
+     * RevisionTrail:(Date/Author/Description)
+     * 2023年07月18日
+     *
+     * @author Japson Huang
+     */
+    int addOrUpdate(DTO entity);
+
+    /**
+     * 新增或更新
+     * 如果表不存在，则新增，存在则更新
+     * RevisionTrail:(Date/Author/Description)
+     * 2023年07月18日
+     *
+     * @param allColumns 是否全覆盖
+     * @author Japson Huang
+     */
+    int addOrUpdate(DTO entity, boolean allColumns);
 
     /**
      * 根据主键查询信息

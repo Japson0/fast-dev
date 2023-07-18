@@ -45,6 +45,25 @@ public class BaseService4DTOImpl<ID extends Serializable, R extends BaseEntity<I
     }
 
     @Override
+    public int addOrUpdate(DTO entity) {
+        return addOrUpdate(entity, false);
+    }
+
+    @Override
+    public int addOrUpdate(DTO entity, boolean allColumns) {
+
+        if (entity.getId() == null) {
+            return addById(entity);
+        } else {
+            int i;
+            if ((i = updateById(entity, allColumns)) == 0) {
+                return addById(entity);
+            }
+            return i;
+        }
+    }
+
+    @Override
     public R getById(ID id) {
         Assert.notNull(id, "id must not be null");
         return baseMapper.selectById(id);

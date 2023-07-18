@@ -19,4 +19,5 @@ import java.io.Serializable;
  */
 public interface BaseService<ID extends Serializable, R extends BaseEntity<ID>> extends BaseService4DTO<ID, R, R> {
 
+
 }
