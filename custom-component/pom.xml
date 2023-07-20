@@ -40,9 +40,10 @@
 
             <dependency>
                 <groupId>net.evecom</groupId>
-                <artifactId>dolphinscheduler-core</artifactId>
+                <artifactId>dolphinscheduler-job-core</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
+
         </dependencies>
 
     </dependencyManagement>

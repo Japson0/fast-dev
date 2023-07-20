@@ -1,4 +1,4 @@
-package net.evecom.dolphinscheduler.core;
+package net.evecom.dolphinscheduler.cache.common;
 
 import java.util.Map;
 

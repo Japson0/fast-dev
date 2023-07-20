@@ -1,8 +1,8 @@
 package net.evecom.dolphinscheduler.core;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.evecom.dolphinscheduler.cache.ParamsHandle;
+import net.evecom.dolphinscheduler.cache.common.JobInfo;
+import net.evecom.dolphinscheduler.cache.common.ParamsCache;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class ExecuteJob implements ApplicationRunner {
     /**
      * 缓存处理器
      */
-    private final ParamsHandle paramsHandle;
+    private final ParamsCache paramsHandle;
 
     /**
      * 任务信息
@@ -40,10 +40,8 @@ public class ExecuteJob implements ApplicationRunner {
 
     private final String PRE_JOB_ID = "preJobId";
 
-    private ObjectMapper objectMapper = new ObjectMapper();
 
-
-    public ExecuteJob(ParamsHandle paramsHandle, JobInfo jobInfo) {
+    public ExecuteJob(ParamsCache paramsHandle, JobInfo jobInfo) {
         this.paramsHandle = paramsHandle;
         this.jobInfo = jobInfo;
     }
@@ -52,13 +50,13 @@ public class ExecuteJob implements ApplicationRunner {
 
         String params = null;
         if (jobParams.getPreJobId() != null) {
-            params = paramsHandle.getParams(jobParams.getPreJobId());
+            params = paramsHandle.get(jobParams.getPreJobId());
         }
         System.out.println("currentJobId" + jobParams.getJobId());
         System.out.println("preJobId" + jobParams.getPreJobId());
         String result = jobInfo.execute(jobParams.getParams(), params);
         if (StringUtils.isNotEmpty(result) && jobParams.getJobId() != null) {
-            paramsHandle.putParams(jobParams.getJobId(), result);
+            paramsHandle.put(jobParams.getJobId(), result);
         }
     }
 
@@ -70,7 +68,6 @@ public class ExecuteJob implements ApplicationRunner {
             String[] split = sourceArg.split("=");
             params.put(split[0], split[1]);
         }
-        ;
         String preJobId = System.getProperty(PRE_JOB_ID);
         String currJobId = System.getProperty(CURRENT_JOB_ID);
         this.jobParams = new JobParams(preJobId, currJobId, params);

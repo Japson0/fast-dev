@@ -1,11 +1,12 @@
 package net.evecom.dolphinscheduler;
 
-import net.evecom.dolphinscheduler.cache.CacheParamsHandle;
-import net.evecom.dolphinscheduler.cache.ParamsHandle;
+import net.evecom.dolphinscheduler.cache.SpringCache;
+import net.evecom.dolphinscheduler.cache.common.JobInfo;
+import net.evecom.dolphinscheduler.cache.common.ParamsCache;
 import net.evecom.dolphinscheduler.core.ExecuteJob;
-import net.evecom.dolphinscheduler.core.JobInfo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * <P><B>DolphinScheduleConfig初始化:</B></P>
@@ -19,15 +20,14 @@ import org.springframework.context.annotation.Configuration;
 public class DolphinScheduleConfig {
 
     @Bean
-    public ExecuteJob executeJob(ParamsHandle paramsHandle, JobInfo jobInfo) {
+    public ExecuteJob executeJob(ParamsCache paramsHandle, JobInfo jobInfo) {
 
         return new ExecuteJob(paramsHandle, jobInfo);
     }
 
     @Bean
-    public ParamsHandle paramsHandle() {
-
-        return new CacheParamsHandle();
+    public ParamsCache paramsHandle(RedisTemplate redisTemplate) {
+        return new SpringCache(redisTemplate);
     }
 
 }
