@@ -29,7 +29,9 @@ public interface ComEnum<T extends Serializable> extends IEnum<T> {
      *
      * @author Japson Huang
      */
-    String getDisplay();
+    default String getDisplay() {
+        return getValue().toString();
+    }
 
     @Override
     T getValue();

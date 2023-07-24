@@ -246,7 +246,7 @@ public class PageConditionDTO<P> extends PageConditionQuery<P> implements IPage 
         this.condition = pageConditionQuery.getCondition();
         this.extend = pageConditionQuery.getExtend();
         this.orderInfos = pageConditionQuery.getOrderInfos();
-        this.setpSearchCount(pageConditionQuery.ispSearchCount());
+        this.searchCount = pageConditionQuery.ispSearchCount();
     }
 
     @Override

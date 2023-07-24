@@ -94,14 +94,6 @@ public class PageConditionQuery<P> {
      */
     @JsonProperty("searchCount")
     private boolean pSearchCount = true;
-    /**
-     * 排序-降序
-     */
-    protected static final String DESC = "DESC";
-    /**
-     * 排序-升序
-     */
-    protected static final String ASC = "ASC";
 
     public long getpCurrent() {
         return pCurrent;

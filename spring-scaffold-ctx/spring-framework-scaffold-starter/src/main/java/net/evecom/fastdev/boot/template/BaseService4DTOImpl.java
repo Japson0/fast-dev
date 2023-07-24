@@ -33,7 +33,7 @@ public class BaseService4DTOImpl<ID extends Serializable, R extends BaseEntity<I
 
 
     @Override
-    public PageConditionQuery<? extends DTO> getPage(PageConditionQuery<?> pageConditionDTO) {
+    public PageConditionQuery<DTO> getPage(PageConditionQuery<?> pageConditionDTO) {
         Assert.notNull(pageConditionDTO, "pageConditionDTO must not be null");
         PageConditionDTO<Object> page;
         if (pageConditionDTO instanceof PageConditionDTO) {
@@ -41,6 +41,7 @@ public class BaseService4DTOImpl<ID extends Serializable, R extends BaseEntity<I
         } else {
             page = new PageConditionDTO(pageConditionDTO);
         }
+        PageConditionDTO pageConditionDTO1 = baseMapper.selectPage(page, page.buildQueryWrapper());
         return baseMapper.selectPage(page, page.buildQueryWrapper());
     }
 
