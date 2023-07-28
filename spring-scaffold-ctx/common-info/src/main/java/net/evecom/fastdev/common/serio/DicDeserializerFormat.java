@@ -28,7 +28,8 @@ public abstract class DicDeserializerFormat<T> extends JsonDeserializer<T> {
         } else {
             while (!parser.isClosed()) {
                 if (DicSerializerFormat.VALUE.equals(parser.nextFieldName())) {
-                    Object value = parser.nextTextValue();
+                    parser.nextValue();
+                    Object value = parser.getText();
                     while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
                         //这里是为了让当前token到达这个子Json的末端”}“
                         parser.nextToken();
