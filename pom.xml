@@ -18,13 +18,12 @@
     <modules>
         <module>spring-mybatis-ctx</module>
         <module>spring-cache-ctx</module>
-        <module>spring-scaffold-ctx/common-info</module>
+        <module>spring-scaffold</module>
         <module>spring-swagger-ctx</module>
-        <module>spring-scaffold-ctx/spring-framework-scaffold-starter</module>
-        <module>spring-scaffold-ctx/spring-framework-cloud-scaffold-starter</module>
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-starter</module>
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-annotation</module>
         <module>custom-component</module>
+        <module>spring-scaffold</module>
     </modules>
 
     <properties>
@@ -44,6 +43,7 @@
         <bcprov.version>1.69</bcprov.version>
         <hadoop.version>3.3.4</hadoop.version>
         <okhttp3.version>4.8.1</okhttp3.version>
+        <feign.version>9.7.0</feign.version>
         <spring-cloud-dependencies.version>Hoxton.SR12</spring-cloud-dependencies.version>
         <spring-cloud-alibaba-dependencies.version>2.2.8.RELEASE</spring-cloud-alibaba-dependencies.version>
     </properties>
@@ -91,7 +91,7 @@
             </dependency>
             <dependency>
                 <groupId>net.evecom</groupId>
-                <artifactId>spring-framework-cloud-starter</artifactId>
+                <artifactId>spring-framework-cloud-scaffold-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 

@@ -47,6 +47,12 @@ public abstract class TenantEntity extends DataEntity {
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
+
+    @Override
+    public void clear() {
+        super.clear();
+        this.tenantId = null;
+    }
 }
 
 

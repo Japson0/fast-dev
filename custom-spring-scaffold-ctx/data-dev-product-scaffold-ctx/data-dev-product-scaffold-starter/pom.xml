@@ -31,7 +31,7 @@
             <version>${fast-dev.version}</version>
         </dependency>
         <dependency>
-            <artifactId>spring-framework-cloud-starter</artifactId>
+            <artifactId>spring-framework-cloud-scaffold-starter</artifactId>
             <groupId>net.evecom</groupId>
         </dependency>
 

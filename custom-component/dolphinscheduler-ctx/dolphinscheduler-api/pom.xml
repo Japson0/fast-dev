@@ -4,25 +4,32 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>custom-component</artifactId>
         <groupId>net.evecom</groupId>
+        <artifactId>dolphinscheduler-ctx</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>dolphinscheduler-ctx</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>dolphinscheduler-api</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <feign.version>9.7.0</feign.version>
     </properties>
 
 
-    <modules>
-        <module>dolphinscheduler-job-core</module>
-        <module>dolphinscheduler-job-common</module>
-        <module>dolphinscheduler-callback</module>
-        <module>dolphinscheduler-api</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+            <version>${feign.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
+            <version>2.2.9.RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>

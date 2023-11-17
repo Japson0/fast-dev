@@ -3,6 +3,7 @@ package net.evecom.fastdev.ddp.model;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -70,14 +71,14 @@ public abstract class AbstractEntity<T extends Serializable>
      *
      */
     @TableField(value = CREATOR_NAME, insertStrategy = FieldStrategy.NOT_NULL, updateStrategy = FieldStrategy.NEVER, fill = FieldFill.INSERT)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String creatorName;
 
     /**
      * 修改人名称
      */
     @TableField(value = MODIFIER_NAME, insertStrategy = FieldStrategy.NOT_NULL, updateStrategy = FieldStrategy.NOT_NULL, fill = FieldFill.INSERT_UPDATE)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String modifierName;
 
     public Date getTimeCreated() {
@@ -142,5 +143,17 @@ public abstract class AbstractEntity<T extends Serializable>
 
     public void setModifierName(String modifierName) {
         this.modifierName = modifierName;
+    }
+
+    public void clear() {
+        this.timeCreated = null;
+        this.timeModified = null;
+        this.creatorId = null;
+        this.modifierId = null;
+        this.creatorName = null;
+        this.modifierName = null;
+        this.createOrgId = null;
+        this.modifyOrgId = null;
+        this.setId(null);
     }
 }

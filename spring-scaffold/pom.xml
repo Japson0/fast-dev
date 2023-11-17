@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>custom-component</artifactId>
         <groupId>net.evecom</groupId>
+        <artifactId>fast-dev</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>dolphinscheduler-ctx</artifactId>
+    <artifactId>spring-scaffold</artifactId>
     <packaging>pom</packaging>
 
     <properties>
@@ -17,12 +17,10 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-
     <modules>
-        <module>dolphinscheduler-job-core</module>
-        <module>dolphinscheduler-job-common</module>
-        <module>dolphinscheduler-callback</module>
-        <module>dolphinscheduler-api</module>
+        <module>common-info</module>
+        <module>spring-framework-cloud-scaffold-starter</module>
+        <module>spring-framework-scaffold-starter</module>
     </modules>
+
 </project>

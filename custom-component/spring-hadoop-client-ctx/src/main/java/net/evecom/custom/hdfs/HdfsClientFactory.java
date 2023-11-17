@@ -1,6 +1,7 @@
 package net.evecom.custom.hdfs;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.util.Assert;
 
@@ -72,4 +73,24 @@ public class HdfsClientFactory implements FactoryBean<HdfsClient> {
         return HdfsClient.class;
     }
 
+
+    public static void main(String[] args) throws Exception {
+        HadoopProperties hadoopProperties = new HadoopProperties();
+        HadoopProperties.KerberosProperties kerberosProperties = new HadoopProperties.KerberosProperties();
+        kerberosProperties.setPrincipal("hekai/client-179.edp.com@EDP.COM");
+        kerberosProperties.setKeyTabPath("C:/Users/HP/Desktop/fsdownload/hekai");
+        kerberosProperties.setKrbConfPath("C:\\ProgramData\\MIT\\Kerberos5\\krb5.ini");
+        hadoopProperties.setAuthMode(AuthMode.Kerberos);
+        hadoopProperties.setKerberos(kerberosProperties);
+        HadoopConfig hadoopConfig = new HadoopConfig(hadoopProperties);
+
+        HdfsProperties hdfsProperties1 = new HdfsProperties();
+        hdfsProperties1.setUserName("hekai");
+        hdfsProperties1.setMode(HdfsMode.SINGLE);
+        hdfsProperties1.setNameNode("hdfs://cn-176.edp.com:8020");
+        HdfsClientFactory hdfsClientFactory = new HdfsClientFactory(hdfsProperties1);
+        HdfsClient object = hdfsClientFactory.getObject();
+        List<FileStatus> list = object.list("/");
+        System.out.println(list.size());
+    }
 }
