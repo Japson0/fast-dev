@@ -9,8 +9,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @version 1.0
  */
 @ApiModel(value = "分页数据结构")
-public class PageConditionQuery<P> {
+public class PageRequest<P> implements Serializable {
 
     /**
      * 序列化
@@ -37,28 +37,27 @@ public class PageConditionQuery<P> {
      * 开始页从0开始
      */
     @ApiModelProperty(value = "当前页")
-    @JsonProperty("page")
-    protected long pCurrent;
+    private long page;
 
     /**
      * 每页数量
      */
     @ApiModelProperty(value = "每页数量", example = "20")
     @JsonProperty("size")
-    protected long pSize;
+    private long size;
     /**
      * 实体类参数对象
      */
     @ApiModelProperty(value = "条件构造器", name = "condition")
     @JsonProperty(value = "queryParams", access = JsonProperty.Access.WRITE_ONLY)
-    protected P condition;
+    private P condition;
 
     /**
-     * 总数
+     * 是否需要加密
      */
-    @ApiParam(hidden = true)
-    @JsonProperty("total")
-    protected long pTotal;
+    @JsonIgnore
+    private boolean encrypt;
+
     /**
      * 扩展类，可存放一些额外信息，
      */
@@ -81,34 +80,27 @@ public class PageConditionQuery<P> {
      */
     @JsonIgnore
     protected List<OrderInfo> orderInfos;
-    /**
-     * 记录
-     */
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @ApiModelProperty(hidden = true)
-    @JsonProperty("records")
-    protected List pRecords;
 
     /**
      * 是否需要查总数
      */
     @JsonProperty("searchCount")
-    private boolean pSearchCount = true;
+    private boolean searchCount = true;
 
-    public long getpCurrent() {
-        return pCurrent;
+    public long getPage() {
+        return page;
     }
 
-    public void setpCurrent(long pCurrent) {
-        this.pCurrent = pCurrent;
+    public void setPage(long page) {
+        this.page = page;
     }
 
-    public long getpSize() {
-        return pSize;
+    public long getSize() {
+        return size;
     }
 
-    public void setpSize(long pSize) {
-        this.pSize = pSize;
+    public void setSize(long size) {
+        this.size = size;
     }
 
     public P getCondition() {
@@ -117,14 +109,6 @@ public class PageConditionQuery<P> {
 
     public void setCondition(P condition) {
         this.condition = condition;
-    }
-
-    public long getpTotal() {
-        return pTotal;
-    }
-
-    public void setpTotal(long pTotal) {
-        this.pTotal = pTotal;
     }
 
     public Map<String, Object> getExtend() {
@@ -159,23 +143,23 @@ public class PageConditionQuery<P> {
         this.orderInfos = orderInfos;
     }
 
-    public List getpRecords() {
-        return pRecords;
+    public boolean isSearchCount() {
+        return searchCount;
     }
 
-    public void setpRecords(List pRecords) {
-        this.pRecords = pRecords;
+    public void setSearchCount(boolean searchCount) {
+        this.searchCount = searchCount;
     }
 
-    public boolean ispSearchCount() {
-        return pSearchCount;
+    public boolean isEncrypt() {
+        return encrypt;
     }
 
-    public void setpSearchCount(boolean pSearchCount) {
-        this.pSearchCount = pSearchCount;
+    public void setEncrypt(boolean encrypt) {
+        this.encrypt = encrypt;
     }
 
-    public PageConditionQuery<P> addOrdersFirst(OrderInfo... orderItems) {
+    public PageRequest<P> addOrdersFirst(OrderInfo... orderItems) {
         if (this.orderInfos == null) {
             this.addOrdersLast(orderItems);
         } else {
@@ -194,7 +178,7 @@ public class PageConditionQuery<P> {
         return this;
     }
 
-    public PageConditionQuery<P> addOrdersLast(OrderInfo... orderItems) {
+    public PageRequest<P> addOrdersLast(OrderInfo... orderItems) {
         if (this.orderInfos == null) {
             this.orderInfos = new LinkedList();
         }
@@ -203,4 +187,28 @@ public class PageConditionQuery<P> {
         return this;
     }
 
+
+    /**
+     * 不分页查询，也就是直接SELECT * FROM TABLE 。没有分页信息
+     * RevisionTrail:(Date/Author/Description)
+     * 2021年12月06日
+     *
+     * @author Japson Huang
+     */
+    public PageRequest<P> noPageAndCount() {
+        setSize(-1);
+        return this;
+    }
+
+    /**
+     * 只查总数，其他什么都不查
+     * RevisionTrail:(Date/Author/Description)
+     * 2021年12月14日
+     *
+     * @author Japson Huang
+     */
+    public PageRequest<P> onlySearchCount() {
+        setPage(Long.MAX_VALUE);
+        return this;
+    }
 }

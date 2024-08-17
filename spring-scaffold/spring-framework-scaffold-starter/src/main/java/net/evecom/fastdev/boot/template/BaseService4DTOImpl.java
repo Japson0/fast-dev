@@ -1,9 +1,10 @@
 package net.evecom.fastdev.boot.template;
 
 import net.evecom.fastdev.common.web.BaseService4DTO;
-import net.evecom.fastdev.mybatis.PageConditionDTO;
+import net.evecom.fastdev.mybatis.util.PageWrapper;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
-import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
+import net.evecom.fastdev.mybatis.annotation.PageRequest;
+import net.evecom.fastdev.mybatis.annotation.PageResponse;
 import net.evecom.fastdev.mybatis.injector.BaseMapperExtend;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -33,15 +34,11 @@ public class BaseService4DTOImpl<ID extends Serializable, R extends BaseEntity<I
 
 
     @Override
-    public PageConditionQuery<? extends DTO> getPage(PageConditionQuery<?> pageConditionDTO) {
+    public <Q> PageResponse<Q,DTO> getPage(PageRequest<Q> pageConditionDTO) {
         Assert.notNull(pageConditionDTO, "pageConditionDTO must not be null");
-        PageConditionDTO<Object> page;
-        if (pageConditionDTO instanceof PageConditionDTO) {
-            page = (PageConditionDTO<Object>) pageConditionDTO;
-        } else {
-            page = new PageConditionDTO(pageConditionDTO);
-        }
-        return baseMapper.selectPage(page, page.buildQueryWrapper());
+        PageWrapper page = new PageWrapper<>(pageConditionDTO);
+        baseMapper.selectPage(page, page.buildQueryWrapper());
+        return page.getPageResponse();
     }
 
     @Override

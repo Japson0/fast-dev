@@ -30,13 +30,5 @@ public interface BaseMapperExtend<T> extends BaseMapper<T> {
      */
     int updateAllColumnById(@Param(Constants.ENTITY) T entity);
 
-    /**
-     * 批量插入
-     * RevisionTrail:(Date/Author/Description)
-     * 2021年08月28日
-     *
-     * @author Japson Huang
-     */
-    int insertBatch(@Param(Constants.LIST) Collection<? extends T> entries);
 
 }

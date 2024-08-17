@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <P><B>Description:</B></P>
+ * <P><B>加密字段:</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2020年10月12日 CREATE
  *

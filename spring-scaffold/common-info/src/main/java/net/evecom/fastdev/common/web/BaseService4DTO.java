@@ -1,7 +1,8 @@
 package net.evecom.fastdev.common.web;
 
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
-import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
+import net.evecom.fastdev.mybatis.annotation.PageRequest;
+import net.evecom.fastdev.mybatis.annotation.PageResponse;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,7 +25,7 @@ public interface BaseService4DTO<ID extends Serializable, R extends BaseEntity<I
      * @param pageConditionDTO 分页类
      * @author Japson Huang
      */
-    PageConditionQuery<? extends DTO> getPage(PageConditionQuery<?> pageConditionDTO);
+    <Q> PageResponse<Q,DTO> getPage(PageRequest<Q> pageConditionDTO);
 
     /**
      * 新增或更新

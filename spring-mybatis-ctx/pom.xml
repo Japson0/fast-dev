@@ -13,8 +13,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <mybatis-plus.version>3.5.2</mybatis-plus.version>
-        <mybatis-mate.version>1.2.5</mybatis-mate.version>
+        <mybatis-plus.version>3.5.7</mybatis-plus.version>
     </properties>
 
     <modules>
@@ -25,14 +24,15 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>net.evecom</groupId>
-                <artifactId>spring-mybatis-ctx-annotation</artifactId>
-                <version>${fast-dev.version}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>net.evecom</groupId>
-                <artifactId>spring-mybatis-ctx-starter</artifactId>
-                <version>${fast-dev.version}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-annotation</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
