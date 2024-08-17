@@ -13,5 +13,5 @@ package net.evecom.fastdev.common.annotation;
  * @author Japson Huang
  * @version 1.0
  */
-public interface Ohter {
+public interface Other {
 }

@@ -21,10 +21,15 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import net.evecom.fastdev.mybatis.config.MybatisCtxProperties;
 import net.evecom.fastdev.mybatis.encrypt.EncryptCertificate;
+import net.evecom.fastdev.mybatis.encrypt.SkinEncrypt;
+import net.evecom.fastdev.mybatis.encrypt.SkinMethodPredicate;
 import net.evecom.fastdev.mybatis.injector.method.InsertBatch;
 import net.evecom.fastdev.mybatis.injector.method.UpdateAllColumnById;
 import net.evecom.fastdev.mybatis.sqlparser.DecryptResultSetInterceptor;
 import net.evecom.fastdev.mybatis.sqlparser.EncryptParamInterceptor;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -34,9 +39,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.util.ReflectionUtils;
 
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.Method;
+import java.util.*;
 
 
 /**
@@ -89,10 +95,15 @@ public class MyBatisPlusConfig {
     @Bean
     @Order(11)
     @ConditionalOnBean(EncryptCertificate.class)
-    public EncryptParamInterceptor encryptParamParser(EncryptCertificate encryptCertificate) {
-        return new EncryptParamInterceptor(encryptCertificate);
+    public Interceptor encryptParamParser(EncryptCertificate encryptCertificate, SkinMethodPredicate skinMethodPredicate) {
+        return new EncryptParamInterceptor(encryptCertificate,skinMethodPredicate);
     }
 
+
+    @Bean
+    public SkinMethodPredicate skinMethodPredicate(){
+        return new SkinMethodPredicate();
+    }
     /**
      * 解密拦截器
      *

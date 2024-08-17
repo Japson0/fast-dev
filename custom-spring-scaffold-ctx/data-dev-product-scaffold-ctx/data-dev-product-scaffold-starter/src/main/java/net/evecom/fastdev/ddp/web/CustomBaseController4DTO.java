@@ -10,7 +10,6 @@ import net.evecom.fastdev.boot.template.BaseController4DTO;
 import net.evecom.fastdev.common.model.RestResponse;
 import net.evecom.fastdev.common.web.BaseService4DTO;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
-import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,17 +28,6 @@ public class CustomBaseController4DTO<T extends BaseEntity<Long>, DTO extends T>
         super(baseService);
     }
 
-
-    /**
-     * 分页查询
-     *
-     * @param conditionDTO
-     * @return
-     */
-    public RestResponse<PageConditionQuery<? extends DTO>> getPageSupport(PageConditionQuery<?> conditionDTO) {
-
-        return RestResponse.renderSuccess(baseService.getPage(conditionDTO));
-    }
 
 
     @DeleteMapping("batch")

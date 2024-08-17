@@ -61,47 +61,51 @@ public class EncryptInspector implements EncryptInterface {
     public static EncryptInspector generator(final Class aclass) {
         EncryptInspector encryptInspector = cacheEncryptInspector.get(aclass);
         if (encryptInspector == null) {
-            Class targetClass = aclass;
-            BeanWrapper beanWrapper;
-            try {
-                beanWrapper = new BeanWrapperImpl(aclass);
-            } catch (Exception ignore) {
-                return NULL_ENCRYPT;
-            }
-            Map<PropertyDescriptor, EncryptType> argsMap = new HashMap<>();
-            Map<PropertyDescriptor, Class> numberClasses = new HashMap<>();
-            while (targetClass != Object.class) {
-                Field[] declaredFields = targetClass.getDeclaredFields();
-                for (Field field : declaredFields) {
-                    Encrypt encrypt = field.getAnnotation(Encrypt.class);
-                    Class<?> fileClass = getFiledType(field);
-                    if (fileClass == null) continue;
-                    if (CryptAble.class.isAssignableFrom(fileClass)) {
-                        PropertyDescriptor propertyDescriptor = beanWrapper.getPropertyDescriptor(field.getName());
-                        if (checkPropertyDescriptor(propertyDescriptor, fileClass)) {
-                            numberClasses.put(propertyDescriptor, fileClass);
-                        }
-                    } else if (encrypt != null) {
-                        if (fileClass == String.class) {
-                            PropertyDescriptor propertyDescriptor = beanWrapper.getPropertyDescriptor(field.getName());
-                            if (checkPropertyDescriptor(propertyDescriptor, String.class)) {
-                                argsMap.put(propertyDescriptor, encrypt.value());
+            synchronized (aclass) {
+                if (encryptInspector == null) {
+                    Class targetClass = aclass;
+                    BeanWrapper beanWrapper;
+                    try {
+                        beanWrapper = new BeanWrapperImpl(aclass);
+                    } catch (Exception ignore) {
+                        return NULL_ENCRYPT;
+                    }
+                    Map<PropertyDescriptor, EncryptType> argsMap = new HashMap<>();
+                    Map<PropertyDescriptor, Class> numberClasses = new HashMap<>();
+                    while (targetClass != Object.class) {
+                        Field[] declaredFields = targetClass.getDeclaredFields();
+                        for (Field field : declaredFields) {
+                            Encrypt encrypt = field.getAnnotation(Encrypt.class);
+                            Class<?> fileClass = getFiledType(field);
+                            if (fileClass == null) continue;
+                            if (CryptAble.class.isAssignableFrom(fileClass)) {
+                                PropertyDescriptor propertyDescriptor = beanWrapper.getPropertyDescriptor(field.getName());
+                                if (checkPropertyDescriptor(propertyDescriptor, fileClass)) {
+                                    numberClasses.put(propertyDescriptor, fileClass);
+                                }
+                            } else if (encrypt != null) {
+                                if (fileClass == String.class) {
+                                    PropertyDescriptor propertyDescriptor = beanWrapper.getPropertyDescriptor(field.getName());
+                                    if (checkPropertyDescriptor(propertyDescriptor, String.class)) {
+                                        argsMap.put(propertyDescriptor, encrypt.value());
+                                    }
+                                }
                             }
                         }
-                    }
-                }
 
-                targetClass = targetClass.getSuperclass();
-            }
-            Map<PropertyDescriptor, EncryptInspector> numberInspectorMap = new HashMap<>(numberClasses.size());
-            for (Map.Entry<PropertyDescriptor, Class> numberClassEntry : numberClasses.entrySet()) {
-                EncryptInspector numberEncrypt = generator(numberClassEntry.getValue());
-                if (numberEncrypt.canCrypt()) {
-                    numberInspectorMap.put(numberClassEntry.getKey(), numberEncrypt);
+                        targetClass = targetClass.getSuperclass();
+                    }
+                    Map<PropertyDescriptor, EncryptInspector> numberInspectorMap = new HashMap<>(numberClasses.size());
+                    for (Map.Entry<PropertyDescriptor, Class> numberClassEntry : numberClasses.entrySet()) {
+                        EncryptInspector numberEncrypt = generator(numberClassEntry.getValue());
+                        if (numberEncrypt.canCrypt()) {
+                            numberInspectorMap.put(numberClassEntry.getKey(), numberEncrypt);
+                        }
+                    }
+                    encryptInspector = new EncryptInspector(aclass, argsMap, numberInspectorMap);
+                    cacheEncryptInspector.put(aclass, encryptInspector);
                 }
             }
-            encryptInspector = new EncryptInspector(aclass, argsMap, numberInspectorMap);
-            cacheEncryptInspector.put(aclass, encryptInspector);
         }
         return encryptInspector;
     }
