@@ -19,7 +19,6 @@
     </properties>
     <modules>
         <module>spring-elasticsearch-ctx</module>
-        <module>dolphinscheduler-ctx</module>
         <module>spring-hadoop-client-ctx</module>
         <module>spring-minio-client-ctx</module>
     </modules>

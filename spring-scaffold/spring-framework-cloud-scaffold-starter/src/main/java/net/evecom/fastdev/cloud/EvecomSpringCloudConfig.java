@@ -1,14 +1,11 @@
 package net.evecom.fastdev.cloud;
 
-import com.alibaba.cloud.nacos.ribbon.NacosRule;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netflix.loadbalancer.IRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -40,18 +37,18 @@ public class EvecomSpringCloudConfig implements WebMvcConfigurer {
         this.restTemplateProperties = restTemplateProperties;
     }
 
-    /**
-     * 另Nacos权重生效
-     * RevisionTrail:(Date/Author/Description)
-     * 2020年07月23日
-     *
-     * @author Japson Huang
-     */
-    @Bean
-    @Scope(value = "prototype")
-    public IRule loadBalanceRule() {
-        return new NacosRule();
-    }
+//    /**
+//     * 另Nacos权重生效
+//     * RevisionTrail:(Date/Author/Description)
+//     * 2020年07月23日
+//     *
+//     * @author Japson Huang
+//     */
+//    @Bean
+//    @Scope(value = "prototype")
+//    public IRule loadBalanceRule(DiscoveryClient nacosDiscoveryClient) {
+//        return new NacosRule();
+//    }
 
 
     @Bean
@@ -60,7 +57,6 @@ public class EvecomSpringCloudConfig implements WebMvcConfigurer {
         if (factory == null) {
             SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
             simpleClientHttpRequestFactory.setConnectTimeout(restTemplateProperties.getConnectTimeOut());
-            ;
             simpleClientHttpRequestFactory.setReadTimeout(restTemplateProperties.getReadTimeOut());
             factory = simpleClientHttpRequestFactory;
         }

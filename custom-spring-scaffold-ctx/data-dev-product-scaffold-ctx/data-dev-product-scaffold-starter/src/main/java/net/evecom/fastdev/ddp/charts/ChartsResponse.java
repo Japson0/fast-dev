@@ -5,7 +5,7 @@ import net.evecom.fastdev.common.model.RestResponse;
 import net.evecom.fastdev.ddp.charts.table.GridData;
 import net.evecom.fastdev.ddp.charts.table.GridTableInfo;
 import net.evecom.fastdev.ddp.charts.table.GridTableUtil;
-import net.evecom.fastdev.mybatis.annotation.PageConditionQuery;
+import net.evecom.fastdev.mybatis.annotation.PageRequest;
 
 import java.util.Collection;
 
@@ -43,7 +43,7 @@ public class ChartsResponse<T> extends RestResponse<T> {
      * @param tableView 表格类
      * @author Japson Huang
      */
-    public static <T> ChartsResponse<GridData<PageConditionQuery<? extends T>>> tableResponse(PageConditionQuery<? extends T> page, Class<?> tableView) {
+    public static <T> ChartsResponse<GridData<PageRequest<? extends T>>> tableResponse(PageRequest<? extends T> page, Class<?> tableView) {
         return tableResponse(page, tableView, null);
     }
 
@@ -57,9 +57,9 @@ public class ChartsResponse<T> extends RestResponse<T> {
      * @param group     分组信息
      * @author Japson Huang
      */
-    public static <T> ChartsResponse<GridData<PageConditionQuery<? extends T>>> tableResponse(PageConditionQuery<? extends T> page, Class<?> tableView, Class<?> group) {
+    public static <T> ChartsResponse<GridData<PageRequest<? extends T>>> tableResponse(PageRequest<? extends T> page, Class<?> tableView, Class<?> group) {
         Collection<GridTableInfo> gridTable = GridTableUtil.createGridTable(tableView, group);
-        ChartsResponse<GridData<PageConditionQuery<? extends T>>> result = new ChartsResponse<>();
+        ChartsResponse<GridData<PageRequest<? extends T>>> result = new ChartsResponse<>();
         result.setData(new GridData<>(page, gridTable));
         return result;
     }

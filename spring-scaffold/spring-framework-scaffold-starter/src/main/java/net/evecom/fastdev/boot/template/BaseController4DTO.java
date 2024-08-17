@@ -1,13 +1,13 @@
 package net.evecom.fastdev.boot.template;
 
+import io.swagger.annotations.ApiOperation;
 import net.evecom.fastdev.common.annotation.Insert;
 import net.evecom.fastdev.common.annotation.Update;
 import net.evecom.fastdev.common.model.RestResponse;
 import net.evecom.fastdev.common.web.BaseService4DTO;
 import net.evecom.fastdev.mybatis.annotation.BaseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 
@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author Japson Huang
  * @version 1.0
  */
-public class BaseController4DTO<ID extends Serializable, T extends BaseEntity<ID>, DTO extends T> implements BaseControllerInterface<ID, T, DTO> {
+public class BaseController4DTO<ID extends Serializable, T extends BaseEntity<ID>, DTO extends T> {
 
     /**
      * 逻辑层
@@ -37,6 +37,8 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseEntity<ID
      *
      * @author Japson Huang
      */
+    @PutMapping
+    @ApiOperation("更新")
     public RestResponse update(@Validated(Update.class) @RequestBody DTO entity) {
 
         if (entity.getId() == null) {
@@ -57,6 +59,8 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseEntity<ID
      *
      * @author Japson Huang
      */
+    @PostMapping
+    @ApiOperation("新增")
     public RestResponse insert(@Validated(Insert.class) @RequestBody DTO entity) {
         if (baseService.addById(entity) > 0) {
             return RestResponse.renderSuccess(entity.getId()).setMessage("新增成功");
@@ -72,6 +76,8 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseEntity<ID
      *
      * @author Japson Huang
      */
+    @DeleteMapping("/{id}")
+    @ApiOperation("删除")
     public RestResponse delete(@PathVariable ID id) {
         if (baseService.deleteById(id) > 0) {
             return RestResponse.renderSuccess(id).setMessage("删除成功");
@@ -87,8 +93,9 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseEntity<ID
      *
      * @author Japson Huang
      */
-    @Override
-    public RestResponse<T> get(ID id) {
+    @GetMapping("{id}")
+    @ApiOperation("查询")
+    public RestResponse<T> get(@PathVariable ID id) {
         return RestResponse.renderSuccess(baseService.getById(id));
     }
 
