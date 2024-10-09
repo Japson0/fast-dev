@@ -13,14 +13,14 @@ import java.io.Serializable;
  * @author Japson Huang
  * @version1.0
  */
-public class DemoEntity extends AbstractEntity {
+public class DemoEntity extends AbstractEntity<Long> {
     @Override
-    public Serializable getId() {
+    public Long getId() {
         return null;
     }
 
     @Override
-    public void setId(Serializable serializable) {
+    public void setId(Long serializable) {
 
     }
 }

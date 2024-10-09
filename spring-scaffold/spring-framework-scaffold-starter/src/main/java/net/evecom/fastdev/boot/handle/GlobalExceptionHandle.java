@@ -65,6 +65,8 @@ public class GlobalExceptionHandle {
             } else {
                 LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
             }
+        }if(e instanceof IllegalArgumentException){
+            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), e.getMessage());
         } else if (e.getClass() == MethodArgumentNotValidException.class) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(),

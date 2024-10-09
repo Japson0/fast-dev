@@ -1,7 +1,7 @@
 package net.evecom.fastdev.mybatis.util;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
+import org.bouncycastle.pqc.legacy.math.linearalgebra.ByteUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
