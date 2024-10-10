@@ -55,8 +55,9 @@ public class EvecomSpringBootConfig {
     @Bean
     public WebMvcConfigurer mvcConfigurer(EvecomSpringBootProperies evecomSpringBootProperies,
                                           WebTransSecurityServer webTransSecurityServer,
-                                          List<ResourceClean> resourceCleans) {
-        return new EvecomSpringBootMvcSpringConfig(evecomSpringBootProperies, webTransSecurityServer, resourceCleans);
+                                          List<ResourceClean> resourceCleans,
+                                          List<CustomInterceptor> interceptors) {
+        return new EvecomSpringBootMvcSpringConfig(evecomSpringBootProperies, webTransSecurityServer, resourceCleans,interceptors);
     }
 
     @Bean

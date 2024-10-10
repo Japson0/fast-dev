@@ -20,12 +20,12 @@ import java.util.Map;
  * @author Japson Huang
  * @version 1.0
  */
-public abstract class DicCacheService implements DictionaryService, ResourceClean, ApplicationRunner {
+public abstract class DicCacheService implements DictionaryService, ApplicationRunner {
 
     /**
      * 本地缓存
      */
-    private final ThreadLocal<Map<String, Map<String, String>>> cache = ThreadLocal.withInitial(() -> new HashMap<>(5));
+    private final Map<String, Map<String, String>> codeMap= new HashMap<>(5);
 
     /**
      * 自身代理类
@@ -34,7 +34,6 @@ public abstract class DicCacheService implements DictionaryService, ResourceClea
 
     @Override
     public String getDicStr(String typeCode, String code) {
-        Map<String, Map<String, String>> codeMap = cache.get();
         Map<String, String> typeCodeMap = codeMap.get(typeCode);
         if (typeCodeMap == null) {
             Map<String, String> dicDetail = proxyService.getDicDetail(typeCode);
@@ -56,17 +55,6 @@ public abstract class DicCacheService implements DictionaryService, ResourceClea
      */
     protected abstract Map<String, String> getDicDetail(String typeCode);
 
-    /**
-     * 拦截器会自动调用此方法，无需手动调用
-     * RevisionTrail:(Date/Author/Description)
-     * 2021年11月13日
-     *
-     * @author Japson Huang
-     */
-    @Override
-    public void clean() {
-        cache.remove();
-    }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

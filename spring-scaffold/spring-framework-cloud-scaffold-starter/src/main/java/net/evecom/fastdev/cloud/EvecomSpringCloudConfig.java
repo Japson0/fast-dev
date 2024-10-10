@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Configuration
 @EnableConfigurationProperties({RestTemplateProperties.class})
-public class EvecomSpringCloudConfig implements WebMvcConfigurer {
+public class EvecomSpringCloudConfig  {
 
     /**
      * resttemplate配置

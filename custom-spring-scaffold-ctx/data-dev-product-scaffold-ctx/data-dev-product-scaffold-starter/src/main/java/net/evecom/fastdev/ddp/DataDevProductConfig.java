@@ -2,6 +2,7 @@ package net.evecom.fastdev.ddp;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
+import net.evecom.fastdev.boot.handle.CustomInterceptor;
 import net.evecom.fastdev.boot.handle.TraceService;
 import net.evecom.fastdev.ddp.filter.UserInterceptor;
 import net.evecom.fastdev.ddp.filter.debug.DebugUserInterceptor;
@@ -29,7 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @EnableConfigurationProperties(DataDevProductProperties.class)
-public class DataDevProductConfig implements WebMvcConfigurer {
+public class DataDevProductConfig {
 
     /**
      * 配置属性
@@ -41,19 +42,16 @@ public class DataDevProductConfig implements WebMvcConfigurer {
         this.devProductProperties = superviseProperties;
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    @Bean
+    public CustomInterceptor customInterceptor(){
         boolean debugger = false;
         if (devProductProperties.getDebug() != null) {
             DataDevProductProperties.Debug debug = devProductProperties.getDebug();
             if (debug.isEnable()) {
-                registry.addInterceptor(new DebugUserInterceptor(debug.getUser())).addPathPatterns("/**");
-                debugger = true;
+                return new DebugUserInterceptor(debug.getUser());
             }
         }
-        if (!debugger) {
-            registry.addInterceptor(new UserInterceptor()).addPathPatterns("/**");
-        }
+        return new UserInterceptor();
     }
 
     @Bean

@@ -5,6 +5,7 @@
 
 package net.evecom.fastdev.ddp.filter;
 
+import net.evecom.fastdev.boot.handle.CustomInterceptor;
 import net.evecom.fastdev.ddp.UserContext;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Japson Huang
  * @version 1.0
  */
-public class UserInterceptor implements HandlerInterceptor {
+public class UserInterceptor implements CustomInterceptor {
 
     /**
      * jwt载荷
@@ -38,6 +39,5 @@ public class UserInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         UserContext.clean();
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 }

@@ -5,6 +5,7 @@
 
 package net.evecom.fastdev.ddp.filter.debug;
 
+import net.evecom.fastdev.boot.handle.CustomInterceptor;
 import net.evecom.fastdev.ddp.UserContext;
 import net.evecom.fastdev.ddp.UserInfo;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Japson Huang
  * @version 1.0
  */
-public class DebugUserInterceptor implements HandlerInterceptor {
+public class DebugUserInterceptor implements CustomInterceptor {
 
     /**
      * 用户信息

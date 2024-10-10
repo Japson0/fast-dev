@@ -6,6 +6,7 @@
 package net.evecom.fastdev.boot;
 
 import net.evecom.fastdev.boot.filter.WebTransSecurityInterceptor;
+import net.evecom.fastdev.boot.handle.CustomInterceptor;
 import net.evecom.fastdev.boot.handle.ResourceClean;
 import net.evecom.fastdev.boot.handle.ResourceCleanInterceptor;
 import net.evecom.fastdev.boot.handle.WebTransSecurityServer;
@@ -33,12 +34,15 @@ public class EvecomSpringBootMvcSpringConfig implements WebMvcConfigurer {
 
     private final List<ResourceClean> resourceCleans;
 
+    private final List<CustomInterceptor> customInterceptors;
+
     public EvecomSpringBootMvcSpringConfig(EvecomSpringBootProperies evecomSpringBootProperies,
                                            WebTransSecurityServer webTransSecurityServer,
-                                           List<ResourceClean> resourceCleans) {
+                                           List<ResourceClean> resourceCleans, List<CustomInterceptor> customInterceptors) {
         this.evecomSpringBootProperies = evecomSpringBootProperies;
         this.webTransSecurityServer = webTransSecurityServer;
         this.resourceCleans = resourceCleans;
+        this.customInterceptors = customInterceptors;
     }
 
 
@@ -49,6 +53,9 @@ public class EvecomSpringBootMvcSpringConfig implements WebMvcConfigurer {
             if (webTransSecurityFilter.isEnable()) {
                 registry.addInterceptor(new WebTransSecurityInterceptor(webTransSecurityServer)).addPathPatterns(webTransSecurityFilter.getPath());
             }
+        }
+        if(!CollectionUtils.isEmpty(customInterceptors)){
+           customInterceptors.forEach(registry::addInterceptor);
         }
         if (!CollectionUtils.isEmpty(resourceCleans)) {
             registry.addInterceptor(new ResourceCleanInterceptor(resourceCleans)).addPathPatterns("/**");
