@@ -56,7 +56,7 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
 
 
     public PageWrapper(PageRequest<P> pageRequest) {
-        Assert.notNull(pageRequest,"请求分页类不允许为空");
+        super(pageRequest.getPage(),pageRequest.getSize(),pageRequest.isSearchCount());
         this.pageRequest = pageRequest;
     }
 

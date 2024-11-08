@@ -84,7 +84,6 @@ public class PageRequest<P> implements Serializable {
     /**
      * 是否需要查总数
      */
-    @JsonProperty("searchCount")
     private boolean searchCount = true;
 
     public long getPage() {
