@@ -27,6 +27,8 @@ import net.evecom.fastdev.mybatis.injector.method.InsertBatch;
 import net.evecom.fastdev.mybatis.injector.method.UpdateAllColumnById;
 import net.evecom.fastdev.mybatis.sqlparser.DecryptResultSetInterceptor;
 import net.evecom.fastdev.mybatis.sqlparser.EncryptParamInterceptor;
+import net.evecom.fastdev.mybatis.sqlparser.MultiTenantLineHandler;
+import net.evecom.fastdev.mybatis.sqlparser.MultiTenantLineInnerInterceptor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -136,6 +138,20 @@ public class MyBatisPlusConfig {
         };
     }
 
+//    /**
+//     * 租户插件
+//     * RevisionTrail:(Date/Author/Description)
+//     * 2022年08月25日
+//     *
+//     * @author Japson Huang
+//     */
+//    @Bean
+//    @ConditionalOnBean(TenantLineHandler.class)
+//    @ConditionalOnMissingBean(TenantLineInnerInterceptor.class)
+//    public InnerInterceptor tenantLineInnerInterceptor(TenantLineHandler tenantLineHandler) {
+//        return new TenantLineInnerInterceptor(tenantLineHandler);
+//    }
+
     /**
      * 租户插件
      * RevisionTrail:(Date/Author/Description)
@@ -144,10 +160,10 @@ public class MyBatisPlusConfig {
      * @author Japson Huang
      */
     @Bean
-    @ConditionalOnBean(TenantLineHandler.class)
+    @ConditionalOnBean(MultiTenantLineHandler.class)
     @ConditionalOnMissingBean(TenantLineInnerInterceptor.class)
-    public InnerInterceptor tenantLineInnerInterceptor(TenantLineHandler tenantLineHandler) {
-        return new TenantLineInnerInterceptor(tenantLineHandler);
+    public MultiTenantLineInnerInterceptor tenantLineInnerInterceptor(MultiTenantLineHandler tenantLineHandler) {
+        return new MultiTenantLineInnerInterceptor(tenantLineHandler);
     }
 
     @Bean
@@ -175,4 +191,6 @@ public class MyBatisPlusConfig {
         }
         return plusProperties -> plusProperties.getGlobalConfig().getDbConfig();
     }
+
+
 }
