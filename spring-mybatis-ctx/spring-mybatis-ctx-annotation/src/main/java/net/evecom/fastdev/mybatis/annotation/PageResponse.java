@@ -1,6 +1,8 @@
 package net.evecom.fastdev.mybatis.annotation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
@@ -26,10 +28,10 @@ public class PageResponse<P,DTO> extends PageRequest<P> {
      * 总数
      */
     @ApiModelProperty(value = "总数")
+    @JsonSerialize(using = LongSerializer.class)
+
     private long total;
 
-    @JsonUnwrapped
-    private final PageRequest pageRequest;
 
 
     public PageResponse(PageRequest pageRequest, List<DTO> records) {
@@ -37,9 +39,9 @@ public class PageResponse<P,DTO> extends PageRequest<P> {
     }
 
     public PageResponse(PageRequest pageRequest, List<DTO> records, long total) {
-        this.pageRequest = pageRequest;
         this.total = total;
         this.records = records;
+        this.setSize(pageRequest.getSize());
     }
 
     public List<DTO> getRecords() {
@@ -58,9 +60,5 @@ public class PageResponse<P,DTO> extends PageRequest<P> {
     public PageResponse<P,DTO> setTotal(long total) {
         this.total = total;
         return this;
-    }
-
-    public PageRequest getPageConditionQuery() {
-        return pageRequest;
     }
 }

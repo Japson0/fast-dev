@@ -44,8 +44,8 @@ public class ObjectMapperBuilder {
             SimpleModule module = new SimpleModule();
             module.addDeserializer(String.class, new StringDeserializer());
             //Long 转成字符串，不然精度会丢失，前端Numbic最多只能存在17位
-            module.addSerializer(Long.class, ToStringSerializer.instance);
-            module.addSerializer(Long.TYPE, ToStringSerializer.instance);
+//            module.addSerializer(Long.class, ToStringSerializer.instance);
+//            module.addSerializer(Long.TYPE, ToStringSerializer.instance);
             builder.modules(module);
         }
 

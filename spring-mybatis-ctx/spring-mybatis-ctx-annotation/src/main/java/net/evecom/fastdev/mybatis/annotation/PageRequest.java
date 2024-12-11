@@ -7,6 +7,7 @@ package net.evecom.fastdev.mybatis.annotation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -37,6 +38,8 @@ public class PageRequest<P> implements Serializable {
      * 开始页从0开始
      */
     @ApiModelProperty(value = "当前页")
+    @JsonSerialize(using = LongSerializer.class)
+
     private long page;
 
     /**
@@ -44,6 +47,8 @@ public class PageRequest<P> implements Serializable {
      */
     @ApiModelProperty(value = "每页数量", example = "20")
     @JsonProperty("size")
+    @JsonSerialize(using = LongSerializer.class)
+
     private long size;
     /**
      * 实体类参数对象
@@ -84,6 +89,7 @@ public class PageRequest<P> implements Serializable {
     /**
      * 是否需要查总数
      */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean searchCount = true;
 
     public long getPage() {
