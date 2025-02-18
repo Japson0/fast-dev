@@ -44,7 +44,6 @@ public class DataDevProductConfig {
 
     @Bean
     public CustomInterceptor customInterceptor(){
-        boolean debugger = false;
         if (devProductProperties.getDebug() != null) {
             DataDevProductProperties.Debug debug = devProductProperties.getDebug();
             if (debug.isEnable()) {

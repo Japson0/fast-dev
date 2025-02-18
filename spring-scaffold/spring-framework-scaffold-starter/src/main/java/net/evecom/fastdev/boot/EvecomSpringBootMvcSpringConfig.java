@@ -13,6 +13,7 @@ import net.evecom.fastdev.boot.handle.WebTransSecurityServer;
 import net.evecom.fastdev.boot.serio.EnumConverterFactory;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -55,7 +56,12 @@ public class EvecomSpringBootMvcSpringConfig implements WebMvcConfigurer {
             }
         }
         if(!CollectionUtils.isEmpty(customInterceptors)){
-           customInterceptors.forEach(registry::addInterceptor);
+            for (CustomInterceptor customInterceptor : customInterceptors) {
+                InterceptorRegistration interceptorRegistration = registry.addInterceptor(customInterceptor);
+                if(CollectionUtils.isEmpty(customInterceptor.excludePathPatterns())){
+                    interceptorRegistration.excludePathPatterns(customInterceptor.excludePathPatterns());
+                }
+            }
         }
         if (!CollectionUtils.isEmpty(resourceCleans)) {
             registry.addInterceptor(new ResourceCleanInterceptor(resourceCleans)).addPathPatterns("/**");

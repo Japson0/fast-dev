@@ -72,16 +72,6 @@ public class JacksonUtils {
         }
     }
 
-    public static void main(String[] args) {
-        List<String> id = new ArrayList<>();
-        id.add("1");
-        id.add("sad");
-        String join = String.join(",", id);
-        System.out.println(join);
-        JacksonUtils.toJson(id);
-        System.out.println(id);
-    }
-
     /**
      * 获取实例
      * Revision Trail: (Date/Author/Description)

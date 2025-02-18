@@ -2,6 +2,9 @@ package net.evecom.fastdev.boot.handle;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * <P><B>自定义拦截器:</B></P>
  * RevisionTrail:(Date/Author/Description)
@@ -11,4 +14,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @version1.0
  */
 public interface CustomInterceptor extends HandlerInterceptor {
+
+    default List<String> excludePathPatterns() {return Collections.emptyList();}
 }
