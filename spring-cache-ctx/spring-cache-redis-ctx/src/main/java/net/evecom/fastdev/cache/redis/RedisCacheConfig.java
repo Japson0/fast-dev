@@ -18,9 +18,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.util.StringUtils;
 
 import java.time.Duration;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <P><B>Redis默认配置:</B></P>
@@ -38,6 +36,7 @@ public class RedisCacheConfig extends CacheProperties {
      * 分隔符
      */
     private static final String SPLIT = ":";
+
 
     private RedisCacheConfiguration cacheConfiguration() {
 
@@ -71,6 +70,7 @@ public class RedisCacheConfig extends CacheProperties {
                 .transactionAware();
         Redis redis = this.getRedis();
         List<String> cacheNames = this.getCacheNames();
+        cacheNames.addAll(Arrays.asList("ONE_DAY#86400","ONE_WEEK#604800","ONE_MONTH#2592000","HALF_YEAR#15768000","ONE_YEAR#31536000"));
         Duration defaultDuration = redis.getTimeToLive();
         Map<String, RedisCacheConfiguration> configurationMap;
         if (cacheNames != null) {
@@ -86,7 +86,7 @@ public class RedisCacheConfig extends CacheProperties {
             configurationMap = new LinkedHashMap<>(1);
         }
         configurationMap.put(RedisTime.DICTIONARY, RedisCacheConfiguration.defaultCacheConfig()
-                .disableKeyPrefix().entryTtl(Duration.ofDays(7))
+                .entryTtl(Duration.ofDays(7))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair
                         .fromSerializer(ProtoBufSerializationRedisSerializer.getInstance())));
         redisCacheManagerBuilder.withInitialCacheConfigurations(configurationMap);

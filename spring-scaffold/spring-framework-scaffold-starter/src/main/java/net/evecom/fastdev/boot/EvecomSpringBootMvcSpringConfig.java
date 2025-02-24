@@ -58,7 +58,7 @@ public class EvecomSpringBootMvcSpringConfig implements WebMvcConfigurer {
         if(!CollectionUtils.isEmpty(customInterceptors)){
             for (CustomInterceptor customInterceptor : customInterceptors) {
                 InterceptorRegistration interceptorRegistration = registry.addInterceptor(customInterceptor);
-                if(CollectionUtils.isEmpty(customInterceptor.excludePathPatterns())){
+                if(!CollectionUtils.isEmpty(customInterceptor.excludePathPatterns())){
                     interceptorRegistration.excludePathPatterns(customInterceptor.excludePathPatterns());
                 }
             }
