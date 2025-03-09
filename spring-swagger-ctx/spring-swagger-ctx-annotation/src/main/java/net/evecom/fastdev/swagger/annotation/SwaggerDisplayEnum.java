@@ -24,7 +24,6 @@ public @interface SwaggerDisplayEnum {
      * value
      */
     String value();
-
     /**
      * name
      */
