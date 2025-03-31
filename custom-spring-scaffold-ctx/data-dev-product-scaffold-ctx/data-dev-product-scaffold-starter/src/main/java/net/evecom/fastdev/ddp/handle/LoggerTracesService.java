@@ -1,6 +1,6 @@
 package net.evecom.fastdev.ddp.handle;
 
-import net.evecom.fastdev.boot.handle.TraceService;
+import net.github.fastdev.boot.handle.TraceService;
 import org.apache.skywalking.apm.toolkit.trace.TraceContext;
 
 /**

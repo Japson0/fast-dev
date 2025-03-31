@@ -1,15 +1,11 @@
-/*
- * Copyright (c) 2005-2022, EVECOM Technology Co.,Ltd. All rights reserved.
- *
- * EVECOM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
+
 package net.evecom.fastdev.ddp.web;
 
 import io.swagger.annotations.ApiOperation;
-import net.evecom.fastdev.boot.template.BaseController4DTO;
-import net.evecom.fastdev.common.model.RestResponse;
-import net.evecom.fastdev.common.web.BaseService4DTO;
-import net.evecom.fastdev.mybatis.annotation.BaseEntity;
+import net.github.fastdev.boot.template.BaseController4DTO;
+import net.github.fastdev.common.model.RestResponse;
+import net.github.fastdev.common.web.BaseService4DTO;
+import net.github.fastdev.mybatis.annotation.BaseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 

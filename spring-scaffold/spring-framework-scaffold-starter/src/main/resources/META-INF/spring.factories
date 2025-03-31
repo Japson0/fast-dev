@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=net.evecom.fastdev.boot.EvecomSpringBootConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=net.github.fastdev.boot.CustomSpringBootConfig

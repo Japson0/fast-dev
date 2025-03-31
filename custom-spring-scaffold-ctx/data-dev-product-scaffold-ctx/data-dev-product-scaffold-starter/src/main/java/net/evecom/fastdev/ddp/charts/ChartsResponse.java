@@ -1,11 +1,11 @@
 package net.evecom.fastdev.ddp.charts;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import net.evecom.fastdev.common.model.RestResponse;
 import net.evecom.fastdev.ddp.charts.table.GridData;
 import net.evecom.fastdev.ddp.charts.table.GridTableInfo;
 import net.evecom.fastdev.ddp.charts.table.GridTableUtil;
-import net.evecom.fastdev.mybatis.annotation.PageRequest;
+import net.github.fastdev.common.model.RestResponse;
+import net.github.fastdev.mybatis.annotation.PageRequest;
 
 import java.util.Collection;
 

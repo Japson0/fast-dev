@@ -1,8 +1,8 @@
 package net.evecom.fastdev.ddp.handle;
 
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
-import net.evecom.fastdev.common.exception.NoUserInfoException;
 import net.evecom.fastdev.ddp.UserContext;
+import net.github.fastdev.common.exception.NoUserInfoException;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import org.apache.ibatis.binding.MapperRegistry;

@@ -1,12 +1,8 @@
-/*
- * Copyright (c) 2005-2022, EVECOM Technology Co.,Ltd. All rights reserved.
- *
- * EVECOM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
+
 package net.evecom.fastdev.ddp.web;
 
-import net.evecom.fastdev.common.web.BaseService;
-import net.evecom.fastdev.mybatis.annotation.BaseEntity;
+import net.github.fastdev.common.web.BaseService;
+import net.github.fastdev.mybatis.annotation.BaseEntity;
 
 /**
  * 知识图谱平台基础开发工程

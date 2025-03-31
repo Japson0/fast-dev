@@ -1,6 +1,6 @@
 package net.evecom.fastdev.ddp.enums;
 
-import net.evecom.fastdev.common.model.ComEnum;
+import net.github.fastdev.common.model.ComEnum;
 
 /**
  * <P><B>启用状态:</B></P>

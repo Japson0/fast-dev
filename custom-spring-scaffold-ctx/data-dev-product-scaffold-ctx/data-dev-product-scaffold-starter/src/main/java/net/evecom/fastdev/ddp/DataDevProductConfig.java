@@ -2,14 +2,14 @@ package net.evecom.fastdev.ddp;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
-import net.evecom.fastdev.boot.handle.CustomInterceptor;
-import net.evecom.fastdev.boot.handle.TraceService;
 import net.evecom.fastdev.ddp.filter.UserInterceptor;
 import net.evecom.fastdev.ddp.filter.debug.DebugUserInterceptor;
 import net.evecom.fastdev.ddp.handle.AutoMetaObjectHandle;
 import net.evecom.fastdev.ddp.handle.DataDevTenantHandler;
 import net.evecom.fastdev.ddp.handle.LoggerTracesService;
 import net.evecom.fastdev.ddp.handle.ModuleBeanPostProcessor;
+import net.github.fastdev.boot.handle.CustomInterceptor;
+import net.github.fastdev.boot.handle.TraceService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,8 +17,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * <P><B>研发二部配置:</B></P>

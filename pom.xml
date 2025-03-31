@@ -10,7 +10,7 @@
         <version>2.7.18</version>
     </parent>
 
-    <groupId>net.evecom</groupId>
+    <groupId>net.github</groupId>
     <artifactId>fast-dev</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
@@ -40,62 +40,62 @@
             <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>data-dev-product-scaffold-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>data-dev-product-scaffold-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-mybatis-ctx-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-mybatis-ctx-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>common-info</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-framework-scaffold-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-framework-cloud-scaffold-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-swagger-ctx-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-swagger-ctx-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-cache-redis-ctx</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
@@ -146,6 +146,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>public</id>
+            <name>public</name>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+    </repositories>
 
     <distributionManagement>
         <repository>

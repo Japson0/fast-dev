@@ -5,10 +5,9 @@
 
 package net.evecom.fastdev.ddp.filter.debug;
 
-import net.evecom.fastdev.boot.handle.CustomInterceptor;
 import net.evecom.fastdev.ddp.UserContext;
 import net.evecom.fastdev.ddp.UserInfo;
-import org.springframework.web.servlet.HandlerInterceptor;
+import net.github.fastdev.boot.handle.CustomInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;

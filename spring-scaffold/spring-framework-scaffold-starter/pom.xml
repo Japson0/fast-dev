@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>spring-scaffold</artifactId>
-        <groupId>net.evecom</groupId>
+        <groupId>net.github</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -22,7 +22,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.evecom</groupId>
+            <groupId>net.github</groupId>
             <artifactId>common-info</artifactId>
         </dependency>
 
@@ -39,17 +39,17 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.evecom</groupId>
+            <groupId>net.github</groupId>
             <artifactId>spring-swagger-ctx-starter</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>net.evecom</groupId>
+            <groupId>net.github</groupId>
             <artifactId>spring-cache-redis-ctx</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>net.evecom</groupId>
+            <groupId>net.github</groupId>
             <artifactId>spring-mybatis-ctx-starter</artifactId>
         </dependency>
 

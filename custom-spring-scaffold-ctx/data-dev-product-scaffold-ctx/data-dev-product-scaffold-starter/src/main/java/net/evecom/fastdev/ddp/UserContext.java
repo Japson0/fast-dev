@@ -7,10 +7,10 @@ package net.evecom.fastdev.ddp;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.extra.spring.SpringUtil;
-import net.evecom.fastdev.boot.utils.JacksonUtils;
-import net.evecom.fastdev.common.exception.NoUserInfoException;
-import net.evecom.fastdev.common.exception.ResourceException;
 import net.evecom.fastdev.ddp.handle.DataDevTenantHandler;
+import net.github.fastdev.boot.utils.JacksonUtils;
+import net.github.fastdev.common.exception.NoUserInfoException;
+import net.github.fastdev.common.exception.ResourceException;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;

@@ -64,8 +64,8 @@ public class DemoController extends CustomBaseController<UserInfo> {
 ```java
 package net.evecom.demo.model.dto.query;
 
-import net.evecom.fastdev.mybatis.annotation.ConditionOperation;
-import net.evecom.fastdev.mybatis.annotation.QueryField;
+import annotation.net.github.fastdev.mybatis.Operation;
+import annotation.net.github.fastdev.mybatis.QueryField;
 
 /**
  * <P><B>用户查询类:</B></P>

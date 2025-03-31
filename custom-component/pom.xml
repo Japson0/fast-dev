@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>fast-dev</artifactId>
-        <groupId>net.evecom</groupId>
+        <groupId>net.github</groupId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -26,19 +26,19 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-minio-client-ctx</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-hadoop-client-ctx</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>dolphinscheduler-job-core</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>

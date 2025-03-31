@@ -1,0 +1,21 @@
+package net.github.fastdev.mybatis.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * <P><B>加密字段:</B></P>
+ * RevisionTrail:(Date/Author/Description)
+ * 2020年10月12日 CREATE
+ *
+ * @author Japson Huang
+ * @version 1.0
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+public @interface Encrypt {
+
+    EncryptType value();
+}

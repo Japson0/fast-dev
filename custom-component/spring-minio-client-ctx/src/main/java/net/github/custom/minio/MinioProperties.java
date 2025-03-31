@@ -1,0 +1,56 @@
+
+package net.github.custom.minio;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+/**
+ * MinioProperties
+ *
+ * @author Nick Lv
+ * @created 2022/10/17 17:11
+ */
+@ConfigurationProperties(prefix = "custom.minio")
+public class MinioProperties {
+    /**
+     * minio服务地址
+     * 例如：http://ip:9000
+     */
+    private String endpoint;
+    /**
+     * 区域，需和minio的配置保持一致
+     * 默认为:us-east-1
+     */
+    private String region = "us-east-1";
+
+    /**
+     * 默认桶信息
+     */
+    private String defaultBucket = "common";
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getDefaultBucket() {
+        return defaultBucket;
+    }
+
+    public void setDefaultBucket(String defaultBucket) {
+        this.defaultBucket = defaultBucket;
+    }
+}
+
+
+

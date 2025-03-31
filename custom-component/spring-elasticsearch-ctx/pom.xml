@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>custom-component</artifactId>
-        <groupId>net.evecom</groupId>
+        <groupId>net.github</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -32,12 +32,12 @@
                 <version>${elastic.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-elasticsearch-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.evecom</groupId>
+                <groupId>net.github</groupId>
                 <artifactId>spring-elasticsearch-ctx-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
