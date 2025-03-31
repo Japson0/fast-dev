@@ -11,7 +11,7 @@ import springfox.documentation.service.Contact;
  * @author Japson Huang
  * @version 1.0
  */
-@ConfigurationProperties(prefix = "evecom.swagger")
+@ConfigurationProperties(prefix = "custom.swagger")
 public class SwaggerProperties {
 
     /**
