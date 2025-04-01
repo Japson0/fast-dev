@@ -1,7 +1,4 @@
-/*
- * Copyright (c) 2005, 2021, EVECOM Technology Co.,Ltd. All rights reserved.
- * EVECOM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
+
 
 /*
  * Copyright (c) 2011-2020, baomidou (jobob@qq.com).

@@ -25,14 +25,14 @@ import java.util.List;
  */
 @Configuration
 @EnableConfigurationProperties({RestTemplateProperties.class})
-public class EvecomSpringCloudConfig  {
+public class CustomSpringCloudConfig {
 
     /**
      * resttemplate配置
      */
     private final RestTemplateProperties restTemplateProperties;
 
-    public EvecomSpringCloudConfig(RestTemplateProperties restTemplateProperties) {
+    public CustomSpringCloudConfig(RestTemplateProperties restTemplateProperties) {
         this.restTemplateProperties = restTemplateProperties;
     }
 

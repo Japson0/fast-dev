@@ -1,12 +1,6 @@
-/*
- * Copyright (c) 2005, 2021, EVECOM Technology Co.,Ltd. All rights reserved.
- * EVECOM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
 
-/*
- * Copyright (c) 2005, 2021, EVECOM Technology Co.,Ltd. All rights reserved.
- * EVECOM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
+
+
 
 /*
  *Copyright(c)2005,2018,EVECOMTechnologyCo.,Ltd.Allrightsreserved.

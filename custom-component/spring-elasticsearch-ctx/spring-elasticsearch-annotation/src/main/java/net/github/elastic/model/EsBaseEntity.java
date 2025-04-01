@@ -1,7 +1,4 @@
-/*
- * Copyright (c) 2005, 2022, EVECOM Technology Co.,Ltd. All rights reserved.
- * EVECOM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
+
 
 package net.github.elastic.model;
 
