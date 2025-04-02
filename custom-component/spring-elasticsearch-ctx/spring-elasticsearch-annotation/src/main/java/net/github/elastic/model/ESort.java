@@ -1,8 +1,4 @@
-/*
- *Copyright(c)2005,2018,EVECOMTechnologyCo.,Ltd.Allrightsreserved.
- *EVECOMPROPRIETARY/CONFIDENTIAL.Useissubjecttolicenseterms.
- *
- */
+
 package net.github.elastic.model;
 
 import net.github.elastic.enums.OrderType;

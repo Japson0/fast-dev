@@ -48,7 +48,7 @@ public class HadoopConfig {
      * @author Japson Huang
      */
     @Bean
-    @ConditionalOnExpression("#{environment['evecom.hadoop.hdfs.mode']!=null}")
+    @ConditionalOnExpression("#{environment['custom.hadoop.hdfs.mode']!=null}")
     public HdfsClientFactory hdfsClientFactory(HdfsProperties hdfsProperties) {
         return new HdfsClientFactory(hdfsProperties);
     }

@@ -37,7 +37,7 @@ import java.util.List;
 @Configuration
 @EnableSwagger2WebMvc
 @Import(BeanValidatorPluginsConfiguration.class)
-@ConditionalOnProperty(prefix = "evecom.swagger", name = "enable", havingValue = "true")
+@ConditionalOnProperty(prefix = "custom.swagger", name = "enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(SwaggerProperties.class)
 public class Swagger2Config {
 
@@ -68,7 +68,6 @@ public class Swagger2Config {
         OpenApiExtendSetting openApiExtendSetting = new OpenApiExtendSetting();
         openApiExtendSetting.setEnableFooter(false);
         openApiExtendSetting.setEnableFooterCustom(true);
-        openApiExtendSetting.setFooterCustomContent("Swagger Apis | Copyright (c) EVECOM");
         OpenApiExtension openApiExtension = new OpenApiExtension("x-openapi");
         openApiExtension.addProperty(new OpenApiSettingExtension(openApiExtendSetting));
         List<VendorExtension> vendorExtensions = new ArrayList();

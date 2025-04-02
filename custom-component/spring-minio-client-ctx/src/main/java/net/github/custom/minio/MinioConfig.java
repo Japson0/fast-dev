@@ -32,7 +32,7 @@ public class MinioConfig {
      * @return
      */
     @Bean
-    @ConditionalOnExpression("#{environment['evecom.minio.endpoint']!=null}")
+    @ConditionalOnExpression("#{environment['custom.minio.endpoint']!=null}")
     @Lazy
     public FileManager fileManager(MinioDriver minioDriver, MinioProperties minioProperties) {
         return new FileManager(minioDriver, minioProperties.getDefaultBucket());
@@ -43,7 +43,7 @@ public class MinioConfig {
      * @return
      */
     @Bean
-    @ConditionalOnExpression("#{environment['evecom.minio.endpoint']!=null}")
+    @ConditionalOnExpression("#{environment['custom.minio.endpoint']!=null}")
     @Lazy
     public BucketManager bucketManager(MinioDriver minioDriver) {
         return new BucketManager(minioDriver);

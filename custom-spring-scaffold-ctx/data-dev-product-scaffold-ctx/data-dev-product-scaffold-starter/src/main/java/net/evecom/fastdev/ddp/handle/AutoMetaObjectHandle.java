@@ -2,11 +2,7 @@
 
 
 
-/*
- *Copyright(c)2005,2018,EVECOMTechnologyCo.,Ltd.Allrightsreserved.
- *EVECOMPROPRIETARY/CONFIDENTIAL.Useissubjecttolicenseterms.
- *
- */
+
 package net.evecom.fastdev.ddp.handle;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
