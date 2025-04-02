@@ -1,7 +1,6 @@
 package net.github.fastdev.mybatis.encrypt;
 
 import net.github.fastdev.mybatis.annotation.EncryptType;
-import net.github.fastdev.mybatis.util.Sm4Util;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,9 +38,7 @@ public class EncryptString implements EncryptInterface<String> {
     @Override
     public String encrypt(String object, EncryptCertificate encryptCertificate) throws Exception {
         if (object != null) {
-            if (encryptType == EncryptType.SM4) {
-                return Sm4Util.encryptEcb(encryptCertificate.getSm4Key(), object);
-            }
+            return encryptCertificate.encrypt(encryptType, object);
         }
         return null;
     }

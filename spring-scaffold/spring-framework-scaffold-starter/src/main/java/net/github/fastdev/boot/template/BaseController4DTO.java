@@ -37,7 +37,7 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseEntity<ID
      *
      * @author Japson Huang
      */
-    @PutMapping
+    @PostMapping
     @ApiOperation("更新")
     public RestResponse update(@Validated(Update.class) @RequestBody DTO entity) {
 
@@ -59,7 +59,7 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseEntity<ID
      *
      * @author Japson Huang
      */
-    @PostMapping
+    @PutMapping
     @ApiOperation("新增")
     public RestResponse insert(@Validated(Insert.class) @RequestBody DTO entity) {
         if (baseService.addById(entity) > 0) {

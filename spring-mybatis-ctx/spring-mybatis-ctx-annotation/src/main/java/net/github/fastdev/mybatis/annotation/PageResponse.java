@@ -13,7 +13,7 @@ import java.util.List;
  * @author Japson Huang
  * @version1.0
  */
-public class PageResponse<P,DTO> extends PageRequest<P> {
+public class PageResponse<DTO> extends PageRequest {
 
     /**
      * 记录
@@ -46,7 +46,7 @@ public class PageResponse<P,DTO> extends PageRequest<P> {
         return records;
     }
 
-    public PageResponse<P,DTO> setRecords(List<DTO> records) {
+    public PageResponse<DTO> setRecords(List<DTO> records) {
         this.records = records;
         return this;
     }
@@ -55,7 +55,7 @@ public class PageResponse<P,DTO> extends PageRequest<P> {
         return total;
     }
 
-    public PageResponse<P,DTO> setTotal(long total) {
+    public PageResponse<DTO> setTotal(long total) {
         this.total = total;
         return this;
     }

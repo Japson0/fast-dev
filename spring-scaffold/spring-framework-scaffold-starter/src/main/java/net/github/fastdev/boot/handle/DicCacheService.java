@@ -24,16 +24,11 @@ public abstract class DicCacheService implements DictionaryService, ApplicationR
      */
     private final Map<String, Map<String, String>> codeMap= new HashMap<>(5);
 
-    /**
-     * 自身代理类
-     */
-    protected DicCacheService proxyService;
-
     @Override
     public String getDicStr(String typeCode, String code) {
         Map<String, String> typeCodeMap = codeMap.get(typeCode);
         if (typeCodeMap == null) {
-            Map<String, String> dicDetail = proxyService.getDicDetail(typeCode);
+            Map<String, String> dicDetail = getDicDetail(typeCode);
             if (dicDetail == null) {
                 return null;
             }
@@ -51,10 +46,4 @@ public abstract class DicCacheService implements DictionaryService, ApplicationR
      * @author Japson Huang
      */
     protected abstract Map<String, String> getDicDetail(String typeCode);
-
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        proxyService = SpringUtil.getBean(DicCacheService.class);
-    }
 }

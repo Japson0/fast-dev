@@ -34,7 +34,7 @@ public class BaseService4DTOImpl<ID extends Serializable, R extends BaseEntity<I
 
 
     @Override
-    public <Q> PageResponse<Q,DTO> getPage(PageRequest<Q> pageConditionDTO) {
+    public <Q> PageResponse<DTO> getPage(PageRequest<Q> pageConditionDTO) {
         Assert.notNull(pageConditionDTO, "pageConditionDTO must not be null");
         PageWrapper page = new PageWrapper<>(pageConditionDTO);
         baseMapper.selectPage(page, page.buildQueryWrapper());

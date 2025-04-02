@@ -114,7 +114,7 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
 
 
 
-    public PageResponse<P,DTO> getPageResponse(){
+    public PageResponse<DTO> getPageResponse(){
         return new PageResponse<>(pageRequest,this.getRecords(),this.getTotal());
     }
 

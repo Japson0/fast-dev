@@ -4,7 +4,6 @@ package net.github.fastdev.mybatis.encrypt;
 import net.github.fastdev.mybatis.annotation.CryptAble;
 import net.github.fastdev.mybatis.annotation.Encrypt;
 import net.github.fastdev.mybatis.annotation.EncryptType;
-import net.github.fastdev.mybatis.util.Sm4Util;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -159,21 +158,19 @@ public class EncryptInspector implements EncryptInterface {
                     try {
                         Object value = propertyDescriptor.getReadMethod().invoke(object);
                         if (value != null) {
-                            if (encryptTypeEntry.getValue() == EncryptType.SM4) {
-                                if (isEncrypt) {
-                                    value = Sm4Util.encryptEcb(encryptCertificate.getSm4Key(), (String) value);
-                                } else {
-                                    if (value instanceof List) {
-                                        List tempVs = (List) value;
-                                        for (int i = 0; i < tempVs.size(); i++) {
-                                            Object tempV = tempVs.get(i);
-                                            if (tempV.getClass() == String.class) {
-                                                tempVs.set(i, tempV);
-                                            }
+                            if (isEncrypt) {
+                                value = encryptCertificate.encrypt(encryptTypeEntry.getValue(), (String) value);
+                            } else {
+                                if (value instanceof List) {
+                                    List tempVs = (List) value;
+                                    for (int i = 0; i < tempVs.size(); i++) {
+                                        Object tempV = tempVs.get(i);
+                                        if (tempV.getClass() == String.class) {
+                                            tempVs.set(i, tempV);
                                         }
-                                    } else {
-                                        value = Sm4Util.decryptEcb(encryptCertificate.getSm4Key(), (String) value);
                                     }
+                                } else {
+                                    value = encryptCertificate.decrypt(encryptTypeEntry.getValue(), (String) value);
                                 }
                             }
                             propertyDescriptor.getWriteMethod().invoke(object, value);

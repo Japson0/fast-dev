@@ -1,7 +1,9 @@
 package net.github.fastdev.mybatis.encrypt;
 
+import cn.hutool.core.util.HexUtil;
+import cn.hutool.crypto.symmetric.SM4;
+import net.github.fastdev.mybatis.annotation.EncryptType;
 import net.github.fastdev.mybatis.config.MybatisCtxProperties;
-import net.github.fastdev.mybatis.util.Sm4Util;
 
 /**
  * <P><B>Description:</B></P>
@@ -13,32 +15,37 @@ import net.github.fastdev.mybatis.util.Sm4Util;
  */
 public class EncryptCertificate {
 
-    private final byte[] sm4Key;
+
+    private SM4 sm4;
+
 
     public EncryptCertificate(MybatisCtxProperties.Encrcypt encrcypt) {
         String sms4Key = encrcypt.getSm4Key();
         if (sms4Key == null || sms4Key.length() != 32) {
             throw new IllegalArgumentException("key of length in SM4 must be equal to 32");
         }
-        this.sm4Key = Sm4Util.hexStringToByteArray(sms4Key);
+        this.sm4 = new SM4(HexUtil.decodeHex(sms4Key));
     }
 
-    public byte[] getSm4Key() {
-        return sm4Key;
-    }
-
-
-    public String sm4Encrypt(String data) {
+    public String encrypt(EncryptType encryptType, String data) {
         try {
-            return Sm4Util.encryptEcb(sm4Key, data);
+            switch (encryptType) {
+                case SM4:  return sm4.encryptHex(data);
+                default: throw new IllegalArgumentException("Unsupported encrypt type: " + encryptType);
+            }
         } catch (Exception e) {
             throw new RuntimeException("加密失败" + e.getMessage());
         }
     }
 
-    public String sm4Decrypt(String data) {
+
+
+    public String decrypt(EncryptType encryptType,String data) {
         try {
-            return Sm4Util.decryptEcb(sm4Key, data);
+            switch (encryptType) {
+                case SM4:  return sm4.decryptStr(data);
+                default: throw new IllegalArgumentException("Unsupported decrypt type: " + encryptType);
+            }
         } catch (Exception e) {
             throw new RuntimeException("解密失败" + e.getMessage());
         }

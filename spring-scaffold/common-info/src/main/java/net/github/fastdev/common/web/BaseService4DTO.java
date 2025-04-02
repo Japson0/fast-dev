@@ -25,7 +25,7 @@ public interface BaseService4DTO<ID extends Serializable, R extends BaseEntity<I
      * @param pageConditionDTO 分页类
      * @author Japson Huang
      */
-    <Q> PageResponse<Q,DTO> getPage(PageRequest<Q> pageConditionDTO);
+    <Q> PageResponse<DTO> getPage(PageRequest<Q> pageConditionDTO);
 
     /**
      * 新增或更新

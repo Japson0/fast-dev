@@ -1,5 +1,6 @@
 package net.github.fastdev.boot.serio;
 
+import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.SM4;
@@ -9,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
-import net.github.fastdev.boot.utils.DesensitizationUtils;
 import net.github.fastdev.boot.utils.WebSecuritySerializeContext;
 import net.github.fastdev.common.annotation.WebSecuritySerialize;
 import net.github.fastdev.common.model.CryptoType;
@@ -93,21 +93,19 @@ public class WebTransSecuritySerializer extends JsonSerializer<String> implement
     public String fuzzy(String value) {
         switch (this.distortionType) {
             case CHINESE_NAME:
-                return DesensitizationUtils.chineseName(value);
+                return DesensitizedUtil.chineseName(value);
             case EMAIL:
-                return DesensitizationUtils.email(value);
+                return DesensitizedUtil.email(value);
             case ADDRESS:
-                return DesensitizationUtils.address(value, 4);
+                return DesensitizedUtil.address(value, 4);
             case ID_CARD:
-                return DesensitizationUtils.idCardNum(value);
+                return DesensitizedUtil.idCardNum(value,3,10);
             case BANK_CARD:
-                return DesensitizationUtils.bankCard(value);
-            case CNAPS_CODE:
-                return DesensitizationUtils.cnapsCode(value);
+                return DesensitizedUtil.bankCard(value);
             case FIXED_PHONE:
-                return DesensitizationUtils.fixedPhone(value);
+                return DesensitizedUtil.fixedPhone(value);
             case MOBILE_PHONE:
-                return DesensitizationUtils.mobilePhone(value);
+                return DesensitizedUtil.mobilePhone(value);
             default:
                 return value;
         }

@@ -44,10 +44,6 @@ public enum DistortionType {
      * 银行卡
      */
     BANK_CARD,
-    /**
-     * 公司开户银行联号
-     */
-    CNAPS_CODE;
 
 
 }
