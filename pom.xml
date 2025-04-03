@@ -10,7 +10,7 @@
         <version>2.7.18</version>
     </parent>
 
-    <groupId>net.github</groupId>
+    <groupId>net.github.fast</groupId>
     <artifactId>fast-dev</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
@@ -43,62 +43,62 @@
             <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
 
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>data-dev-product-scaffold-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>data-dev-product-scaffold-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>spring-mybatis-ctx-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>spring-mybatis-ctx-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
 
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>common-info</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>spring-framework-scaffold-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>spring-framework-cloud-scaffold-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
 
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>spring-swagger-ctx-starter</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>spring-swagger-ctx-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.github</groupId>
+                <groupId>net.github.fast</groupId>
                 <artifactId>spring-cache-redis-ctx</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>

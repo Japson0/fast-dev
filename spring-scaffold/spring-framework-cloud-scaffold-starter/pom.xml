@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>spring-scaffold</artifactId>
-        <groupId>net.github</groupId>
+        <groupId>net.github.fast</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -26,7 +26,7 @@
         </dependency>
 
         <dependency>
-            <groupId>net.github</groupId>
+            <groupId>net.github.fast</groupId>
             <artifactId>spring-framework-scaffold-starter</artifactId>
         </dependency>
 

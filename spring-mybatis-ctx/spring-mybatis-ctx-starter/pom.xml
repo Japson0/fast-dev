@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>spring-mybatis-ctx</artifactId>
-        <groupId>net.github</groupId>
+        <groupId>net.github.fast</groupId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -31,7 +31,7 @@
 
 
         <dependency>
-            <groupId>net.github</groupId>
+            <groupId>net.github.fast</groupId>
             <artifactId>spring-mybatis-ctx-annotation</artifactId>
         </dependency>
 
