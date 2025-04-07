@@ -37,12 +37,6 @@
                 <version>${fast-dev.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>net.github.fast</groupId>
-                <artifactId>dolphinscheduler-job-core</artifactId>
-                <version>${fast-dev.version}</version>
-            </dependency>
-
         </dependencies>
 
     </dependencyManagement>

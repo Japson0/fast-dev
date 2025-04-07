@@ -183,14 +183,15 @@
 
     <distributionManagement>
         <repository>
-            <id>data-maven-releases</id>
-            <name>Releases</name>
-            <url>http://172.16.40.114:8081/repository/maven-releases/</url>
+            <id>releases</id>
+            <name>releases Repository</name>
+            <url>http://192.168.133.162:9081/repository/maven-releases/</url>
         </repository>
-        <!-- 发布到快照版本的仓库，即测试版本仓库 -->
+
         <snapshotRepository>
-            <id>data-maven-snapshots</id>
-            <url>http://172.16.40.114:8081/repository/maven-snapshots/</url>
+            <id>snapshots</id>
+            <url>http://192.168.133.162:9081/repository/maven-snapshots/</url>
+            <uniqueVersion>true</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
 
