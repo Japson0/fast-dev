@@ -24,6 +24,7 @@
         <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx</module>
 <!--        <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-annotation</module>-->
         <module>custom-component</module>
+        <module>newland-spring-scaffold-ctx</module>
     </modules>
 
     <properties>
