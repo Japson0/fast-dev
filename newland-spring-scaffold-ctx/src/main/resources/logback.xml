@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2005, 2024, EVECOM Technology Co.,Ltd. All rights reserved.
+  ~ EVECOM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  ~
+  -->
+
+<configuration scanPeriod="30 seconds" debug="false">
+
+    <springProperty scope="context" name="appName" source="spring.application.name"/>
+    <property name="log.charset" value="utf-8" />
+    <property name="log.path" value="${spring.application.name}" />
+    <property name="log.pattern"
+              value="%black(${app.name}) %red(%d{yyyy-MM-dd HH:mm:ss}) %highlight(%-5level) %boldMagenta(%logger{36}) [%X{traceId}] - %msg%n" />
+
+    <!-- 控制台日志：输出全部日志到控制台 -->
+<!--    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+<!--            <pattern>${log.pattern}</pattern>-->
+<!--            <charset>${log.charset}</charset>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
+                <Pattern>[${appName}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%X{tid}] [%thread] %-5level %logger{36} -%msg%n</Pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <!--普通日志输出到控制台 -->
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+
+</configuration>

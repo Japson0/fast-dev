@@ -1,5 +1,6 @@
 package net.github.fastdev.boot.handle;
 
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Collections;
@@ -16,4 +17,6 @@ import java.util.List;
 public interface CustomInterceptor extends HandlerInterceptor {
 
     default List<String> excludePathPatterns() {return Collections.emptyList();}
+
+    default public int order() {return Ordered.LOWEST_PRECEDENCE;}
 }

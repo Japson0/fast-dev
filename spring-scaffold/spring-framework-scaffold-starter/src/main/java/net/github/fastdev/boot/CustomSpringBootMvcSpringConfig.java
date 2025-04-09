@@ -13,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -51,6 +53,7 @@ public class CustomSpringBootMvcSpringConfig implements WebMvcConfigurer {
                 registry.addInterceptor(new WebTransSecurityInterceptor(webTransSecurityServer)).addPathPatterns(webTransSecurityFilter.getPath());
             }
         }
+        Collections.sort(customInterceptors, Comparator.comparingInt(a->a.order()));
         if(!CollectionUtils.isEmpty(customInterceptors)){
             for (CustomInterceptor customInterceptor : customInterceptors) {
                 InterceptorRegistration interceptorRegistration = registry.addInterceptor(customInterceptor);

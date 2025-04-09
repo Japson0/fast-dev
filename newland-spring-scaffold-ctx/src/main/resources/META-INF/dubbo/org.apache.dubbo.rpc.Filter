@@ -1,0 +1,1 @@
+rpcUserFilter=com.nlecloud.spring.scaffold.filter.DubboRpcUserContentFilter

@@ -17,7 +17,7 @@ import java.util.Map;
  * @author Japson Huang
  * @version 1.0
  */
-public abstract class DicCacheService implements DictionaryService, ApplicationRunner {
+public abstract class DicCacheService implements DictionaryService {
 
     /**
      * 本地缓存
