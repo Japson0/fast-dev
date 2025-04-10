@@ -2,6 +2,7 @@ package com.nlecloud.spring.scaffold;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
+import com.nlecloud.spring.scaffold.filter.PermissionInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserInterceptor;
 import com.nlecloud.spring.scaffold.handle.AutoMetaObjectHandle;
 import com.nlecloud.spring.scaffold.handle.TenantHandle;
@@ -62,6 +63,10 @@ public class NewLandSpringConfig {
         return new UserInterceptor(userProxy);
     }
 
+    @Bean
+    public PermissionInterceptor permissionInterceptor(){
+        return new PermissionInterceptor();
+    }
 
     @Bean
     @ConditionalOnProperty(prefix = "nlecloud.product",name = "tenantEnabled",havingValue = "true")
@@ -75,4 +80,5 @@ public class NewLandSpringConfig {
         }
         return new TenantHandle(predicate);
     }
+
 }

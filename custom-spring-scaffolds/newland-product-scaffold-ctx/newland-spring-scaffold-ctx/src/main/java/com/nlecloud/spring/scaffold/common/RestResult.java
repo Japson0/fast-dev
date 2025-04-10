@@ -1,9 +1,11 @@
 package com.nlecloud.spring.scaffold.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nlecloud.spring.scaffold.utils.I18nUtils;
 import io.swagger.annotations.ApiModelProperty;
 import net.github.fastdev.common.exception.CommonError;
 import net.github.fastdev.common.exception.IErrorCode;
+import net.github.fastdev.common.model.RestResponse;
 
 /**
  * <P><B>Description:</B></P>
@@ -13,21 +15,9 @@ import net.github.fastdev.common.exception.IErrorCode;
  * @author Japson Huang
  * @version1.0
  */
-public class RestResult<T>  {
+public class RestResult<T>  extends RestResponse<T> {
 
 
-    /**
-     * 请求是否成功
-     */
-    @ApiModelProperty(value = "是否成功")
-    private  boolean result = true;
-    /**
-     * 成功时返回的数据，失败时返回具体的异常信息
-     */
-    @ApiModelProperty(value = "返回数据：可以是对象或集合")
-    private  T data;
-
-    private  String message;
 
     private static final RestResult RENDER_SUCCESS=new RestResult(true,null,CommonError.SUCCEED.getCode());
 
@@ -43,11 +33,7 @@ public class RestResult<T>  {
     }
 
     public RestResult(boolean success, T data, String i18nKey) {
-        this.result = success;
-        this.data = data;
-        if(i18nKey!=null) {
-            this.message = I18nUtils.getMessage(i18nKey,null);
-        }
+        super(success,i18nKey,data,i18nKey==null?null:I18nUtils.getMessage(i18nKey,null));
     }
 
     /**
@@ -77,6 +63,8 @@ public class RestResult<T>  {
         return new RestResult(true, null, i18nKey);
     }
 
+
+
     /**
      * @param errorCode
      * @return
@@ -85,15 +73,17 @@ public class RestResult<T>  {
         return new RestResult<>(false, null, errorCode.getCode());
     }
 
-    public boolean isResult() {
-        return result;
+    /**
+     * @param i18nKey
+     * @return
+     */
+    public static <T> RestResult<T> renderError(String i18nKey) {
+        return new RestResult<>(false, null, i18nKey);
     }
 
-    public T getData() {
-        return data;
-    }
-
-    public String getMessage() {
-        return message;
+    @Override
+    @JsonIgnore
+    public String getCode() {
+        return super.getCode();
     }
 }

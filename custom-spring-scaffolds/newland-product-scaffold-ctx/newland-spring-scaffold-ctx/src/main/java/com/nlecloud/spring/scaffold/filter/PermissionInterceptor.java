@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 
 /**
- * <P><B>Description:</B></P>
+ * <P><B>权限判断:</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2025年04月09日 CREATE
  *
