@@ -1,5 +1,6 @@
 package net.github.fastdev.boot.handle;
 
+import org.apache.commons.lang3.LocaleUtils;
 import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 /**
- * <P><B>Description:</B></P>
+ * <P><B>国际化解析:</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2025年04月10日 CREATE
  *
@@ -24,7 +25,7 @@ public class CustomAcceptHeaderLocaleResolver implements LocaleResolver {
 
         String header = request.getHeader("Accept-Language");
         if (header != null) {
-            return new Locale(header);
+            return LocaleUtils.toLocale(header);
         }
         return Locale.SIMPLIFIED_CHINESE;
     }

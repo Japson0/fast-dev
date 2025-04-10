@@ -17,7 +17,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class NewLandSpringProperty {
 
-    private boolean tenantEnabled=true;
+    private boolean tenantEnabled=false;
 
     /**
      * 租户忽略的表信息

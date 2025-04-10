@@ -62,7 +62,7 @@ public class GlobalExceptionHandle {
             } else {
                 LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
             }
-        }if(e instanceof IllegalArgumentException){
+        }else if(e instanceof IllegalArgumentException){
             result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), e.getMessage());
         } else if (e.getClass() == MethodArgumentNotValidException.class) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -78,7 +78,7 @@ public class GlobalExceptionHandle {
             LOGGER.warn("系统运行时异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), "系统未知异常");
+            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), "system error");
             LOGGER.error("系统异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
         }
         if(traceService!=null){
