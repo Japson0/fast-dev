@@ -1,6 +1,6 @@
 package net.github.model.entity;
 
-import net.evecom.fastdev.ddp.model.AbstractEntity;
+import net.github.fastdev.mybatis.annotation.BaseEntity;
 
 /**
  * <P><B>Description:</B></P>
@@ -10,7 +10,7 @@ import net.evecom.fastdev.ddp.model.AbstractEntity;
  * @author Japson Huang
  * @version1.0
  */
-public class DemoEntity extends AbstractEntity<Long> {
+public class DemoEntity implements BaseEntity<Long> {
     @Override
     public Long getId() {
         return null;

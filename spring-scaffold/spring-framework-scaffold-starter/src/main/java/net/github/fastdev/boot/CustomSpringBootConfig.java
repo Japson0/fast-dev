@@ -6,15 +6,22 @@ import net.github.fastdev.boot.controller.EnumController;
 import net.github.fastdev.boot.handle.*;
 import net.github.fastdev.cache.redis.CacheHandle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -30,6 +37,7 @@ import java.util.List;
 @Configuration
 @EnableConfigurationProperties(CustomSpringBootProperies.class)
 @ComponentScan(basePackages = {"cn.hutool.extra.spring"})
+@AutoConfigureBefore(WebMvcAutoConfiguration.class)
 public class CustomSpringBootConfig {
 
     /**
@@ -68,6 +76,12 @@ public class CustomSpringBootConfig {
             prefix = enums.getPrefixPackage();
         }
         return new EnumController(prefix);
+    }
+
+    @Bean(DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME)
+    @ConditionalOnBean(MessageSource.class)
+    public CustomAcceptHeaderLocaleResolver customAcceptHeaderLocaleResolver() {
+        return new CustomAcceptHeaderLocaleResolver();
     }
 
     @Bean
