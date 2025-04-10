@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>net.github.fast</groupId>
-        <artifactId>spring-cloud-archetype</artifactId>
+        <groupId>com.necloud</groupId>
+        <artifactId>newland-product-scaffold-ctx</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>spring-cloud-api</artifactId>
+    <artifactId>newland-spring-scaffold-annotation</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -17,11 +17,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
 
+    <dependencies>
         <dependency>
-            <groupId>com.necloud</groupId>
-            <artifactId>newland-spring-scaffold-annotation</artifactId>
+            <groupId>net.github.fast</groupId>
+            <artifactId>common-info</artifactId>
         </dependency>
     </dependencies>
 </project>

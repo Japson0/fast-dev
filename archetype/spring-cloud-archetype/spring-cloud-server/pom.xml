@@ -27,8 +27,9 @@
         </dependency>
 
         <dependency>
-            <groupId>net.github.fast</groupId>
-            <artifactId>data-dev-product-scaffold-starter</artifactId>
+            <groupId>com.necloud</groupId>
+            <artifactId>newland-spring-scaffold-ctx</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

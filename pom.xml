@@ -21,10 +21,8 @@
         <module>spring-scaffold</module>
         <module>spring-swagger-ctx</module>
         <module>archetype/spring-cloud-archetype</module>
-        <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx</module>
-<!--        <module>custom-spring-scaffold-ctx/data-dev-product-scaffold-ctx/data-dev-product-scaffold-annotation</module>-->
         <module>custom-component</module>
-        <module>newland-spring-scaffold-ctx</module>
+        <module>custom-spring-scaffolds</module>
     </modules>
 
     <properties>
@@ -44,14 +42,14 @@
             <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
 
             <dependency>
-                <groupId>net.github.fast</groupId>
-                <artifactId>data-dev-product-scaffold-annotation</artifactId>
+                <groupId>com.necloud</groupId>
+                <artifactId>newland-spring-scaffold-ctx</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>net.github.fast</groupId>
-                <artifactId>data-dev-product-scaffold-starter</artifactId>
+                <groupId>com.necloud</groupId>
+                <artifactId>newland-spring-scaffold-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
 

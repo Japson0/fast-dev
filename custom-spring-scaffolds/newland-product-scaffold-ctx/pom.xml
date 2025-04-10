@@ -5,11 +5,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.github.fast</groupId>
-        <artifactId>spring-cloud-archetype</artifactId>
+        <artifactId>custom-spring-scaffolds</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>spring-cloud-api</artifactId>
+    <groupId>com.necloud</groupId>
+    <artifactId>newland-product-scaffold-ctx</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>newland-spring-scaffold-annotation</module>
+        <module>newland-spring-scaffold-ctx</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -17,11 +23,4 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-
-        <dependency>
-            <groupId>com.necloud</groupId>
-            <artifactId>newland-spring-scaffold-annotation</artifactId>
-        </dependency>
-    </dependencies>
 </project>
