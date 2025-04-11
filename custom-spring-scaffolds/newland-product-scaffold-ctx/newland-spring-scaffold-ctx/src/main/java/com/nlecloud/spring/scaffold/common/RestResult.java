@@ -81,9 +81,4 @@ public class RestResult<T>  extends RestResponse<T> {
         return new RestResult<>(false, null, i18nKey);
     }
 
-    @Override
-    @JsonIgnore
-    public String getCode() {
-        return super.getCode();
-    }
 }
