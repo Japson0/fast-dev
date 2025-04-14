@@ -12,7 +12,23 @@ package net.github.fastdev.mybatis.annotation;
 public enum EncryptType {
 
     /**
-     * 国密SM4
+     * SM4,对称算法
      */
-    SM4
+    SM4(true),
+
+    /**
+     * SM3,摘要算法
+     */
+    SM3(false);
+
+    private final boolean canDecrypt;
+
+    public boolean isCanDecrypt() {
+        return canDecrypt;
+    }
+
+
+    EncryptType(boolean canDecrypt) {
+        this.canDecrypt = canDecrypt;
+    }
 }

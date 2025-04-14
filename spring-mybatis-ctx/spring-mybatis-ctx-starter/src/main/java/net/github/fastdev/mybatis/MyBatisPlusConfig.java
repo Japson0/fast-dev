@@ -74,7 +74,7 @@ public class MyBatisPlusConfig {
 
 
     @Bean
-    @ConditionalOnExpression("#{environment['mybatis-plus.encrcypt.sm4-key']!=null}")
+    @ConditionalOnExpression("#{environment['mybatis-plus.encrcypt.sm4-key']!=null||environment['mybatis-plus.encrcypt.sm3-key']!=null}")
     public EncryptCertificate encryptCertificate(MybatisCtxProperties mybaitsCtxProperties) {
         return new EncryptCertificate(mybaitsCtxProperties.getEncrcypt());
     }

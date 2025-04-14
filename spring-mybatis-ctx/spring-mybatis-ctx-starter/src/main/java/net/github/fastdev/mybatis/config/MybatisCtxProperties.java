@@ -41,12 +41,22 @@ public class MybatisCtxProperties {
          */
         private String sm4Key;
 
+        private String sm3key;
+
         public String getSm4Key() {
             return sm4Key;
         }
 
         public void setSm4Key(String sm4Key) {
             this.sm4Key = sm4Key;
+        }
+
+        public String getSm3key() {
+            return sm3key;
+        }
+
+        public void setSm3key(String sm3key) {
+            this.sm3key = sm3key;
         }
     }
 
