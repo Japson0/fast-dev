@@ -1,8 +1,6 @@
-package com.nlecloud.spring.scaffold.common;
+package com.necloud.spring.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nlecloud.spring.scaffold.utils.I18nUtils;
-import io.swagger.annotations.ApiModelProperty;
+import com.necloud.spring.common.i18n.I18nUtils;
 import net.github.fastdev.common.exception.CommonError;
 import net.github.fastdev.common.exception.IErrorCode;
 import net.github.fastdev.common.model.RestResponse;
@@ -33,7 +31,7 @@ public class RestResult<T>  extends RestResponse<T> {
     }
 
     public RestResult(boolean success, T data, String i18nKey) {
-        super(success,i18nKey,data,i18nKey==null?null:I18nUtils.getMessage(i18nKey,null));
+        super(success,i18nKey,data,i18nKey==null?null: I18nUtils.getMessage(i18nKey,null));
     }
 
     /**

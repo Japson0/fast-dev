@@ -1,6 +1,5 @@
-package com.nlecloud.spring.scaffold.i18n;
+package com.necloud.spring.common.i18n;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,6 @@ import org.springframework.context.support.AbstractApplicationContext;
  * @version1.0
  */
 @Configuration
-//@ConditionalOnProperty
 public class LocaleConfig {
 
     @Bean

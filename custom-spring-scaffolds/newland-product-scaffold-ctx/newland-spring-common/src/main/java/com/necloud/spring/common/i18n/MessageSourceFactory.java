@@ -1,20 +1,15 @@
-package com.nlecloud.spring.scaffold.i18n;
+package com.necloud.spring.common.i18n;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <P><B>Description:</B></P>
@@ -27,8 +22,6 @@ import java.util.Set;
 public class MessageSourceFactory implements FactoryBean<MessageSource> {
 
     private final MessageSourceProperties properties;
-
-    private final String defaultBasename="i18n/messages";
 
     public MessageSourceFactory(MessageSourceProperties properties) {
         this.properties = properties;

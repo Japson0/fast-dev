@@ -6,7 +6,10 @@
 
 package com.nlecloud.spring.scaffold.common;
 
+import com.necloud.spring.common.handle.UserWrapper;
 import com.nlecloud.spring.annotation.UserInfo;
+
+import java.util.Set;
 
 /**
  * <P><B>用户工具类:</B></P>
@@ -39,6 +42,10 @@ public class UserContext {
     public static String getUserName() {
         UserWrapper userWrapper = USER_INFO_LOCAL.get();
         return userWrapper==null?null:userWrapper.getUsername();
+    }
+
+    public static Set<String> getRoles(){
+        return USER_INFO_LOCAL.get().getRoles();
     }
 
     public static UserInfo getUserInfo() {

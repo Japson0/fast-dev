@@ -1,6 +1,6 @@
 package com.nlecloud.spring.scaffold.filter;
 
-import com.nlecloud.spring.scaffold.annotation.PreAuthorize;
+import com.nlecloud.spring.annotation.PreAuthorize;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import net.github.fastdev.boot.handle.CustomInterceptor;
 import org.springframework.core.Ordered;
@@ -23,7 +23,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author Japson Huang
  * @version1.0
  */
-public class PermissionInterceptor implements CustomInterceptor {
+public class PermissionInterceptor  implements CustomInterceptor {
 
     private Map<String,Set<Method>> roleMethodMap = new LinkedHashMap<>();
 
@@ -75,7 +75,7 @@ public class PermissionInterceptor implements CustomInterceptor {
             //否则根据角色判断是否存在对应的角色
             reentrantReadWriteLock.readLock().lock();
             if (!ignorePermissionMethods.contains(handlerMethod.getMethod())) {
-                for (String role : UserContext.getUserInfo().getRoles()) {
+                for (String role : UserContext.getRoles()) {
                     if (roleMethodMap.get(role).contains(handlerMethod.getMethod())) {
                         return true;
                     }

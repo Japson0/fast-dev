@@ -1,4 +1,4 @@
-package com.nlecloud.spring.scaffold.annotation;
+package com.nlecloud.spring.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

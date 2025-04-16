@@ -1,4 +1,4 @@
-package com.nlecloud.spring.scaffold.service;
+package com.necloud.spring.common.handle;
 
 import com.nlecloud.spring.annotation.UserInfo;
 

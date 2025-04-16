@@ -2,23 +2,18 @@ package com.nlecloud.spring.scaffold;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
+import com.necloud.spring.common.handle.UserProxy;
 import com.nlecloud.spring.scaffold.filter.PermissionInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserInterceptor;
 import com.nlecloud.spring.scaffold.handle.AutoMetaObjectHandle;
 import com.nlecloud.spring.scaffold.handle.TenantHandle;
-import com.nlecloud.spring.scaffold.i18n.LocaleConfig;
 import com.nlecloud.spring.scaffold.service.DictServiceProxy;
-import com.nlecloud.spring.scaffold.service.UserProxy;
 import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,8 +29,6 @@ import java.util.function.Predicate;
  */
 @Configuration
 @EnableConfigurationProperties(NewLandSpringProperty.class)
-@AutoConfigureBefore({MessageSourceAutoConfiguration .class})
-@Import(LocaleConfig.class)
 public class NewLandSpringConfig {
 
 
@@ -47,21 +40,12 @@ public class NewLandSpringConfig {
         return new AutoMetaObjectHandle();
     }
 
-    @Bean
-    public UserProxy userProxy(){
-        return new UserProxy();
-    }
 
     @Bean
     public DictServiceProxy dictServiceProxy(){
         return new DictServiceProxy();
     }
 
-
-    @Bean
-    public UserInterceptor userInterceptor(UserProxy userProxy){
-        return new UserInterceptor(userProxy);
-    }
 
     @Bean
     public PermissionInterceptor permissionInterceptor(){
