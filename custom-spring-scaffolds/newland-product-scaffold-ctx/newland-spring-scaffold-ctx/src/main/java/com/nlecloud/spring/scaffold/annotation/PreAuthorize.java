@@ -1,5 +1,10 @@
 package com.nlecloud.spring.scaffold.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * <P><B>权限控制:</B></P>
  * RevisionTrail:(Date/Author/Description)
@@ -8,6 +13,8 @@ package com.nlecloud.spring.scaffold.annotation;
  * @author Japson Huang
  * @version1.0
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE,ElementType.METHOD})
 public @interface PreAuthorize {
 
 

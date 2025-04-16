@@ -8,7 +8,12 @@ import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * <P><B>权限判断:</B></P>
@@ -20,18 +25,19 @@ import java.util.Set;
  */
 public class PermissionInterceptor implements CustomInterceptor {
 
+    private Map<String,Set<Method>> roleMethodMap = new LinkedHashMap<>();
+
+    private Set<Method> initMethods = new LinkedHashSet<>();
+
+    private Set<Method> ignorePermissionMethods = new LinkedHashSet<>();
+
+    private ReentrantReadWriteLock reentrantReadWriteLock=new ReentrantReadWriteLock();
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         if(handler instanceof HandlerMethod) {
-            PreAuthorize annotation = ((HandlerMethod) handler).getMethod().getAnnotation(PreAuthorize.class);
-            if(annotation != null) {
-                String[] value = annotation.value();
-                Set<String> roles = UserContext.getUserInfo().getRoles();
-                for (String role : value) {
-                    if(roles.contains(role)){
-                        return true;
-                    }
-                }
+            if(!containRole((HandlerMethod)handler)) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 return false;
             }
@@ -42,5 +48,57 @@ public class PermissionInterceptor implements CustomInterceptor {
     @Override
     public int order() {
         return Ordered.LOWEST_PRECEDENCE;
+    }
+
+    private boolean containRole(HandlerMethod handlerMethod){
+
+        if(!initMethods.contains(handlerMethod.getMethod())){
+            try {
+                reentrantReadWriteLock.writeLock().lock();
+                String[] annotation = getAnnotation(handlerMethod);
+                if (annotation != null) {
+                    for (String role : annotation) {
+                        Set<Method> methods = roleMethodMap.computeIfAbsent(role, a -> new LinkedHashSet<>());
+                        methods.add(handlerMethod.getMethod());
+                    }
+                } else {
+                    ignorePermissionMethods.add(handlerMethod.getMethod());
+                }
+                initMethods.add(handlerMethod.getMethod());
+
+            }finally {
+                reentrantReadWriteLock.writeLock().unlock();
+            }
+        }
+        try {
+         //在忽略权限的方法中时，true
+            //否则根据角色判断是否存在对应的角色
+            reentrantReadWriteLock.readLock().lock();
+            if (!ignorePermissionMethods.contains(handlerMethod.getMethod())) {
+                for (String role : UserContext.getUserInfo().getRoles()) {
+                    if (roleMethodMap.get(role).contains(handlerMethod.getMethod())) {
+                        return true;
+                    }
+                }
+                return false;
+            } else {
+                return true;
+            }
+        }finally {
+            reentrantReadWriteLock.readLock().unlock();
+        }
+
+    }
+
+    private String[] getAnnotation(HandlerMethod handlerMethod) {
+        PreAuthorize methodAnnotation = handlerMethod.getMethod().getAnnotation(PreAuthorize.class);
+        if(methodAnnotation != null) {
+            return methodAnnotation.value();
+        }
+        PreAuthorize beanAnnotation = handlerMethod.getBeanType().getAnnotation(PreAuthorize.class);
+        if(beanAnnotation != null) {
+            return beanAnnotation.value();
+        }
+        return null;
     }
 }
