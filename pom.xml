@@ -49,6 +49,12 @@
 
             <dependency>
                 <groupId>com.necloud</groupId>
+                <artifactId>newland-spring-webflux-scaffold-ctx</artifactId>
+                <version>${fast-dev.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.necloud</groupId>
                 <artifactId>newland-spring-scaffold-annotation</artifactId>
                 <version>${fast-dev.version}</version>
             </dependency>
