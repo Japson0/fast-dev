@@ -15,4 +15,6 @@ public class AuthConstants {
     public static final String USER_HEADER = "x-user-header";
     public static final String USER_ID_HEADER = "x-userid-header";
     public static final String ROLE_HEADER = "x-role-header";
+
+    public static final String TENANT_ID_HEADER = "x-tenant-id-header";
 }

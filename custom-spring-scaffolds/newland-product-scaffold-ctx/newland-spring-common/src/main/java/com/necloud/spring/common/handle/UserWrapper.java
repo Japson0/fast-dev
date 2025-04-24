@@ -27,17 +27,24 @@ public class UserWrapper extends UserInfo {
 
     private Set<String> roles;
 
-    private UserInfo userInfo;
+    private Long tenantId;
 
     private  static UserProxy userProxy;
+
+    private UserInfo userInfo;
+
 
     public UserWrapper(HttpHeaders headers){
         String userId = headers.getFirst("x-userid-header");
         String username = headers.getFirst("x-user-header");
         String roles = headers.getFirst("x-role-header");
+        String tenantId = headers.getFirst("x-school-header");
+
         if(userId!=null) {
             this.userId=Long.valueOf(userId);
             this.username=username;
+            //TODO 租户这里有可能没有
+            this.tenantId=Long.valueOf(tenantId);
             if (roles != null) {
                 this.roles = Collections.EMPTY_SET;
             } else {
@@ -52,11 +59,14 @@ public class UserWrapper extends UserInfo {
 
 
 
-    public UserWrapper(Long userId, String username, Set<String> roles) {
+    public UserWrapper(Long userId, String username,Long tenantId, Set<String> roles) {
         this.userId = userId;
         this.username = username;
         this.roles = roles;
+        this.tenantId=tenantId;
     }
+
+
 
     @Override
     public Long getUserId() {
@@ -74,7 +84,42 @@ public class UserWrapper extends UserInfo {
     }
 
 
-    public UserInfo getUserInfo() {
+    @Override
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    @Override
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    @Override
+    public String getClassId() {
+        return getUserInfo().getClassId();
+    }
+
+    @Override
+    public String getEmail() {
+        return getUserInfo().getEmail();
+    }
+
+    private UserInfo getUserInfo() {
         if(userInfo == null){
             if(userProxy == null){
                 synchronized (this){

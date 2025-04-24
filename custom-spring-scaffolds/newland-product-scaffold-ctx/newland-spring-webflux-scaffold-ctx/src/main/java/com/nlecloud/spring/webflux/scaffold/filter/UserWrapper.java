@@ -18,8 +18,8 @@ public class UserWrapper extends com.necloud.spring.common.handle.UserWrapper {
 
     private static final String KEY_INFO = "USER_INFO_KEY";
 
-    public UserWrapper(Long userId, String username, Set<String> roles) {
-        super(userId, username, roles);
+    public UserWrapper(Long userId, String username,Long tenantId, Set<String> roles) {
+        super(userId, username,tenantId, roles);
     }
 
     ContextView getContextView() {

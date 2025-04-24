@@ -30,12 +30,14 @@ public class UserFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         HttpHeaders headers = exchange.getRequest().getHeaders();
-        String userId = headers.getFirst(AuthConstants.USER_ID_HEADER);
-        String username = headers.getFirst(AuthConstants.USER_HEADER);
-        String roles = headers.getFirst(AuthConstants.ROLE_HEADER);
 
-        if(userId!=null && username!=null) {
+        String username = headers.getFirst(AuthConstants.USER_HEADER);
+
+        if( username!=null) {
             Set<String> rolesSet= Collections.EMPTY_SET;
+            String userId = headers.getFirst(AuthConstants.USER_ID_HEADER);
+            String roles = headers.getFirst(AuthConstants.ROLE_HEADER);
+            String tenantId = headers.getFirst(AuthConstants.TENANT_ID_HEADER);
             if(roles!=null) {
                 String[] rolesSplit = roles.split(",");
                 rolesSet = new HashSet<>(rolesSplit.length);
@@ -43,7 +45,7 @@ public class UserFilter implements WebFilter {
                     rolesSet.add(role);
                 }
             }
-            return chain.filter(exchange).contextWrite(new UserWrapper(Long.valueOf(userId),username,rolesSet).getContextView());
+            return chain.filter(exchange).contextWrite(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(tenantId),rolesSet).getContextView());
         }
         return chain.filter(exchange);
     }

@@ -1,7 +1,5 @@
 package com.nlecloud.spring.scaffold;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -13,8 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @version1.0
  */
 @ConfigurationProperties(prefix = "nlecloud.product")
-@Getter
-@Setter
 public class NewLandSpringProperty {
 
     private boolean tenantEnabled=false;
@@ -23,4 +19,20 @@ public class NewLandSpringProperty {
      * 租户忽略的表信息
      */
     private String[] ignoreTenantTable;
+
+    public boolean isTenantEnabled() {
+        return tenantEnabled;
+    }
+
+    public void setTenantEnabled(boolean tenantEnabled) {
+        this.tenantEnabled = tenantEnabled;
+    }
+
+    public String[] getIgnoreTenantTable() {
+        return ignoreTenantTable;
+    }
+
+    public void setIgnoreTenantTable(String[] ignoreTenantTable) {
+        this.ignoreTenantTable = ignoreTenantTable;
+    }
 }

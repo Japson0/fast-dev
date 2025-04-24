@@ -27,12 +27,13 @@ public class UserInterceptor implements CustomInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
         String username = request.getHeader(AuthConstants.USER_HEADER);
-        String roles = request.getHeader(AuthConstants.ROLE_HEADER);
 
-        if(userId!=null && username!=null) {
+        if(username!=null) {
             Set<String> rolesSet=Collections.EMPTY_SET;
+            String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
+            String roles = request.getHeader(AuthConstants.ROLE_HEADER);
+            String tenantId = request.getHeader(AuthConstants.TENANT_ID_HEADER);
             if(roles!=null) {
                 String[] rolesSplit = roles.split(",");
                 rolesSet = new HashSet<>(rolesSplit.length);
@@ -40,7 +41,7 @@ public class UserInterceptor implements CustomInterceptor {
                     rolesSet.add(role);
                 }
             }
-            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username,rolesSet));
+            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(tenantId),rolesSet));
         }
         return true;
     }

@@ -49,7 +49,7 @@ public class UserContext {
     }
 
     public static UserInfo getUserInfo() {
-        return USER_INFO_LOCAL.get().getUserInfo();
+        return USER_INFO_LOCAL.get();
     }
 
 
@@ -67,7 +67,7 @@ public class UserContext {
      * @author Japson Huang
      */
     public static boolean hasRole(String role) {
-        return USER_INFO_LOCAL.get().getUserInfo().getRoles().contains(role);
+        return USER_INFO_LOCAL.get().getRoles().contains(role);
     }
 
 

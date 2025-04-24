@@ -38,17 +38,16 @@ public class DubboRpcUserContentFilter implements Filter {
 
     private void pushUser() {
         String userName = UserContext.getUserName();
-        if(userName!=null){
+        if(userName!=null) {
             RpcContext.getContext().setAttachment(AuthConstants.USER_HEADER, userName);
-        }
-        Long userId = UserContext.getUserId();
-        if(userName!=null){
+            Long userId = UserContext.getUserId();
             RpcContext.getContext().setAttachment(AuthConstants.USER_ID_HEADER, userId);
-        }
-        Set<String> roles = UserContext.getRoles();
-        if(!CollectionUtils.isEmpty(roles)){
-            RpcContext.getContext().setAttachment(AuthConstants.ROLE_HEADER, String.join(",", roles));
+            RpcContext.getContext().setAttachment(AuthConstants.TENANT_ID_HEADER, userId);
 
+            Set<String> roles = UserContext.getRoles();
+            if (!CollectionUtils.isEmpty(roles)) {
+                RpcContext.getContext().setAttachment(AuthConstants.ROLE_HEADER, String.join(",", roles));
+            }
         }
     }
 
@@ -56,6 +55,7 @@ public class DubboRpcUserContentFilter implements Filter {
         String userName = RpcContext.getContext().getAttachment(AuthConstants.USER_HEADER);
         String userId = RpcContext.getContext().getAttachment(AuthConstants.USER_ID_HEADER);
         if(userName!=null&&userId!=null){
+            String tenantId = RpcContext.getContext().getAttachment(AuthConstants.TENANT_ID_HEADER);
             String roles = RpcContext.getContext().getAttachment(AuthConstants.ROLE_HEADER);
             Set<String> rolesSet= Collections.EMPTY_SET;
             if(roles!=null) {
@@ -65,7 +65,7 @@ public class DubboRpcUserContentFilter implements Filter {
                     rolesSet.add(role);
                 }
             }
-            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),userName,rolesSet));
+            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),userName,Long.valueOf(tenantId),rolesSet));
         }
     }
 
