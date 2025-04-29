@@ -5,12 +5,10 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import net.github.fastdev.boot.serio.DictionarySerializer;
-import net.github.fastdev.boot.serio.StringDeserializer;
-import net.github.fastdev.boot.serio.WebTransSecurityDeSerializer;
-import net.github.fastdev.boot.serio.WebTransSecuritySerializer;
+import net.github.fastdev.boot.serio.*;
 import net.github.fastdev.common.annotation.Dictionary;
 import net.github.fastdev.common.annotation.WebSecuritySerialize;
+import net.github.fastdev.common.model.ComEnum;
 import net.github.fastdev.common.serio.DictionaryDeserializer;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -30,8 +28,20 @@ import java.util.Map;
  */
 public class ObjectMapperBuilder {
 
+    private final ComEnumDisplayHandle comEnumDisplayHandle;
 
-    public static ObjectMapper builder(Jackson2ObjectMapperBuilder builder, JacksonProperties jacksonProperties) {
+
+    private final Jackson2ObjectMapperBuilder builder;
+
+    private final JacksonProperties jacksonProperties;
+
+    public ObjectMapperBuilder(ComEnumDisplayHandle comEnumDisplayHandle, Jackson2ObjectMapperBuilder builder, JacksonProperties jacksonProperties) {
+        this.comEnumDisplayHandle = comEnumDisplayHandle;
+        this.builder = builder;
+        this.jacksonProperties = jacksonProperties;
+    }
+
+    public  ObjectMapper builder() {
 
         builder.annotationIntrospector(new CustomJacksonAnnotationIntrospector());
         builder.serializationInclusion(JsonInclude.Include.NON_NULL);
@@ -42,6 +52,7 @@ public class ObjectMapperBuilder {
             builder.featuresToEnable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
             SimpleModule module = new SimpleModule();
             module.addDeserializer(String.class, new StringDeserializer());
+            module.addSerializer(ComEnum.class,new DefaultEnumSerializer(comEnumDisplayHandle));
             //Long 转成字符串，不然精度会丢失，前端Numbic最多只能存在17位
 //            module.addSerializer(Long.class, ToStringSerializer.instance);
 //            module.addSerializer(Long.TYPE, ToStringSerializer.instance);

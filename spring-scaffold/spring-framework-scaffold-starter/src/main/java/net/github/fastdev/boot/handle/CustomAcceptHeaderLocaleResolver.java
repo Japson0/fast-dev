@@ -23,7 +23,7 @@ public class CustomAcceptHeaderLocaleResolver implements LocaleResolver {
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
 
-        String header = request.getHeader("Accept-Language");
+        String header = request.getHeader("Accept-Language-v1");
         if (header != null) {
             return LocaleUtils.toLocale(header);
         }

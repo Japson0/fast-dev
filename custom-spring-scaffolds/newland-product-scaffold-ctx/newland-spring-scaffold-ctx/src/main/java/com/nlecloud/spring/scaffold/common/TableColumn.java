@@ -25,13 +25,13 @@ public class TableColumn {
      */
     public static final String CREATE_USER_ID="CREATE_PERSON";
 
-    public static final String CREATE_USER_ID_NAME="createUserId";
+    public static final String CREATE_USER_ID_NAME="createPerson";
     /**
      * 更新用户ID
      */
     public static final String UPDATE_USER_ID="UPDATE_PERSON";
 
-    public static final String UPDATE_USER_ID_NAME="updateUserId";
+    public static final String UPDATE_USER_ID_NAME="updatePerson";
 
     /**
      * 创建时间

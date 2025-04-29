@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -41,7 +42,7 @@ public class UserInterceptor implements CustomInterceptor {
                     rolesSet.add(role);
                 }
             }
-            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(tenantId),rolesSet));
+            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username, Long.valueOf(Optional.ofNullable(tenantId).orElse("-1")),rolesSet));
         }
         return true;
     }

@@ -49,8 +49,15 @@ public class CustomSpringBootConfig {
     @Bean
     @Primary
     @ConditionalOnMissingBean(Jackson2ObjectMapperBuilder.class)
-    public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder, JacksonProperties jacksonProperties) {
-        return ObjectMapperBuilder.builder(builder, jacksonProperties);
+    public ObjectMapper jacksonObjectMapper(ComEnumDisplayHandle comEnumDisplayHandle,Jackson2ObjectMapperBuilder builder, JacksonProperties jacksonProperties) {
+        return new ObjectMapperBuilder(comEnumDisplayHandle,builder,jacksonProperties).builder();
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean(ComEnumDisplayHandle.class)
+    public ComEnumDisplayHandle comEnumDisplayHandle(){
+        return e->e.getDisplay();
     }
 
     @Bean

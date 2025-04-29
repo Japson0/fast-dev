@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 /**
- * <P><B>Description:</B></P>
+ * <P><B>基础类:</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2025年04月09日 CREATE
  *
@@ -33,7 +33,7 @@ public class BaseEntity implements net.github.fastdev.mybatis.annotation.BaseEnt
 
     @TableField(value = TableColumn.UPDATE_USER_ID,fill = FieldFill.INSERT_UPDATE)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long updateUserId;
+    private Long updatePerson;
 
     @TableField(value = TableColumn.CREATE_TIME,fill = FieldFill.INSERT)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -63,12 +63,12 @@ public class BaseEntity implements net.github.fastdev.mybatis.annotation.BaseEnt
         this.createPerson = createPerson;
     }
 
-    public Long getUpdateUserId() {
-        return updateUserId;
+    public Long getUpdatePerson() {
+        return updatePerson;
     }
 
-    public void setUpdateUserId(Long updateUserId) {
-        this.updateUserId = updateUserId;
+    public void setUpdatePerson(Long updatePerson) {
+        this.updatePerson = updatePerson;
     }
 
     public Timestamp getCreateTime() {
