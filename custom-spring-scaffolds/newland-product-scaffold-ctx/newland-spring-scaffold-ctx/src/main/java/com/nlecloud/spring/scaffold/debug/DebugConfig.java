@@ -1,6 +1,7 @@
 package com.nlecloud.spring.scaffold.debug;
 
 import com.nlecloud.spring.scaffold.NewLandSpringProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DebugConfig {
 
+    @Autowired
     private NewLandSpringProperty newLandSpringProperty;
 
 
