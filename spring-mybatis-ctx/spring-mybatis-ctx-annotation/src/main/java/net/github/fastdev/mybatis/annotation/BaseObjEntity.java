@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author Japson Huang
  * @version 1.0
  */
-public interface BaseEntity<T extends Serializable> extends Serializable {
+public interface BaseObjEntity<T extends Serializable> extends Serializable {
 
     /**
      * 获取ID

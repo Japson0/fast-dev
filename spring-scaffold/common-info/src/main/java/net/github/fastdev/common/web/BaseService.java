@@ -2,7 +2,7 @@
 
 package net.github.fastdev.common.web;
 
-import net.github.fastdev.mybatis.annotation.BaseEntity;
+import net.github.fastdev.mybatis.annotation.BaseObjEntity;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Japson Huang
  * @version 1.0
  */
-public interface BaseService<ID extends Serializable, R extends BaseEntity<ID>> extends BaseService4DTO<ID, R, R> {
+public interface BaseService<ID extends Serializable, R extends BaseObjEntity<ID>> extends BaseService4DTO<ID, R, R> {
 
 
 }

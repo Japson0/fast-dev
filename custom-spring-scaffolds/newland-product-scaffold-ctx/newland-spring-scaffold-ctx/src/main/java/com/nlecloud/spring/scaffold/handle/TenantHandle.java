@@ -34,6 +34,6 @@ public class TenantHandle implements TenantLineHandler {
 
     @Override
     public boolean ignoreTable(String tableName) {
-        return ignoreTenantPredicate.test(tableName);
+        return UserContext.isRobot()?true:ignoreTenantPredicate.test(tableName);
     }
 }

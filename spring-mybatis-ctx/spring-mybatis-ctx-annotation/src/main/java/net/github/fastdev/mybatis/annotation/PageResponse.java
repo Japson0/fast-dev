@@ -1,5 +1,6 @@
 package net.github.fastdev.mybatis.annotation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -20,6 +21,7 @@ public class PageResponse<DTO> extends PageRequest {
      */
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ApiModelProperty("返回数据")
+    @JsonProperty("data")
     protected List<DTO> records;
 
     /**
@@ -40,6 +42,7 @@ public class PageResponse<DTO> extends PageRequest {
         this.total = total;
         this.records = records;
         this.setSize(pageRequest.getSize());
+        this.setPage(pageRequest.getPage());
     }
 
     public List<DTO> getRecords() {

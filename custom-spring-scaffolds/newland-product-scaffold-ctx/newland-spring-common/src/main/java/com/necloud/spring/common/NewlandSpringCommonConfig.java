@@ -1,10 +1,8 @@
 package com.necloud.spring.common;
 
-import com.necloud.spring.common.handle.UserProxy;
 import com.necloud.spring.common.i18n.LocaleConfig;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -21,9 +19,4 @@ import org.springframework.context.annotation.Import;
 @AutoConfigureBefore({MessageSourceAutoConfiguration.class})
 public class NewlandSpringCommonConfig {
 
-
-    @Bean
-    public UserProxy userProxy(){
-        return new UserProxy();
-    }
 }

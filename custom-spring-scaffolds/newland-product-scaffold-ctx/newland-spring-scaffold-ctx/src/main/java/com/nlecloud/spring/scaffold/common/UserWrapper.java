@@ -1,12 +1,9 @@
-package com.necloud.spring.common.handle;
+package com.nlecloud.spring.scaffold.common;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.nlecloud.spring.annotation.UserInfo;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.server.ServerHttpRequest;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -89,6 +86,7 @@ public class UserWrapper extends UserInfo {
         return tenantId;
     }
 
+
     @Override
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -104,20 +102,7 @@ public class UserWrapper extends UserInfo {
         this.roles = roles;
     }
 
-    @Override
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
 
-    @Override
-    public String getClassId() {
-        return getUserInfo().getClassId();
-    }
-
-    @Override
-    public String getEmail() {
-        return getUserInfo().getEmail();
-    }
 
     private UserInfo getUserInfo() {
         if(userInfo == null){
@@ -130,7 +115,7 @@ public class UserWrapper extends UserInfo {
             }
             this.userInfo=userProxy.getUserInfo(this.userId); //这里通过远程调用获取用户信息
         }
-        return this.userInfo;
+        return this;
     }
 
 }

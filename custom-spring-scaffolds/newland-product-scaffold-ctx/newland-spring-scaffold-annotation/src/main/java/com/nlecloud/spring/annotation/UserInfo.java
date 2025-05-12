@@ -1,5 +1,7 @@
 package com.nlecloud.spring.annotation;
 
+import com.nlecloud.spring.annotation.enums.Sex;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -22,10 +24,16 @@ public class UserInfo implements Serializable {
      */
     private String username;
 
+
     /**
-     * 租户ID
+     * 学校ID
      */
-    private Long tenantId;
+    private Long schoolId;
+
+    /**
+     * 学校名称
+     */
+    private String schoolName;
 
     /**
      * 角色编码列表
@@ -35,12 +43,36 @@ public class UserInfo implements Serializable {
     /**
      * 班级ID
      */
-    private String classId;
+    private Long classId;
 
+    /**
+     * 帮班级名称
+     */
+    private String className;
+
+    /**
+     * 学号
+     */
+    private String studentNo;
+
+    /**
+     * 专业名称
+     */
+    private String professionName;
     /**
      * 又想
      */
     private String email;
+
+    /**
+     * 头像url
+     */
+    private String avatar;
+
+    /**
+     * 性别
+     */
+    private Sex sex;
 
     public Long getUserId() {
         return userId;
@@ -59,12 +91,9 @@ public class UserInfo implements Serializable {
     }
 
     public Long getTenantId() {
-        return tenantId;
+        return schoolId;
     }
 
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
 
     public Set<String> getRoles() {
         return roles;
@@ -74,11 +103,11 @@ public class UserInfo implements Serializable {
         this.roles = roles;
     }
 
-    public String getClassId() {
+    public Long getClassId() {
         return classId;
     }
 
-    public void setClassId(String classId) {
+    public void setClassId(Long classId) {
         this.classId = classId;
     }
 
@@ -88,5 +117,61 @@ public class UserInfo implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getStudentNo() {
+        return studentNo;
+    }
+
+    public void setStudentNo(String studentNo) {
+        this.studentNo = studentNo;
+    }
+
+    public String getProfessionName() {
+        return professionName;
+    }
+
+    public void setProfessionName(String professionName) {
+        this.professionName = professionName;
+    }
+
+    public Long getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Long schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public Sex getSex() {
+        return sex;
+    }
+
+    public void setSex(Sex sex) {
+        this.sex = sex;
     }
 }

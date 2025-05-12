@@ -5,7 +5,7 @@ import net.github.fastdev.common.annotation.Insert;
 import net.github.fastdev.common.annotation.Update;
 import net.github.fastdev.common.model.RestResponse;
 import net.github.fastdev.common.web.BaseService4DTO;
-import net.github.fastdev.mybatis.annotation.BaseEntity;
+import net.github.fastdev.mybatis.annotation.BaseObjEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author Japson Huang
  * @version 1.0
  */
-public class BaseController4DTO<ID extends Serializable, T extends BaseEntity<ID>, DTO extends T> {
+public class BaseController4DTO<ID extends Serializable, T extends BaseObjEntity<ID>, DTO extends T> {
 
     /**
      * 逻辑层

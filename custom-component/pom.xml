@@ -21,6 +21,7 @@
         <module>spring-elasticsearch-ctx</module>
         <module>spring-hadoop-client-ctx</module>
         <module>spring-minio-client-ctx</module>
+        <module>spring-xxl-job-ctx</module>
     </modules>
 
     <dependencyManagement>

@@ -3,7 +3,7 @@
 package net.github.fastdev.boot.template;
 
 import net.github.fastdev.common.web.BaseService;
-import net.github.fastdev.mybatis.annotation.BaseEntity;
+import net.github.fastdev.mybatis.annotation.BaseObjEntity;
 
 import java.io.Serializable;
 
@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @author Japson Huang
  * @version 1.0
  */
-public class BaseController<ID extends Serializable, T extends BaseEntity<ID>> extends BaseController4DTO<ID, T, T> {
+public class BaseController<ID extends Serializable, T extends BaseObjEntity<ID>> extends BaseController4DTO<ID, T, T> {
 
     public BaseController(BaseService<ID, T> baseService) {
         super(baseService);

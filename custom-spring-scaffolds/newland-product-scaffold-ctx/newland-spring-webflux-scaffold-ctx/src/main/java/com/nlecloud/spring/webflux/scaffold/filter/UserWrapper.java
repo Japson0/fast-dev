@@ -1,5 +1,6 @@
 package com.nlecloud.spring.webflux.scaffold.filter;
 
+import com.nlecloud.spring.annotation.UserInfo;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;
 
@@ -13,13 +14,24 @@ import java.util.Set;
  * @author Japson Huang
  * @version1.0
  */
-public class UserWrapper extends com.necloud.spring.common.handle.UserWrapper {
+public class UserWrapper extends UserInfo {
+
+    private Long userId;
+
+    private String username;
+
+    private Set<String> roles;
+
+    private Long tenantId;
 
 
     private static final String KEY_INFO = "USER_INFO_KEY";
 
     public UserWrapper(Long userId, String username,Long tenantId, Set<String> roles) {
-        super(userId, username,tenantId, roles);
+        this.userId = userId;
+        this.username = username;
+        this.roles = roles;
+        this.tenantId=tenantId;
     }
 
     ContextView getContextView() {
@@ -29,5 +41,44 @@ public class UserWrapper extends com.necloud.spring.common.handle.UserWrapper {
 
     public static UserWrapper getUserWrapper(ContextView contextView) {
         return contextView.get(KEY_INFO);
+    }
+
+    @Override
+    public Long getUserId() {
+        return userId;
+    }
+
+    @Override
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    @Override
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 }

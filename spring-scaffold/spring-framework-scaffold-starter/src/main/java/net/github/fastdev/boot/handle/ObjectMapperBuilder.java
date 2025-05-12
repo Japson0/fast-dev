@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import net.github.fastdev.boot.serio.*;
 import net.github.fastdev.common.annotation.Dictionary;
 import net.github.fastdev.common.annotation.WebSecuritySerialize;
@@ -54,7 +55,7 @@ public class ObjectMapperBuilder {
             module.addDeserializer(String.class, new StringDeserializer());
             module.addSerializer(ComEnum.class,new DefaultEnumSerializer(comEnumDisplayHandle));
             //Long 转成字符串，不然精度会丢失，前端Numbic最多只能存在17位
-//            module.addSerializer(Long.class, ToStringSerializer.instance);
+            module.addSerializer(Long.class, ToStringSerializer.instance);
 //            module.addSerializer(Long.TYPE, ToStringSerializer.instance);
             builder.modules(module);
         }

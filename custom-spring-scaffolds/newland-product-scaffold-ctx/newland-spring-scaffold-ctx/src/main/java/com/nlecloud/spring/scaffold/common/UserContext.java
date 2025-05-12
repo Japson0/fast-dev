@@ -6,7 +6,6 @@
 
 package com.nlecloud.spring.scaffold.common;
 
-import com.necloud.spring.common.handle.UserWrapper;
 import com.nlecloud.spring.annotation.UserInfo;
 
 import java.util.Set;
@@ -26,6 +25,12 @@ public class UserContext {
      * 用户信息
      */
     private final static ThreadLocal<UserWrapper> USER_INFO_LOCAL=new ThreadLocal<>();
+
+    private static final UserWrapper robotUser=new UserWrapper(0L,"system",0L,null);
+
+    public static UserWrapper getRobotUser() {
+        return  robotUser;
+    }
 
 
     private UserContext() {
@@ -71,4 +76,7 @@ public class UserContext {
     }
 
 
+    public static boolean isRobot(){
+        return getUserInfo()!= robotUser;
+    }
 }

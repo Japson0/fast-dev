@@ -1,13 +1,12 @@
 package com.nlecloud.spring.scaffold.debug;
 
-import com.necloud.spring.common.handle.UserWrapper;
+import com.nlecloud.spring.scaffold.common.UserWrapper;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import net.github.fastdev.boot.handle.CustomInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 /**
  * <P><B>用户注入:</B></P>

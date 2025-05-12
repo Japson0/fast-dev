@@ -1,7 +1,7 @@
 package net.github.dao;
 
 import net.github.fastdev.mybatis.injector.BaseMapperExtend;
-import net.github.model.entity.DemoEntity;
+import net.github.model.entity.DemoObjEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -13,5 +13,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @version 1.0
  */
 @Mapper
-public interface DemoDAO extends BaseMapperExtend<DemoEntity> {
+public interface DemoDAO extends BaseMapperExtend<DemoObjEntity> {
 }

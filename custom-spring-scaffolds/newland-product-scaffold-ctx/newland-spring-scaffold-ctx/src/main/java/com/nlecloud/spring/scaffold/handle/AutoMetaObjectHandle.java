@@ -35,7 +35,7 @@ public class AutoMetaObjectHandle implements MetaObjectHandler {
         if (canSet(TableColumn.CREATE_TIME_NAME, metaObject)) {
             initValue(metaObject, TableColumn.CREATE_TIME_NAME, now);
         }
-        if (canSet(TableColumn.CREATE_USER_ID_NAME, metaObject)) {
+        if (!UserContext.isRobot()&&canSet(TableColumn.CREATE_USER_ID_NAME, metaObject)) {
             initValue(metaObject, TableColumn.CREATE_USER_ID_NAME, UserContext.getUserId());
         }
         updateFill(metaObject);
@@ -54,7 +54,7 @@ public class AutoMetaObjectHandle implements MetaObjectHandler {
         if (canSet(TableColumn.UPDATE_TIME_NAME, metaObject)) {
             initValue(metaObject, TableColumn.UPDATE_TIME_NAME, new Timestamp(SystemClock.now()));
         }
-        if (canSet(TableColumn.UPDATE_USER_ID_NAME, metaObject)) {
+        if (!UserContext.isRobot()&&canSet(TableColumn.UPDATE_USER_ID_NAME, metaObject)) {
             initValue(metaObject, TableColumn.UPDATE_USER_ID_NAME, UserContext.getUserId());
         }
     }

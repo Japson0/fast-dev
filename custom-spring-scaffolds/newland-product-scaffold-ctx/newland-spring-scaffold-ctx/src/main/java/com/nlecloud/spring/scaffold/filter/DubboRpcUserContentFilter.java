@@ -3,7 +3,7 @@ package com.nlecloud.spring.scaffold.filter;
 
 import com.necloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
-import com.necloud.spring.common.handle.UserWrapper;
+import com.nlecloud.spring.scaffold.common.UserWrapper;
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
@@ -52,11 +52,11 @@ public class DubboRpcUserContentFilter implements Filter {
     }
 
     private void popUser() {
-        String userName = RpcContext.getContext().getAttachment(AuthConstants.USER_HEADER);
         String userId = RpcContext.getContext().getAttachment(AuthConstants.USER_ID_HEADER);
-        if(userName!=null&&userId!=null){
+        if(userId!=null){
             String tenantId = RpcContext.getContext().getAttachment(AuthConstants.TENANT_ID_HEADER);
             String roles = RpcContext.getContext().getAttachment(AuthConstants.ROLE_HEADER);
+            String username =RpcContext.getContext().getAttachment(AuthConstants.USER_HEADER);
             Set<String> rolesSet= Collections.EMPTY_SET;
             if(roles!=null) {
                 String[] rolesSplit = roles.split(",");
@@ -65,7 +65,7 @@ public class DubboRpcUserContentFilter implements Filter {
                     rolesSet.add(role);
                 }
             }
-            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),userName,Long.valueOf(tenantId),rolesSet));
+            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(tenantId),rolesSet));
         }
     }
 

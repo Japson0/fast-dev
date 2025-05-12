@@ -31,11 +31,11 @@ public class UserFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         HttpHeaders headers = exchange.getRequest().getHeaders();
 
-        String username = headers.getFirst(AuthConstants.USER_HEADER);
+        String userId = headers.getFirst(AuthConstants.USER_ID_HEADER);
 
-        if( username!=null) {
+        if( userId!=null) {
             Set<String> rolesSet= Collections.EMPTY_SET;
-            String userId = headers.getFirst(AuthConstants.USER_ID_HEADER);
+            String username = headers.getFirst(AuthConstants.USER_HEADER);
             String roles = headers.getFirst(AuthConstants.ROLE_HEADER);
             String tenantId = headers.getFirst(AuthConstants.TENANT_ID_HEADER);
             if(roles!=null) {

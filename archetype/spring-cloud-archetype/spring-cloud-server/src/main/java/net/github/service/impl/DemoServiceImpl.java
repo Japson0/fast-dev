@@ -2,7 +2,7 @@ package net.github.service.impl;
 
 import net.github.fastdev.boot.template.BaseServiceImpl;
 import net.github.fastdev.mybatis.injector.BaseMapperExtend;
-import net.github.model.entity.DemoEntity;
+import net.github.model.entity.DemoObjEntity;
 import net.github.service.DemoService;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  */
 @Service
-public class DemoServiceImpl extends BaseServiceImpl<Long, DemoEntity> implements DemoService {
-    public DemoServiceImpl(BaseMapperExtend<DemoEntity> baseMapper) {
+public class DemoServiceImpl extends BaseServiceImpl<Long, DemoObjEntity> implements DemoService {
+    public DemoServiceImpl(BaseMapperExtend<DemoObjEntity> baseMapper) {
         super(baseMapper);
     }
 }

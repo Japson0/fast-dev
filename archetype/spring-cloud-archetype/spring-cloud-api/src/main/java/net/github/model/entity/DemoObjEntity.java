@@ -1,6 +1,6 @@
 package net.github.model.entity;
 
-import net.github.fastdev.mybatis.annotation.BaseEntity;
+import net.github.fastdev.mybatis.annotation.BaseObjEntity;
 
 /**
  * <P><B>Description:</B></P>
@@ -10,7 +10,7 @@ import net.github.fastdev.mybatis.annotation.BaseEntity;
  * @author Japson Huang
  * @version1.0
  */
-public class DemoEntity implements BaseEntity<Long> {
+public class DemoObjEntity implements BaseObjEntity<Long> {
     @Override
     public Long getId() {
         return null;

@@ -3,7 +3,7 @@
 package net.github.fastdev.boot.template;
 
 import net.github.fastdev.common.web.BaseService;
-import net.github.fastdev.mybatis.annotation.BaseEntity;
+import net.github.fastdev.mybatis.annotation.BaseObjEntity;
 import net.github.fastdev.mybatis.injector.BaseMapperExtend;
 
 import java.io.Serializable;
@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @author Japson Huang
  * @version 1.0
  */
-public class BaseServiceImpl<ID extends Serializable, R extends BaseEntity<ID>> extends BaseService4DTOImpl<ID, R, R> implements BaseService<ID, R> {
+public class BaseServiceImpl<ID extends Serializable, R extends BaseObjEntity<ID>> extends BaseService4DTOImpl<ID, R, R> implements BaseService<ID, R> {
 
 
     public BaseServiceImpl(BaseMapperExtend<R> baseMapper) {

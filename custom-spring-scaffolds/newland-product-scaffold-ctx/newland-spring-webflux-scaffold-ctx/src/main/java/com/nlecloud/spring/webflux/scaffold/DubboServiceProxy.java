@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -17,10 +18,15 @@ import java.util.function.Supplier;
  * @author Japson Huang
  * @version1.0
  */
-@Component
-public class DubboServiceProxy {
+public class DubboServiceProxy<T> {
 
-    public <T> Mono<T> invoke(Supplier<T> supplier){
+    private final T api;
+
+    public DubboServiceProxy(T api) {
+        this.api = api;
+    }
+
+    public <R> Mono<R> invoke(Function<T,R> supplier){
 
         return Mono.deferContextual(contextView -> {
             return Mono.fromCallable(() -> {
@@ -32,9 +38,8 @@ public class DubboServiceProxy {
                     RpcContext.getContext().setAttachment(AuthConstants.USER_ID_HEADER, userWrapper.getUserId());
                     RpcContext.getContext().setAttachment(AuthConstants.TENANT_ID_HEADER, String.join(",", userWrapper.getRoles()));
                 }
-                return supplier.get();
+                return supplier.apply(api);
             }).subscribeOn(Schedulers.boundedElastic()); // 在这里指定
-
         });
     }
 }

@@ -2,17 +2,15 @@
 package com.nlecloud.spring.scaffold.filter;
 
 import com.necloud.spring.common.AuthConstants;
-import com.necloud.spring.common.handle.UserProxy;
 import com.nlecloud.spring.scaffold.common.UserContext;
-import com.necloud.spring.common.handle.UserWrapper;
+import com.nlecloud.spring.scaffold.common.UserWrapper;
 import net.github.fastdev.boot.handle.CustomInterceptor;
-import org.springframework.http.HttpRequest;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -28,13 +26,16 @@ public class UserInterceptor implements CustomInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String username = request.getHeader(AuthConstants.USER_HEADER);
+        String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
 
-        if(username!=null) {
+        if(userId!=null) {
             Set<String> rolesSet=Collections.EMPTY_SET;
-            String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
+            String username = request.getHeader(AuthConstants.USER_HEADER);
             String roles = request.getHeader(AuthConstants.ROLE_HEADER);
             String tenantId = request.getHeader(AuthConstants.TENANT_ID_HEADER);
+            if(!StringUtils.hasText(tenantId)){
+                tenantId="0";
+            }
             if(roles!=null) {
                 String[] rolesSplit = roles.split(",");
                 rolesSet = new HashSet<>(rolesSplit.length);
@@ -42,7 +43,7 @@ public class UserInterceptor implements CustomInterceptor {
                     rolesSet.add(role);
                 }
             }
-            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username, Long.valueOf(Optional.ofNullable(tenantId).orElse("-1")),rolesSet));
+            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username, Long.valueOf(tenantId),rolesSet));
         }
         return true;
     }

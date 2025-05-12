@@ -1,7 +1,7 @@
 package net.github.fastdev.boot.template;
 
 import net.github.fastdev.common.web.BaseService4DTO;
-import net.github.fastdev.mybatis.annotation.BaseEntity;
+import net.github.fastdev.mybatis.annotation.BaseObjEntity;
 import net.github.fastdev.mybatis.annotation.PageRequest;
 import net.github.fastdev.mybatis.annotation.PageResponse;
 import net.github.fastdev.mybatis.injector.BaseMapperExtend;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author Japson Huang
  * @version 1.0
  */
-public class BaseService4DTOImpl<ID extends Serializable, R extends BaseEntity<ID>, DTO extends R> implements BaseService4DTO<ID, R, DTO> {
+public class BaseService4DTOImpl<ID extends Serializable, R extends BaseObjEntity<ID>, DTO extends R> implements BaseService4DTO<ID, R, DTO> {
 
     /**
      * 基础DAO

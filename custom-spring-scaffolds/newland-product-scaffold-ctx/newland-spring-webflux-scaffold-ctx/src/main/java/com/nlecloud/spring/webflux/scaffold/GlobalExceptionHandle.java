@@ -38,7 +38,7 @@ public class GlobalExceptionHandle {
         return Mono.just(ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(RestResult.renderError(ex.getCode(),ex.getMessage())));
+                .body(RestResponse.renderError(ex.getCode(),ex.getMessage())));
     }
 
     @ExceptionHandler(Exception.class)
@@ -48,6 +48,6 @@ public class GlobalExceptionHandle {
         return Mono.just(ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(RestResult.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION)));
+                .body(RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION)));
     }
 }

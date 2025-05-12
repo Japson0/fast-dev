@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.github.fastdev.common.annotation.Update;
+import net.github.fastdev.mybatis.annotation.BaseObjEntity;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -18,7 +21,7 @@ import java.sql.Timestamp;
  * @author Japson Huang
  * @version1.0
  */
-public class BaseEntity implements net.github.fastdev.mybatis.annotation.BaseEntity<Long> {
+public class BaseEntity implements BaseObjEntity<Long> {
 
     /**
      * 逐渐
@@ -28,11 +31,11 @@ public class BaseEntity implements net.github.fastdev.mybatis.annotation.BaseEnt
     private Long id;
 
     @TableField(value = TableColumn.CREATE_USER_ID,fill = FieldFill.INSERT)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     private Long createPerson;
 
     @TableField(value = TableColumn.UPDATE_USER_ID,fill = FieldFill.INSERT_UPDATE)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     private Long updatePerson;
 
     @TableField(value = TableColumn.CREATE_TIME,fill = FieldFill.INSERT)
@@ -45,12 +48,12 @@ public class BaseEntity implements net.github.fastdev.mybatis.annotation.BaseEnt
     private Timestamp updateTime;
 
     @Override
-    public @NotNull(groups = Update.class) Long getId() {
+    public  Long getId() {
         return id;
     }
 
     @Override
-    public void setId(@NotNull(groups = Update.class) Long id) {
+    public void setId( Long id) {
         this.id = id;
     }
 

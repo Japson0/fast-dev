@@ -2,21 +2,26 @@ package com.nlecloud.spring.scaffold;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
+import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
+import com.nlecloud.spring.scaffold.common.UserProxy;
 import com.nlecloud.spring.scaffold.debug.DebugConfig;
 import com.nlecloud.spring.scaffold.filter.PermissionInterceptor;
+import com.nlecloud.spring.scaffold.filter.UserFeignInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserInterceptor;
-import com.nlecloud.spring.scaffold.handle.AutoMetaObjectHandle;
-import com.nlecloud.spring.scaffold.handle.I18n4EnumHandle;
-import com.nlecloud.spring.scaffold.handle.TenantHandle;
-import com.nlecloud.spring.scaffold.handle.TraceServiceHandle;
+import com.nlecloud.spring.scaffold.handle.*;
 import com.nlecloud.spring.scaffold.service.DictServiceProxy;
+import feign.Feign;
 import net.github.fastdev.boot.CustomSpringBootConfig;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
 import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.FeignClientFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -37,6 +42,7 @@ import java.util.function.Predicate;
 @EnableConfigurationProperties(NewLandSpringProperty.class)
 @AutoConfigureBefore({CustomSpringBootConfig.class})
 @Import(DebugConfig.class)
+@EnableFeignClients(clients = {IUPMSUserApi.class})
 public class NewLandSpringConfig {
 
 
@@ -48,6 +54,19 @@ public class NewLandSpringConfig {
         return new AutoMetaObjectHandle();
     }
 
+
+    /**
+     *用户代理
+     *RevisionTrail:(Date/Author/Description)
+     * 2025年05月12日
+     *@author Japson Huang
+     *
+    */
+    @Bean
+    public UserProxy userProxy(IUPMSUserApi iupmsUserApi){
+
+        return new UserProxy(iupmsUserApi);
+    }
     /**
      *枚举国际化
      *RevisionTrail:(Date/Author/Description)
@@ -72,6 +91,11 @@ public class NewLandSpringConfig {
         return new UserInterceptor();
     }
 
+    @Bean
+//    @ConditionalOnBean(FeignClientFactoryBean.class)
+    public UserFeignInterceptor userFeignInterceptor(){
+        return new UserFeignInterceptor();
+    }
     /**
      *字典转换服务
      *RevisionTrail:(Date/Author/Description)
@@ -85,6 +109,10 @@ public class NewLandSpringConfig {
     }
 
 
+    @Bean
+    public InjectRobotAspectHandle injectRobotAspectHandle(){
+        return new InjectRobotAspectHandle();
+    }
     /**
      *追溯ID
      *RevisionTrail:(Date/Author/Description)

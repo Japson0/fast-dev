@@ -1,6 +1,6 @@
 package net.github.fastdev.common.web;
 
-import net.github.fastdev.mybatis.annotation.BaseEntity;
+import net.github.fastdev.mybatis.annotation.BaseObjEntity;
 import net.github.fastdev.mybatis.annotation.PageRequest;
 import net.github.fastdev.mybatis.annotation.PageResponse;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @author Japson Huang
  * @version 1.0
  */
-public interface BaseService4DTO<ID extends Serializable, R extends BaseEntity<ID>, DTO extends R> {
+public interface BaseService4DTO<ID extends Serializable, R extends BaseObjEntity<ID>, DTO extends R> {
 
     /**
      * 查询分页数据

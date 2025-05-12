@@ -182,7 +182,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-            <url>https://maven.aliyun.com/repository/public</url>
+            <url>http://192.168.133.162:9081/repository/maven-releases/</url>
         </repository>
     </repositories>
 

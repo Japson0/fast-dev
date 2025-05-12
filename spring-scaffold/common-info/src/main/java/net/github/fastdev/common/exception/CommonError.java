@@ -10,7 +10,7 @@ package net.github.fastdev.common.exception;
  */
 public enum CommonError implements IErrorCode {
 
-    SUCCEED("00000", "成功"),
+    SUCCEED("200", "成功"),
 
     CLIENT_ERROR("A0001", "用户端错误"),
 
