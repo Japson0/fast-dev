@@ -49,6 +49,11 @@ public class UserContext {
         return userWrapper==null?null:userWrapper.getUsername();
     }
 
+    public static Long getTenantId() {
+        return USER_INFO_LOCAL.get().getTenantId();
+    }
+
+
     public static Set<String> getRoles(){
         return USER_INFO_LOCAL.get().getRoles();
     }
@@ -56,6 +61,13 @@ public class UserContext {
     public static UserInfo getUserInfo() {
         return USER_INFO_LOCAL.get();
     }
+
+
+
+
+
+
+    
 
 
     public static void setUserInfo(UserWrapper userInfo){
