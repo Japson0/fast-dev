@@ -3,12 +3,10 @@ package com.nlecloud.spring.webflux.scaffold;
 import com.necloud.spring.common.AuthConstants;
 import com.nlecloud.spring.webflux.scaffold.filter.UserWrapper;
 import org.apache.dubbo.rpc.RpcContext;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * <P><B>dubbo服务代理:</B></P>

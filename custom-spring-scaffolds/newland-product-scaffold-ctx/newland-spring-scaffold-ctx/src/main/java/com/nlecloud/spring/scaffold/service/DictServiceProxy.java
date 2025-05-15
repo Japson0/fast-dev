@@ -2,7 +2,6 @@ package com.nlecloud.spring.scaffold.service;
 
 import net.github.fastdev.boot.handle.DicCacheService;
 import net.github.fastdev.boot.handle.ResourceClean;
-import org.springframework.boot.ApplicationArguments;
 
 import java.util.Collections;
 import java.util.Map;

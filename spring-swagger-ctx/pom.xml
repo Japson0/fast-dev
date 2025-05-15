@@ -16,13 +16,15 @@
     <properties>
 
         <swagger-annotations.version>1.6.6</swagger-annotations.version>
-        <knife4j.version>4.5.0</knife4j.version>
+        <knife4j.version>4.6.0</knife4j.version>
+        <swagger-annotations-jakarta.version>2.2.25</swagger-annotations-jakarta.version>
     </properties>
 
     <modules>
         <module>spring-swagger-ctx-starter</module>
         <module>spring-swagger-ctx-annotation</module>
     </modules>
+
 
 
 </project>

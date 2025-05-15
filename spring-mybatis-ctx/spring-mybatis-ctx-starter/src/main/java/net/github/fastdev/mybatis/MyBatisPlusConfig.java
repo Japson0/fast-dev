@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.extension.incrementer.*;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
@@ -21,8 +22,6 @@ import net.github.fastdev.mybatis.injector.method.InsertBatch;
 import net.github.fastdev.mybatis.injector.method.UpdateAllColumnById;
 import net.github.fastdev.mybatis.sqlparser.DecryptResultSetInterceptor;
 import net.github.fastdev.mybatis.sqlparser.EncryptParamInterceptor;
-import net.github.fastdev.mybatis.sqlparser.MultiTenantLineHandler;
-import net.github.fastdev.mybatis.sqlparser.MultiTenantLineInnerInterceptor;
 import org.apache.ibatis.plugin.Interceptor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +67,7 @@ public class MyBatisPlusConfig {
             }
         }
         BaseQuery.initDbType(mybatisCtxProperties.getDbType());
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(mybatisCtxProperties.getDbType()));
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor (mybatisCtxProperties.getDbType()));
         return interceptor;
     }
 
@@ -151,11 +150,13 @@ public class MyBatisPlusConfig {
      * @author Japson Huang
      */
     @Bean
-    @ConditionalOnBean(MultiTenantLineHandler.class)
+    @ConditionalOnBean(TenantLineHandler.class)
     @ConditionalOnMissingBean(TenantLineInnerInterceptor.class)
-    public MultiTenantLineInnerInterceptor tenantLineInnerInterceptor(MultiTenantLineHandler tenantLineHandler) {
-        return new MultiTenantLineInnerInterceptor(tenantLineHandler);
+    public TenantLineInnerInterceptor tenantLineInnerInterceptor(TenantLineHandler tenantLineHandler) {
+        return new TenantLineInnerInterceptor(tenantLineHandler);
     }
+
+
 
     @Bean
     @ConditionalOnProperty(prefix = "mybatis-plus", name = "db-type")

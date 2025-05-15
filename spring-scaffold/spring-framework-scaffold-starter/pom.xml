@@ -14,8 +14,6 @@
 
 
     <properties>
-
-        <hutool-all.version>5.8.31</hutool-all.version>
     </properties>
 
     <dependencies>
@@ -53,7 +51,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>${hutool-all.version}</version>
+            <version>${hutool.version}</version>
         </dependency>
 
         <dependency>

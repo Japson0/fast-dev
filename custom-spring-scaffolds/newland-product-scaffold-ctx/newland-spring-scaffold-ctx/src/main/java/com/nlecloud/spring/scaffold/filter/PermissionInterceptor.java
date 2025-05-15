@@ -2,12 +2,12 @@ package com.nlecloud.spring.scaffold.filter;
 
 import com.nlecloud.spring.annotation.PreAuthorize;
 import com.nlecloud.spring.scaffold.common.UserContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
 import org.springframework.core.Ordered;
 import org.springframework.web.method.HandlerMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

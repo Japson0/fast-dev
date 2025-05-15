@@ -13,8 +13,7 @@
     <artifactId>spring-mybatis-ctx-starter</artifactId>
 
     <properties>
-
-        <bcprov.version>1.77</bcprov.version>
+        <bcprov.version>1.78.1</bcprov.version>
     </properties>
 
     <dependencies>
@@ -26,6 +25,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
 
 
@@ -36,7 +36,13 @@
 
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
         </dependency>
 
         <dependency>
@@ -51,5 +57,6 @@
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
+
     </dependencies>
 </project>

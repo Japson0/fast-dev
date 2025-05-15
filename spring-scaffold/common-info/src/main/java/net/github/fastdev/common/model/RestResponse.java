@@ -1,8 +1,7 @@
 
 package net.github.fastdev.common.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import net.github.fastdev.common.exception.CommonError;
 import net.github.fastdev.common.exception.IErrorCode;
 import net.github.fastdev.common.exception.ResourceNotFoundException;
@@ -16,27 +15,27 @@ import net.github.fastdev.common.exception.ResourceNotFoundException;
  * @author Timer He
  * @version 1.0
  */
-@ApiModel("返回参数")
+@Schema(name = "返回参数")
 public class RestResponse<T> {
     /**
      * 请求是否成功
      */
-    @ApiModelProperty(value = "是否成功")
+    @Schema(name  = "是否成功")
     private boolean result = true;
     /**
      * 成功或者失败的code错误码
      */
-    @ApiModelProperty(value = "成功或者失败的应答码", example = "00000:正确，00001，错误，99999：系统异常")
+    @Schema(name = "成功或者失败的应答码", example = "00000:正确，00001，错误，99999：系统异常")
     private String code = CommonError.SUCCEED.getCode();
     /**
      * 成功时返回的数据，失败时返回具体的异常信息
      */
-    @ApiModelProperty(value = "返回数据：可以是对象或集合")
+    @Schema(name = "返回数据：可以是对象或集合")
     private T data;
     /**
      * 请求失败返回的提示信息，给前端进行页面展示的信息
      */
-    @ApiModelProperty(value = "返回信息描述")
+    @Schema(name = "返回信息描述")
     private String message;
 
     /**

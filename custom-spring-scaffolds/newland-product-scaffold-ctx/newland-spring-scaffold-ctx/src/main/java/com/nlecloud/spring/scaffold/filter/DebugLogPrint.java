@@ -1,9 +1,9 @@
 package com.nlecloud.spring.scaffold.filter;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <P><B>debug日志打印:</B></P>

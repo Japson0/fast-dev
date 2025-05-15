@@ -4,13 +4,12 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import net.github.fastdev.common.annotation.Update;
 import net.github.fastdev.mybatis.annotation.BaseObjEntity;
 
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 /**

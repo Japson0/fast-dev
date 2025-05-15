@@ -20,7 +20,4 @@
         <module>spring-cache-redis-ctx</module>
     </modules>
 
-    <dependencies>
-
-    </dependencies>
 </project>

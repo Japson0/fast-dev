@@ -11,11 +11,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-swagger-ctx-starter</artifactId>
-
-    <properties>
-
-    </properties>
     <dependencies>
+
+
+        <dependency>
+            <groupId>com.github.xingfudeshi</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <version>${knife4j.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -27,21 +30,11 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
-            <version>${knife4j.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>net.github.fast</groupId>
             <artifactId>spring-swagger-ctx-annotation</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 </project>

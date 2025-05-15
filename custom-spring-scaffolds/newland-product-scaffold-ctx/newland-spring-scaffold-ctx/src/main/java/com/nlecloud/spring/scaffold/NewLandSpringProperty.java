@@ -1,6 +1,6 @@
 package com.nlecloud.spring.scaffold;
 
-import com.nlecloud.spring.scaffold.debug.DebugProperty;
+import com.nlecloud.spring.annotation.UserInfo;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -46,5 +46,59 @@ public class NewLandSpringProperty {
 
     public void setDebug(DebugProperty debug) {
         this.debug = debug;
+    }
+
+
+    public static class DebugProperty {
+
+        /**
+         * debug总开关
+         */
+        private boolean enable=false;
+
+        /**
+         * 日志debug，会输出所有参数
+         */
+        private boolean logger = false;
+
+
+        /**
+         * 注入用户
+         */
+        private boolean injectUser = false;
+
+        private UserInfo userInfo;
+
+        public boolean isLogger() {
+            return logger;
+        }
+
+        public void setLogger(boolean logger) {
+            this.logger = logger;
+        }
+
+        public boolean isInjectUser() {
+            return injectUser;
+        }
+
+        public void setInjectUser(boolean injectUser) {
+            this.injectUser = injectUser;
+        }
+
+        public UserInfo getUserInfo() {
+            return userInfo;
+        }
+
+        public void setUserInfo(UserInfo userInfo) {
+            this.userInfo = userInfo;
+        }
+
+        public boolean isEnable() {
+            return enable;
+        }
+
+        public void setEnable(boolean enable) {
+            this.enable = enable;
+        }
     }
 }

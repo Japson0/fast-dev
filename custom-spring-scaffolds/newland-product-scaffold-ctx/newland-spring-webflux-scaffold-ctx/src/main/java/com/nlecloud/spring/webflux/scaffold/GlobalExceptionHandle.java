@@ -1,7 +1,6 @@
 
 package com.nlecloud.spring.webflux.scaffold;
 
-import com.necloud.spring.common.RestResult;
 import net.github.fastdev.common.exception.CommonError;
 import net.github.fastdev.common.exception.CommonException;
 import net.github.fastdev.common.model.RestResponse;

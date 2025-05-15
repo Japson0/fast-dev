@@ -1,12 +1,13 @@
 package com.nlecloud.spring.scaffold.debug;
 
-import com.nlecloud.spring.scaffold.common.UserWrapper;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.scaffold.common.UserContext;
+import com.nlecloud.spring.scaffold.common.UserWrapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
+import org.springframework.core.Ordered;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <P><B>用户注入:</B></P>
@@ -31,5 +32,10 @@ public class UserInjectInterceptor  implements CustomInterceptor {
         UserContext.setUserInfo(new UserWrapper(userInfo.getUserId(),userInfo.getUsername(),userInfo.getTenantId(),userInfo.getRoles()));
 
         return CustomInterceptor.super.preHandle(request, response, handler);
+    }
+
+    @Override
+    public int order() {
+        return Ordered.HIGHEST_PRECEDENCE-1;
     }
 }

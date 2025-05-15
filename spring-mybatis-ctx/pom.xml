@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <mybatis-plus.version>3.5.12</mybatis-plus.version>
     </properties>
 
     <modules>
@@ -21,19 +21,16 @@
         <module>spring-mybatis-ctx-annotation</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
 
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-annotation</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>com.baomidou</groupId>
+                    <artifactId>mybatis-plus-bom</artifactId>
+                    <version>${mybatis-plus.version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
 </project>

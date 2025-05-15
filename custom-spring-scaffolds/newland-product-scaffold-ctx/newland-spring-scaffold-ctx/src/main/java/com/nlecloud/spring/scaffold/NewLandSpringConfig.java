@@ -10,18 +10,14 @@ import com.nlecloud.spring.scaffold.filter.UserFeignInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserInterceptor;
 import com.nlecloud.spring.scaffold.handle.*;
 import com.nlecloud.spring.scaffold.service.DictServiceProxy;
-import feign.Feign;
 import net.github.fastdev.boot.CustomSpringBootConfig;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
 import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.FeignClientFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -41,8 +37,8 @@ import java.util.function.Predicate;
 @Configuration
 @EnableConfigurationProperties(NewLandSpringProperty.class)
 @AutoConfigureBefore({CustomSpringBootConfig.class})
-@Import(DebugConfig.class)
 @EnableFeignClients(clients = {IUPMSUserApi.class})
+@Import(DebugConfig.class)
 public class NewLandSpringConfig {
 
 

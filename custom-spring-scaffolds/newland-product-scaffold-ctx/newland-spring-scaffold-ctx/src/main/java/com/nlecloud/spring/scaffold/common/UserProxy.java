@@ -5,7 +5,6 @@ import com.nlecloud.spring.annotation.enums.Sex;
 import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
 import com.nlecloud.spring.scaffold.api.user.UPMSUserDTO;
 import net.github.fastdev.common.model.ComEnum;
-import org.apache.http.client.methods.HttpGet;
 import org.springframework.util.StringUtils;
 
 /**

@@ -2,10 +2,6 @@
 
 package net.github.fastdev.boot.handle;
 
-import cn.hutool.extra.spring.SpringUtil;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-
 import java.util.HashMap;
 import java.util.Map;
 

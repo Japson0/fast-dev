@@ -3,8 +3,8 @@ package com.nlecloud.spring.scaffold.handle;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.toolkit.SystemClock;
-import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.TableColumn;
+import com.nlecloud.spring.scaffold.common.UserContext;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.sql.Timestamp;

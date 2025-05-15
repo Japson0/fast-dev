@@ -1,6 +1,6 @@
 package net.github.fastdev.boot.template;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import net.github.fastdev.common.annotation.Insert;
 import net.github.fastdev.common.annotation.Update;
 import net.github.fastdev.common.model.RestResponse;
@@ -38,7 +38,7 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseObjEntity
      * @author Japson Huang
      */
     @PostMapping
-    @ApiOperation("更新")
+    @Operation(summary = "更新")
     public RestResponse update(@Validated(Update.class) @RequestBody DTO entity) {
 
         if (entity.getId() == null) {
@@ -60,7 +60,7 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseObjEntity
      * @author Japson Huang
      */
     @PutMapping
-    @ApiOperation("新增")
+    @Operation(summary = "新增")
     public RestResponse insert(@Validated(Insert.class) @RequestBody DTO entity) {
         if (baseService.addById(entity) > 0) {
             return RestResponse.renderSuccess(entity.getId()).setMessage("新增成功");
@@ -77,7 +77,7 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseObjEntity
      * @author Japson Huang
      */
     @DeleteMapping("/{id}")
-    @ApiOperation("删除")
+    @Operation(summary = "删除")
     public RestResponse delete(@PathVariable ID id) {
         if (baseService.deleteById(id) > 0) {
             return RestResponse.renderSuccess(id).setMessage("删除成功");
@@ -94,7 +94,7 @@ public class BaseController4DTO<ID extends Serializable, T extends BaseObjEntity
      * @author Japson Huang
      */
     @GetMapping("{id}")
-    @ApiOperation("查询")
+    @Operation(summary = "查询")
     public RestResponse<T> get(@PathVariable ID id) {
         return RestResponse.renderSuccess(baseService.getById(id));
     }

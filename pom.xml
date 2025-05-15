@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
+        <version>3.4.5</version>
     </parent>
 
     <groupId>net.github.fast</groupId>
@@ -26,14 +26,14 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <fast-dev.version>2.0-SNAPSHOT</fast-dev.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <fast-dev.version>2.0-jdk17-SNAPSHOT</fast-dev.version>
         <revision>${fast-dev.version}</revision>
-        <spring.version>2.7.18</spring.version>
-        <hutool.version>5.8.31</hutool.version>
-        <spring-cloud-dependencies.version>2021.0.8</spring-cloud-dependencies.version>
-        <spring-cloud-alibaba-dependencies.version>2021.0.6.1</spring-cloud-alibaba-dependencies.version>
+        <spring.version>3.4.5</spring.version>
+        <hutool.version>5.8.38</hutool.version>
+        <spring-cloud-dependencies.version>2024.0.1</spring-cloud-dependencies.version>
+        <spring-cloud-alibaba-dependencies.version>2023.0.3.2</spring-cloud-alibaba-dependencies.version>
     </properties>
 
     <dependencyManagement>
@@ -123,24 +123,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
         </dependencies>
 
     </dependencyManagement>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -182,7 +171,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-            <url>http://192.168.133.162:9081/repository/maven-releases/</url>
+            <url>http://192.168.133.162:9081/repository/maven-public/</url>
         </repository>
     </repositories>
 

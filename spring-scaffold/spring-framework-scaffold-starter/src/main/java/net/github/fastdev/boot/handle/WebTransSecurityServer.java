@@ -1,7 +1,8 @@
 
 package net.github.fastdev.boot.handle;
 
-import javax.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * <P><B>判断是否需要脱敏的服务:</B></P>

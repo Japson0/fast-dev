@@ -1,13 +1,12 @@
 package net.github.fastdev.boot.filter;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.WebTransSecurityServer;
 import net.github.fastdev.boot.utils.WebSecuritySerializeContext;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * <P><B>脱敏拦截器，决定是否脱敏:</B></P>
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Japson Huang
  * @version 1.0
  */
-public class WebTransSecurityInterceptor extends HandlerInterceptorAdapter {
+public class WebTransSecurityInterceptor implements HandlerInterceptor {
 
     private WebTransSecurityServer webTransSecurityServer;
 

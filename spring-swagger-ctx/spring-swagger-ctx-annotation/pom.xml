@@ -6,7 +6,6 @@
         <artifactId>spring-swagger-ctx</artifactId>
         <groupId>net.github.fast</groupId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,9 +17,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>${swagger-annotations.version}</version>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <groupId>io.swagger.core.v3</groupId>
+            <version>${swagger-annotations-jakarta.version}</version>
         </dependency>
     </dependencies>
 </project>
