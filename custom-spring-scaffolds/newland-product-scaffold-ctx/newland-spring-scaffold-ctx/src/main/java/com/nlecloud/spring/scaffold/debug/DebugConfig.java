@@ -2,8 +2,12 @@ package com.nlecloud.spring.scaffold.debug;
 
 import com.nlecloud.spring.scaffold.NewLandSpringProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.*;
+import org.springframework.core.Ordered;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+
+import javax.servlet.Filter;
 
 /**
  * <P><B>debug配置:</B></P>
@@ -15,6 +19,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 @Configuration
 @Conditional(DebugConfig.DebugCondition.class)
+@Import(RequestWrapperFilter.class)
 public class DebugConfig{
 
 
@@ -23,7 +28,14 @@ public class DebugConfig{
     public DebugConfig(NewLandSpringProperty newLandSpringProperty) {
         this.newLandSpringProperty = newLandSpringProperty;
     }
-
+    @Bean
+    @ConditionalOnProperty(prefix = "nlecloud.product.debug",name="logger",havingValue = "true")
+    public FilterRegistrationBean<RequestWrapperFilter> contentCachingFilter() {
+        FilterRegistrationBean<RequestWrapperFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new RequestWrapperFilter());
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE); // 确保过滤器最先执行
+        return registrationBean;
+    }
 
     @Bean
     @ConditionalOnProperty(prefix = "nlecloud.product.debug",name="logger",havingValue = "true")

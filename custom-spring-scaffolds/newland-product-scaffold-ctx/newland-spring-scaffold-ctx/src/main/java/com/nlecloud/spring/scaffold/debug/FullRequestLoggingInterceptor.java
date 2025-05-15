@@ -1,66 +1,73 @@
 package com.nlecloud.spring.scaffold.debug;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class FullRequestLoggingInterceptor implements CustomInterceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(FullRequestLoggingInterceptor.class);
-
-    private boolean shouldLogBody(HttpServletRequest request) {
-        return "POST".equalsIgnoreCase(request.getMethod())
-                || "PUT".equalsIgnoreCase(request.getMethod());
+    private static final Logger log = LoggerFactory.getLogger(FullRequestLoggingInterceptor.class);
+    @Override
+    public void afterCompletion(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Object handler,
+            Exception ex
+    ) throws UnsupportedEncodingException {
+        // 仅在发生异常时记录请求信息
+//        if (ex != null) {
+        log.error("Request failed - URL: {}, Method: {}, Headers: {}, Params: {}, Body: {}",
+                request.getRequestURI(),
+                request.getMethod(),
+                getHeaders(request),
+                getParams(request),
+                getBody(request)
+        );
+        log.error("Exception: ", ex); // 打印异常堆栈
+//        }
     }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-                                Object handler, Exception ex) throws JsonProcessingException, UnsupportedEncodingException {
-        // 包装请求以支持多次读取body
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
-
-        Map<String, Object> requestDetails = new LinkedHashMap<>();
-
-        // 基础信息
-        requestDetails.put("method", wrappedRequest.getMethod());
-        requestDetails.put("uri", wrappedRequest.getRequestURI());
-        requestDetails.put("query", wrappedRequest.getQueryString());
-
-        // 请求头
-        Map<String, String> headers = new LinkedHashMap<>();
-        Enumeration<String> headerNames = wrappedRequest.getHeaderNames();
+    private String getHeaders(HttpServletRequest request) {
+        // 获取所有请求头
+        Enumeration<String> headerNames = request.getHeaderNames();
+        StringBuilder headers = new StringBuilder();
         while (headerNames.hasMoreElements()) {
-            String header = headerNames.nextElement();
-            headers.put(header, wrappedRequest.getHeader(header));
-        }
-        requestDetails.put("headers", headers);
-
-        // 请求参数
-        requestDetails.put("parameters", wrappedRequest.getParameterMap());
-
-        // 请求体（仅对需要body的方法处理）
-        if (shouldLogBody(wrappedRequest)) {
-            byte[] content = wrappedRequest.getContentAsByteArray();
-            if (content.length > 0) {
-                String body = new String(content, wrappedRequest.getCharacterEncoding());
-                requestDetails.put("body", body);
+            String headerName = headerNames.nextElement();
+            headers.append(headerName).append("=").append(request.getHeader(headerName));
+            if (headerNames.hasMoreElements()) {
+                headers.append(", ");
             }
         }
+        return headers.toString();
+    }
 
-        logger.info("Full request details:\n{}",
-                new ObjectMapper().writerWithDefaultPrettyPrinter()
-                        .writeValueAsString(requestDetails));
+    private String getParams(HttpServletRequest request) {
+        // 获取 Query 和 Form 参数
+        Map<String, String[]> params = request.getParameterMap();
+        return params.entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + Arrays.toString(entry.getValue()))
+                .collect(Collectors.joining(", "));
+    }
+
+    private String getBody(HttpServletRequest request) throws UnsupportedEncodingException {
+        // 获取 Body（仅适用于 ContentCachingRequestWrapper）
+        if (request instanceof ContentCachingRequestWrapper) {
+            byte[] bodyBytes = ((ContentCachingRequestWrapper) request).getContentAsByteArray();
+            if (bodyBytes.length > 0) {
+                return new String(bodyBytes, request.getCharacterEncoding());
+            }
+        }
+        return "[empty or non-repeatable body]";
     }
 }
