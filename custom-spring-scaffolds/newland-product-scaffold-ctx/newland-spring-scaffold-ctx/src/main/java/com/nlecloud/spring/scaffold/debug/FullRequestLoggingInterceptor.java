@@ -17,17 +17,17 @@ import java.util.Map;
 
 @Component
 public class FullRequestLoggingInterceptor implements CustomInterceptor {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(FullRequestLoggingInterceptor.class);
 
     private boolean shouldLogBody(HttpServletRequest request) {
-        return "POST".equalsIgnoreCase(request.getMethod()) 
-            || "PUT".equalsIgnoreCase(request.getMethod());
+        return "POST".equalsIgnoreCase(request.getMethod())
+                || "PUT".equalsIgnoreCase(request.getMethod());
     }
-    
+
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-            Object handler, Exception ex) throws JsonProcessingException, UnsupportedEncodingException {
+                                Object handler, Exception ex) throws JsonProcessingException, UnsupportedEncodingException {
         // 包装请求以支持多次读取body
         ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
 
