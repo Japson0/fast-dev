@@ -34,7 +34,6 @@ public class FullRequestLoggingInterceptor implements CustomInterceptor {
                 getParams(request),
                 getBody(request)
         );
-        log.error("Exception: ", ex); // 打印异常堆栈
         }
     }
 
