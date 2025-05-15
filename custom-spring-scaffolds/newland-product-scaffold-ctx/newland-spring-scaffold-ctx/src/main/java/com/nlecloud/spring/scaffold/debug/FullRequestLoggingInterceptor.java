@@ -26,7 +26,7 @@ public class FullRequestLoggingInterceptor implements CustomInterceptor {
             Exception ex
     ) throws UnsupportedEncodingException {
         // 仅在发生异常时记录请求信息
-//        if (ex != null) {
+        if (ex != null) {
             log.error("Request failed - URL: {}, Method: {}, Headers: {}, Params: {}, Body: {}",
                     request.getRequestURI(),
                     request.getMethod(),
@@ -35,7 +35,7 @@ public class FullRequestLoggingInterceptor implements CustomInterceptor {
                     getBody(request)
             );
             log.error("Exception: ", ex); // 打印异常堆栈
-//        }
+        }
     }
 
     private String getHeaders(HttpServletRequest request) {
