@@ -76,9 +76,22 @@ public class BaseQuery<T> {
                 Object value = queryField.getValue(object);
                 if (isEmpty(value)) continue;
                 Operation condition = queryField.getCondition();
-                initQuery(queryWrapper, condition, queryField.getColumnName(ignoreAlias), value);
+                String[] columnName = queryField.getColumnName(ignoreAlias);
+                if(columnName.length>1){
+                    queryWrapper.nested(nest->{
+                        QueryWrapper<T> or = nest;
+                        for (String s : columnName) {
+                            initQuery(or,condition,s,value);
+                            or=or.or();
+                        }
+                    });
+                }else{
+                    initQuery(queryWrapper, condition, columnName[0], value);
+
+                }
             }
         }
+
         return queryWrapper;
     }
 

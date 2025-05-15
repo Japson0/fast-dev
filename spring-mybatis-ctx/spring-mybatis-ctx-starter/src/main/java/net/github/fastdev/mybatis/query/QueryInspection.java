@@ -2,10 +2,12 @@
 
 package net.github.fastdev.mybatis.query;
 
+import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import net.github.fastdev.mybatis.annotation.Operation;
 import net.github.fastdev.mybatis.annotation.QueryClass;
 import net.github.fastdev.mybatis.annotation.QueryField;
 import net.github.fastdev.mybatis.util.CamelCaseUtils;
+import org.springframework.util.StringUtils;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -72,9 +74,10 @@ public class QueryInspection {
             if (readMethod == null) continue;
             QueryField queryField = field.getAnnotation(QueryField.class);
             if (queryField == null) {
-                tempQueryFields.add(new QueryFieldWrapper(CamelCaseUtils.toUnderlineName(field.getName()), readMethod));
+                tempQueryFields.add(new QueryFieldWrapper(new String[]{CamelCaseUtils.toUnderlineName(field.getName())}, readMethod));
             } else if (queryField.exists()) {
-                if (queryField.value().equals("")) {
+
+                if (queryField.value().length==1&&! StringUtils.hasText(queryField.value()[0])) {
                     tempQueryFields.add(new QueryFieldWrapper(queryField, CamelCaseUtils.toUnderlineName(field.getName()), readMethod));
                 } else {
                     tempQueryFields.add(new QueryFieldWrapper(queryField, null, readMethod));
@@ -102,7 +105,7 @@ public class QueryInspection {
         /**
          * 数据库字段名，如果为空则取参数名的驼峰映射
          */
-        private final String column;
+        private final String[] column;
 
         /**
          * 操作符，如LIKE、EQ之类的
@@ -120,14 +123,14 @@ public class QueryInspection {
         private final boolean ignoreClassAlias;
 
         public QueryFieldWrapper(QueryField queryField, String defaultValue, Method readMethod) {
-            this.column = defaultValue == null ? queryField.value() : defaultValue;
+            this.column = defaultValue == null ? queryField.value() : new String[]{defaultValue};
             this.condition = queryField.condition();
             this.alias = queryField.alias().equals("") ? null : queryField.alias();
             this.ignoreClassAlias = queryField.ignoreClassAlias();
             this.readMethod = readMethod;
         }
 
-        public QueryFieldWrapper(String column, Method readMethod) {
+        public QueryFieldWrapper(String[] column, Method readMethod) {
             this.column = column;
             this.alias = null;
             this.condition = Operation.EQ;
@@ -150,21 +153,30 @@ public class QueryInspection {
             return Objects.hash(readMethod.getName());
         }
 
-        public String getColumnName(boolean ignoreAlias) {
+        public String[] getColumnName(boolean ignoreAlias) {
             if (ignoreAlias) return column;
             if (queryClass == null) {
-                return getAliasColumn();
+                return getAliasColumn(alias);
             } else {
                 if (this.ignoreClassAlias) {
-                    return getAliasColumn();
+                    return getAliasColumn(alias);
                 } else {
-                    return !"".equals(queryClass.alias()) ? queryClass.alias() + "." + column : column;
+                    return getAliasColumn(!"".equals(queryClass.alias()) ? queryClass.alias() :null);
                 }
             }
         }
 
-        private String getAliasColumn() {
-            return alias != null ? alias + "." + column : column;
+        private String[] getAliasColumn(String alias) {
+            if(alias==null){
+                return column;
+            }
+            else{
+                String[] result = new String[column.length];
+                for (int i = 0; i < result.length; i++) {
+                    result[i] = alias + "." + column;
+                }
+                return result;
+            }
         }
 
         public Operation getCondition() {

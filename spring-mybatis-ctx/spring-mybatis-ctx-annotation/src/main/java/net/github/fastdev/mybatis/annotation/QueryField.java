@@ -21,7 +21,7 @@ public @interface QueryField {
     /**
      * 数据库字段名，如果为空则取参数名的驼峰映射
      */
-    String value() default "";
+    String[] value() default "";
 
     /**
      * 是否存在
