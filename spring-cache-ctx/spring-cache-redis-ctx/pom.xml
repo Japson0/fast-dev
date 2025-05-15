@@ -13,8 +13,7 @@
     <artifactId>spring-cache-redis-ctx</artifactId>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+
         <protostuff.version>1.7.4</protostuff.version>
     </properties>
 

@@ -1,6 +1,7 @@
 package net.github.fastdev.common.model;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import net.github.fastdev.common.serio.EnumDeserializer;
 import net.github.fastdev.swagger.annotation.SwaggerDisplayEnum;
@@ -17,7 +18,8 @@ import java.io.Serializable;
  */
 @JsonDeserialize(using = EnumDeserializer.class)
 @SwaggerDisplayEnum(value = "value", name = "display")
-public interface ComEnum<T extends Serializable> extends IEnum<T> {
+public interface ComEnum<T extends Serializable> extends IEnum<T>, Serializable {
+
 
     /**
      * 序列化显示的值
@@ -31,6 +33,7 @@ public interface ComEnum<T extends Serializable> extends IEnum<T> {
     }
 
     @Override
+    @JsonValue
     T getValue();
 
     static <T extends Serializable, E extends ComEnum<T>> E getEnum(T t, Class<E> clazz) {

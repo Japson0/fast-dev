@@ -6,6 +6,8 @@
 
 package com.nlecloud.spring.scaffold.common;
 
+
+
 import com.nlecloud.spring.annotation.UserInfo;
 
 import java.util.Set;

@@ -6,14 +6,13 @@
     <parent>
         <groupId>com.necloud</groupId>
         <artifactId>newland-product-scaffold-ctx</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>newland-spring-common</artifactId>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
