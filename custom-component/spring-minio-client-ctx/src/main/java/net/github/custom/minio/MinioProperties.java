@@ -2,6 +2,7 @@
 package net.github.custom.minio;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Primary;
 
 /**
  * MinioProperties
@@ -9,13 +10,22 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Nick Lv
  * @created 2022/10/17 17:11
  */
-@ConfigurationProperties(prefix = "custom.minio")
+@ConfigurationProperties(prefix = "minio")
 public class MinioProperties {
     /**
      * minio服务地址
      * 例如：http://ip:9000
      */
     private String endpoint;
+
+    /**
+     * accessKey
+     */
+    private String accessKey;
+    /**
+     * secretKey
+     */
+    private String secretKey;
     /**
      * 区域，需和minio的配置保持一致
      * 默认为:us-east-1
@@ -33,6 +43,22 @@ public class MinioProperties {
 
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
     }
 
     public String getRegion() {

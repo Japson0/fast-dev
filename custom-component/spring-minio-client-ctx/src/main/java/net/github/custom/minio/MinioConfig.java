@@ -1,6 +1,7 @@
 
 package net.github.custom.minio;
 
+import io.minio.MinioClient;
 import net.github.custom.minio.driver.MinioDriver;
 import net.github.custom.minio.driver.ServerInfo;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -23,31 +24,21 @@ public class MinioConfig {
 
     @Bean
     @Scope("prototype")
-    public MinioDriver minioDriver(ServerInfo serverInfo, MinioProperties properties) {
-        return new MinioDriver(serverInfo, properties);
+    public MinioDriver minioDriver( MinioProperties properties) {
+        return new MinioDriver(properties);
     }
 
     /**
-     * @param minioDriver
+     * @param minioClient
      * @return
      */
     @Bean
-    @ConditionalOnExpression("#{environment['custom.minio.endpoint']!=null}")
+    @ConditionalOnExpression("#{environment['minio.endpoint']!=null}")
     @Lazy
-    public FileManager fileManager(MinioDriver minioDriver, MinioProperties minioProperties) {
-        return new FileManager(minioDriver, minioProperties.getDefaultBucket());
+    public FileManager fileManager(MinioClient minioClient) {
+        return new FileManager(minioClient);
     }
 
-    /**
-     * @param minioDriver
-     * @return
-     */
-    @Bean
-    @ConditionalOnExpression("#{environment['custom.minio.endpoint']!=null}")
-    @Lazy
-    public BucketManager bucketManager(MinioDriver minioDriver) {
-        return new BucketManager(minioDriver);
-    }
 }
 
 

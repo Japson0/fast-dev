@@ -3,6 +3,7 @@ package net.github.custom.minio.driver;
 
 import io.minio.MinioClient;
 import net.github.custom.minio.MinioProperties;
+import org.springframework.beans.factory.FactoryBean;
 
 /**
  * minio的驱动类
@@ -10,62 +11,31 @@ import net.github.custom.minio.MinioProperties;
  * @author Nick Lv
  * @created 2022/10/12 17:14
  */
-public class MinioDriver {
-    /**
-     * minio的客户端
-     */
-    private MinioClient client;
-    /**
-     * 服务信息
-     */
-    private ServerInfo serverInfo;
-    /**
-     * minio地址
-     */
-    private final String endPoint;
-    /**
-     * region的位置
-     */
-    private final String region;
+public class MinioDriver implements FactoryBean<MinioClient> {
 
-    public String getEndPoint() {
-        return endPoint;
-    }
+    private MinioProperties minioProperties;
 
-    public String getRegion() {
-        return region;
-    }
 
-    public MinioClient getClient() {
-        if (client == null) {
-            initClient();
-        }
-        return client;
-    }
 
-    public ServerInfo getServerInfo() {
-        return serverInfo;
-    }
-
-    public MinioDriver(ServerInfo serverInfo, MinioProperties properties) {
-        this.serverInfo = serverInfo;
-        this.endPoint = properties.getEndpoint();
-        this.region = properties.getRegion();
+    public MinioDriver( MinioProperties properties) {
+        this.minioProperties=properties;
     }
 
 
-    /**
-     * 初始化客户端
-     */
-    private void initClient() {
-        this.client = MinioClient.builder()
-                .endpoint(endPoint)
-                .credentials(serverInfo.getUsername(), serverInfo.getPassword())
-                .region(region)
+
+    @Override
+    public MinioClient getObject() throws Exception {
+        return MinioClient.builder()
+                .endpoint(minioProperties.getEndpoint())
+                .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
+                .region(minioProperties.getRegion())
                 .build();
     }
 
-
+    @Override
+    public Class<MinioClient> getObjectType() {
+        return MinioClient.class;
+    }
 }
 
 

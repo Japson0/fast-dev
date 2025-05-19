@@ -8,6 +8,7 @@ package com.nlecloud.spring.webflux.scaffold.filter;
 
 import com.necloud.spring.common.AuthConstants;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -38,6 +39,9 @@ public class UserFilter implements WebFilter {
             String username = headers.getFirst(AuthConstants.USER_HEADER);
             String roles = headers.getFirst(AuthConstants.ROLE_HEADER);
             String tenantId = headers.getFirst(AuthConstants.TENANT_ID_HEADER);
+            if(!StringUtils.hasText(tenantId)){
+                tenantId="0";
+            }
             if(roles!=null) {
                 String[] rolesSplit = roles.split(",");
                 rolesSet = new HashSet<>(rolesSplit.length);
