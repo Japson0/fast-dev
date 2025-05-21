@@ -14,4 +14,8 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface DemoDAO extends BaseMapperExtend<DemoObjEntity> {
+    @Override
+    default Long selectRepetitionCount(DemoObjEntity entity) {
+        return 0L;
+    }
 }

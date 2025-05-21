@@ -18,6 +18,7 @@ import net.github.fastdev.mybatis.config.MybatisCtxProperties;
 import net.github.fastdev.mybatis.encrypt.EncryptCertificate;
 import net.github.fastdev.mybatis.encrypt.SkinMethodPredicate;
 import net.github.fastdev.mybatis.injector.method.InsertBatch;
+import net.github.fastdev.mybatis.injector.method.SelectRepetitionCount;
 import net.github.fastdev.mybatis.injector.method.UpdateAllColumnById;
 import net.github.fastdev.mybatis.sqlparser.DecryptResultSetInterceptor;
 import net.github.fastdev.mybatis.sqlparser.EncryptParamInterceptor;
@@ -123,7 +124,8 @@ public class MyBatisPlusConfig {
             public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {
                 List<AbstractMethod> methodList = super.getMethodList(mapperClass, tableInfo);
                 methodList.add(new UpdateAllColumnById());
-                methodList.add(new InsertBatch());
+//                methodList.add(new InsertBatch());
+                methodList.add(new SelectRepetitionCount());
                 return methodList;
             }
         };
