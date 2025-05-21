@@ -24,5 +24,12 @@ public interface BaseMapperExtend<T> extends BaseMapper<T> {
      */
     int updateAllColumnById(@Param(Constants.ENTITY) T entity);
 
-
+    /**
+     *获取重复字段的数量
+     *RevisionTrail:(Date/Author/Description)
+     * 2025年05月19日
+     *@author Japson Huang
+     *
+    */
+    Long selectRepetitionCount(@Param(Constants.ENTITY) T entity);
 }

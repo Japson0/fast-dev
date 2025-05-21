@@ -24,19 +24,19 @@ public class BusinessException extends CommonException {
     }
 
     public BusinessException(Throwable throwable, String code, CommonError commonError) {
-        this(throwable, code, commonError.getCode());
+        this(throwable, code, commonError.getCode(),null);
     }
 
 
-    public BusinessException(String i18nKey) {
-        this(null, i18nKey);
+    public BusinessException(String i18nKey,String...args) {
+        this(null, i18nKey,args);
     }
 
-    public BusinessException(Throwable throwable, String i18nKey) {
-        this(throwable, null,i18nKey);
+    public BusinessException(Throwable throwable, String i18nKey,String...args) {
+        this(throwable, null,i18nKey,args);
     }
 
-    public BusinessException(Throwable throwable, String code, String i18nKey) {
-        super(throwable, code, I18nUtils.getMessage(i18nKey,null));
+    public BusinessException(Throwable throwable, String code, String i18nKey,String...args) {
+        super(throwable, code, I18nUtils.getMessage(i18nKey,args));
     }
 }
