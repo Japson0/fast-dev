@@ -105,21 +105,6 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
         this.queryWrapper = NULL_WRAPPER;
     }
 
-    @Override
-    @JsonIgnore
-    public List<OrderItem> orders() {
-        List<OrderInfo> orderInfos = this.pageRequest.getOrderInfos();
-        if (orderInfos != null) {
-            List<OrderItem> orderItems = new ArrayList<>(orderInfos.size());
-            for (OrderInfo orderInfo : orderInfos) {
-                orderItems.add(orderInfo.isAsc() ? OrderItem.asc(orderInfo.getColumn()) :
-                        OrderItem.desc(orderInfo.getColumn()));
-            }
-            return orderItems;
-        }
-        return Collections.emptyList();
-    }
-
 
 
     public PageResponse<DTO> getPageResponse(){
