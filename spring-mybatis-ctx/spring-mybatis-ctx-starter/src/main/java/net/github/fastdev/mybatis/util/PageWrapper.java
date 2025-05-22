@@ -52,6 +52,15 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
 
     public PageWrapper(PageRequest<P> pageRequest) {
         super(pageRequest.getPage(),pageRequest.getSize(),pageRequest.isSearchCount());
+        List<OrderInfo> orderInfos = pageRequest.getOrderInfos();
+        if (orderInfos != null) {
+            List<OrderItem> orderItems = new ArrayList<>(orderInfos.size());
+            for (OrderInfo orderInfo : orderInfos) {
+                orderItems.add(orderInfo.isAsc() ? OrderItem.asc(orderInfo.getColumn()) :
+                        OrderItem.desc(orderInfo.getColumn()));
+            }
+            addOrder(orderItems);
+        }
         this.pageRequest = pageRequest;
     }
 
@@ -110,7 +119,6 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
         }
         return Collections.emptyList();
     }
-
 
 
 
