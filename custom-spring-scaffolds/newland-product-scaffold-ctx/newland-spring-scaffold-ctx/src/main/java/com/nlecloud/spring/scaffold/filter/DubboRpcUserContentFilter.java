@@ -42,7 +42,7 @@ public class DubboRpcUserContentFilter implements Filter {
             RpcContext.getContext().setAttachment(AuthConstants.USER_HEADER, userName);
             Long userId = UserContext.getUserId();
             RpcContext.getContext().setAttachment(AuthConstants.USER_ID_HEADER, userId);
-            RpcContext.getContext().setAttachment(AuthConstants.TENANT_ID_HEADER, userId);
+            RpcContext.getContext().setAttachment(AuthConstants.SCHOOL_ID_HEADER, UserContext.getTenantId());
 
             Set<String> roles = UserContext.getRoles();
             if (!CollectionUtils.isEmpty(roles)) {
@@ -54,7 +54,7 @@ public class DubboRpcUserContentFilter implements Filter {
     private void popUser() {
         String userId = RpcContext.getContext().getAttachment(AuthConstants.USER_ID_HEADER);
         if(userId!=null){
-            String tenantId = RpcContext.getContext().getAttachment(AuthConstants.TENANT_ID_HEADER);
+            String tenantId = RpcContext.getContext().getAttachment(AuthConstants.SCHOOL_ID_HEADER);
             String roles = RpcContext.getContext().getAttachment(AuthConstants.ROLE_HEADER);
             String username =RpcContext.getContext().getAttachment(AuthConstants.USER_HEADER);
             Set<String> rolesSet= Collections.EMPTY_SET;

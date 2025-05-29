@@ -31,6 +31,10 @@ public class UserInfo implements Serializable {
     private Long schoolId;
 
     /**
+     * tenantId
+     */
+    private Long tenantId;
+    /**
      * 学校名称
      */
     private String schoolName;
@@ -91,7 +95,7 @@ public class UserInfo implements Serializable {
     }
 
     public Long getTenantId() {
-        return schoolId;
+        return tenantId==null?schoolId:tenantId;
     }
 
 

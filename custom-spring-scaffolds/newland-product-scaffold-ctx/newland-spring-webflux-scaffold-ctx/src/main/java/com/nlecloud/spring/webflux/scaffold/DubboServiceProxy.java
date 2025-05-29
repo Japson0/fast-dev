@@ -34,7 +34,7 @@ public class DubboServiceProxy<T> {
                     RpcContext.getContext().setAttachment(AuthConstants.USER_HEADER, userWrapper.getUsername());
                     RpcContext.getContext().setAttachment(AuthConstants.USER_ID_HEADER, userWrapper.getUserId());
                     RpcContext.getContext().setAttachment(AuthConstants.USER_ID_HEADER, userWrapper.getUserId());
-                    RpcContext.getContext().setAttachment(AuthConstants.TENANT_ID_HEADER, String.join(",", userWrapper.getRoles()));
+                    RpcContext.getContext().setAttachment(AuthConstants.SCHOOL_ID_HEADER, String.join(",", userWrapper.getRoles()));
                 }
                 return supplier.apply(api);
             }).subscribeOn(Schedulers.boundedElastic()); // 在这里指定

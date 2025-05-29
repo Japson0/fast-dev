@@ -38,9 +38,14 @@ public class UserFilter implements WebFilter {
             Set<String> rolesSet= Collections.EMPTY_SET;
             String username = headers.getFirst(AuthConstants.USER_HEADER);
             String roles = headers.getFirst(AuthConstants.ROLE_HEADER);
+            String schoolId = headers.getFirst(AuthConstants.SCHOOL_ID_HEADER);
             String tenantId = headers.getFirst(AuthConstants.TENANT_ID_HEADER);
+            if(tenantId==null){
+                //针对以前没有租户的，把学校当租户
+                tenantId=schoolId;
+            }
             if(!StringUtils.hasText(tenantId)){
-                tenantId="0";
+                tenantId="0";  //TODO， 有些历史数据没学校，后面改完可以删掉
             }
             if(roles!=null) {
                 String[] rolesSplit = roles.split(",");

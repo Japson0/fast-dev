@@ -32,8 +32,14 @@ public class UserInterceptor implements CustomInterceptor {
             Set<String> rolesSet=Collections.EMPTY_SET;
             String username = request.getHeader(AuthConstants.USER_HEADER);
             String roles = request.getHeader(AuthConstants.ROLE_HEADER);
+            String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
             String tenantId = request.getHeader(AuthConstants.TENANT_ID_HEADER);
+            if(tenantId==null){
+                //针对以前没租户的，把学校当租户
+                tenantId=schoolId;
+            }
             if(!StringUtils.hasText(tenantId)){
+                //TODO， 有些历史数据没学校，后面改完可以删掉
                 tenantId="0";
             }
             if(roles!=null) {

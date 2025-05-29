@@ -22,6 +22,7 @@ public class UserFeignInterceptor implements RequestInterceptor {
         if (userInfo != null) {
             requestTemplate.header(AuthConstants.USER_ID_HEADER,userInfo.getUserId().toString())
                     .header(AuthConstants.ROLE_HEADER,String.join(",",userInfo.getRoles()))
+                    .header(AuthConstants.SCHOOL_ID_HEADER,userInfo.getSchoolId().toString())
                     .header(AuthConstants.TENANT_ID_HEADER,userInfo.getTenantId().toString())
                     .header(AuthConstants.USER_HEADER,userInfo.getUsername());
 
