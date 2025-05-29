@@ -41,10 +41,11 @@ public class UserFilter implements WebFilter {
             String schoolId = headers.getFirst(AuthConstants.SCHOOL_ID_HEADER);
             String tenantId = headers.getFirst(AuthConstants.TENANT_ID_HEADER);
             if(tenantId==null){
-                tenantId=schoolId; //针对以前租户的，把学校当租户
+                //针对以前没有租户的，把学校当租户
+                tenantId=schoolId;
             }
             if(!StringUtils.hasText(tenantId)){
-                tenantId="0";
+                tenantId="0";  //TODO， 有些历史数据没学校，后面改完可以删掉
             }
             if(roles!=null) {
                 String[] rolesSplit = roles.split(",");
