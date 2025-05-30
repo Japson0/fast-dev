@@ -1,8 +1,3 @@
-///*
-// *Copyright(c)2005,2018,EVECOMTechnologyCo.,Ltd.Allrightsreserved.
-// *EVECOMPROPRIETARY/CONFIDENTIAL.Useissubjecttolicenseterms.
-// *
-// */
 //package net.evecom.fastdev.mybatis.sqlparser;
 //
 //import com.baomidou.mybatisplus.core.toolkit.StringPool;
