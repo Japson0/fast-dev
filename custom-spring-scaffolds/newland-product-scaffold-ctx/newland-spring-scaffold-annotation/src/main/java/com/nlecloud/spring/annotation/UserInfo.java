@@ -78,6 +78,8 @@ public class UserInfo implements Serializable {
      */
     private Sex sex;
 
+    private String phone;
+
     public Long getUserId() {
         return userId;
     }
@@ -177,5 +179,17 @@ public class UserInfo implements Serializable {
 
     public void setSex(Sex sex) {
         this.sex = sex;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

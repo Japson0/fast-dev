@@ -23,6 +23,7 @@
         <module>archetype/spring-cloud-archetype</module>
         <module>custom-component</module>
         <module>custom-spring-scaffolds</module>
+        <module>spring-distributed-lock-ctx</module>
     </modules>
 
     <properties>
