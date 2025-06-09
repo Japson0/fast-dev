@@ -42,6 +42,7 @@ public class UserProxy {
         if(upmsUserDTO.getSex()!=null){
             userInfo.setSex(ComEnum.getEnum(upmsUserDTO.getSex(),Sex.class));
         }
+        userInfo.setPhone(upmsUserDTO.getPhone());
         return userInfo;
     }
 }
