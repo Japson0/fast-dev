@@ -1,4 +1,4 @@
-package com.necloud.spring.common;
+package com.nlecloud.spring.common;
 
 /**
  * <P><B>授权常量:</B></P>

@@ -1,6 +1,6 @@
 package com.nlecloud.spring.scaffold.filter;
 
-import com.necloud.spring.common.AuthConstants;
+import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import feign.RequestInterceptor;
