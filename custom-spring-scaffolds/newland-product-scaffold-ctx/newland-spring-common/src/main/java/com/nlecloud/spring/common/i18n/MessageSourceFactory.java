@@ -1,4 +1,4 @@
-package com.necloud.spring.common.i18n;
+package com.nlecloud.spring.common.i18n;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.boot.autoconfigure.context.MessageSourceProperties;

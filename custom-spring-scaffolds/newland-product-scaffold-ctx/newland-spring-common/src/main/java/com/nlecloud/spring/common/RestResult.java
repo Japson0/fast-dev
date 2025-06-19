@@ -1,6 +1,6 @@
-package com.necloud.spring.common;
+package com.nlecloud.spring.common;
 
-import com.necloud.spring.common.i18n.I18nUtils;
+import com.nlecloud.spring.common.i18n.I18nUtils;
 import net.github.fastdev.common.exception.CommonError;
 import net.github.fastdev.common.exception.IErrorCode;
 import net.github.fastdev.common.model.RestResponse;

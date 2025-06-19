@@ -1,4 +1,4 @@
-package com.necloud.spring.common.i18n;
+package com.nlecloud.spring.common.i18n;
 
 import cn.hutool.extra.spring.SpringUtil;
 import org.springframework.context.MessageSource;

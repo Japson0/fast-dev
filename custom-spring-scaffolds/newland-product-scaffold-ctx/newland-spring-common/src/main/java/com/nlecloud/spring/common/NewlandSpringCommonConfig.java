@@ -1,6 +1,6 @@
-package com.necloud.spring.common;
+package com.nlecloud.spring.common;
 
-import com.necloud.spring.common.i18n.LocaleConfig;
+import com.nlecloud.spring.common.i18n.LocaleConfig;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.context.annotation.Configuration;

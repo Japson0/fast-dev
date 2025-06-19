@@ -1,7 +1,7 @@
 
 package com.nlecloud.spring.scaffold.filter;
 
-import com.necloud.spring.common.AuthConstants;
+import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
 import net.github.fastdev.boot.handle.CustomInterceptor;

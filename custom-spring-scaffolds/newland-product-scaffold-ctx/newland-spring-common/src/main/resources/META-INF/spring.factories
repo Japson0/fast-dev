@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.necloud.spring.common.NewlandSpringCommonConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.nlecloud.spring.common.NewlandSpringCommonConfig

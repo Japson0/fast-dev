@@ -1,7 +1,6 @@
 package com.nlecloud.spring.scaffold.handle;
 
-import cn.hutool.core.collection.ConcurrentHashSet;
-import com.necloud.spring.common.i18n.I18nUtils;
+import com.nlecloud.spring.common.i18n.I18nUtils;
 import com.nlecloud.spring.annotation.enums.I18nDisplay;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
 import net.github.fastdev.common.model.ComEnum;
@@ -9,11 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.StringUtils;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <P><B>枚举持久化类:</B></P>
