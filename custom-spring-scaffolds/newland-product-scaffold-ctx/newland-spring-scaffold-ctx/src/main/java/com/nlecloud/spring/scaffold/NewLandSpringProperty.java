@@ -67,7 +67,7 @@ public class NewLandSpringProperty {
          */
         private boolean injectUser = false;
 
-        private UserInfo userInfo;
+        private DebugUser userInfo;
 
         public boolean isLogger() {
             return logger;
@@ -85,11 +85,11 @@ public class NewLandSpringProperty {
             this.injectUser = injectUser;
         }
 
-        public UserInfo getUserInfo() {
+        public DebugUser getUserInfo() {
             return userInfo;
         }
 
-        public void setUserInfo(UserInfo userInfo) {
+        public void setUserInfo(DebugUser userInfo) {
             this.userInfo = userInfo;
         }
 
@@ -100,5 +100,9 @@ public class NewLandSpringProperty {
         public void setEnable(boolean enable) {
             this.enable = enable;
         }
+
+
+        public static class DebugUser extends UserInfo {}
     }
+
 }
