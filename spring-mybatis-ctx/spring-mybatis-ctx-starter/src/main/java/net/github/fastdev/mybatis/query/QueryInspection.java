@@ -173,7 +173,7 @@ public class QueryInspection {
             else{
                 String[] result = new String[column.length];
                 for (int i = 0; i < result.length; i++) {
-                    result[i] = alias + "." + column;
+                    result[i] = alias + "." + column[i];
                 }
                 return result;
             }
