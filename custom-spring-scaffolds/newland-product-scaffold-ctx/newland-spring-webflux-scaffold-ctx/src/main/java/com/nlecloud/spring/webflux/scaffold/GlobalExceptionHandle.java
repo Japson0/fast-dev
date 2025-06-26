@@ -17,9 +17,9 @@ import reactor.core.publisher.Mono;
 /**
  * <P><B>Description: </B> 定义全局性异常处理类  </P>
  * Revision Trail: (Date/Author/Description)
- * 2019/3/20 Timer He CREATE
+ * 2019/3/20 Japson Huang CREATE
  *
- * @author Timer He
+ * @author Japson Huang
  * @version 1.0
  */
 @ControllerAdvice
