@@ -17,7 +17,7 @@
 
         <swagger-annotations.version>1.6.6</swagger-annotations.version>
         <knife4j.version>4.6.0</knife4j.version>
-        <swagger-annotations-jakarta.version>2.2.25</swagger-annotations-jakarta.version>
+        <swagger-annotations-jakarta.version>2.2.30</swagger-annotations-jakarta.version>
     </properties>
 
     <modules>
