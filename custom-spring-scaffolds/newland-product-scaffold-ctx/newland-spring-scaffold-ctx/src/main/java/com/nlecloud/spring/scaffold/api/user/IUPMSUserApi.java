@@ -1,12 +1,12 @@
 package com.nlecloud.spring.scaffold.api.user;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "nlecloud-upms-user-center",contextId = "getUserId")
+@HttpExchange(url = "http://nlecloud-upms-user-center") // 使用服务名称
 public interface IUPMSUserApi {
 
-    @GetMapping("/api/user/detail/{id}")
+    @GetExchange("/api/user/detail/{id}")
     UPMSUserDTO getUserDetailById(@PathVariable("id") String id);
 }

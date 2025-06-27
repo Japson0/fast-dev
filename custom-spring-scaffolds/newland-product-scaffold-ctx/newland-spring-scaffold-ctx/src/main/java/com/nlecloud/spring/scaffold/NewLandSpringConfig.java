@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -37,8 +36,7 @@ import java.util.function.Predicate;
 @Configuration
 @EnableConfigurationProperties(NewLandSpringProperty.class)
 @AutoConfigureBefore({CustomSpringBootConfig.class})
-@EnableFeignClients(clients = {IUPMSUserApi.class})
-@Import(DebugConfig.class)
+@Import({DebugConfig.class,WebClientConfig.class})
 public class NewLandSpringConfig {
 
 
@@ -63,6 +61,8 @@ public class NewLandSpringConfig {
 
         return new UserProxy(iupmsUserApi);
     }
+
+
     /**
      *枚举国际化
      *RevisionTrail:(Date/Author/Description)
