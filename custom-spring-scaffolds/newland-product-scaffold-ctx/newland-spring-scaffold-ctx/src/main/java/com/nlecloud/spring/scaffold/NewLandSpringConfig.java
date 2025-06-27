@@ -6,7 +6,6 @@ import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
 import com.nlecloud.spring.scaffold.common.UserProxy;
 import com.nlecloud.spring.scaffold.debug.DebugConfig;
 import com.nlecloud.spring.scaffold.filter.PermissionInterceptor;
-import com.nlecloud.spring.scaffold.filter.UserFeignInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserInterceptor;
 import com.nlecloud.spring.scaffold.handle.*;
 import com.nlecloud.spring.scaffold.service.DictServiceProxy;
@@ -87,11 +86,7 @@ public class NewLandSpringConfig {
         return new UserInterceptor();
     }
 
-    @Bean
-//    @ConditionalOnBean(FeignClientFactoryBean.class)
-    public UserFeignInterceptor userFeignInterceptor(){
-        return new UserFeignInterceptor();
-    }
+
     /**
      *字典转换服务
      *RevisionTrail:(Date/Author/Description)
