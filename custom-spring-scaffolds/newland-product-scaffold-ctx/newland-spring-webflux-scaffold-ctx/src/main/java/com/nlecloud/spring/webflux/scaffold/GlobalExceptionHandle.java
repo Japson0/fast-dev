@@ -1,6 +1,8 @@
 
 package com.nlecloud.spring.webflux.scaffold;
 
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.context.Context;
 import net.github.fastdev.common.exception.CommonError;
 import net.github.fastdev.common.exception.CommonException;
 import net.github.fastdev.common.model.RestResponse;
@@ -33,11 +35,13 @@ public class GlobalExceptionHandle {
 
     @ExceptionHandler(CommonException.class)
     public Mono<ResponseEntity<RestResponse>> handleAllExceptions(CommonException ex,ServerWebExchange exchange) {
+
         LOGGER.error("调用接口：{}，出错",exchange.getRequest().getPath(),ex);
         return Mono.just(ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(RestResponse.renderError(ex.getCode(),ex.getMessage())));
+                .body(RestResponse.renderError(ex.getCode(),ex.getMessage())
+                        .setTraceId(getTraceId())));
     }
 
     @ExceptionHandler(Exception.class)
@@ -47,6 +51,13 @@ public class GlobalExceptionHandle {
         return Mono.just(ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION)));
+                .body(RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION)
+                        .setTraceId(getTraceId())));
+    }
+
+
+    private String getTraceId() {
+        Span currentSpan = Span.fromContext(Context.current());
+        return currentSpan.getSpanContext().getTraceId();
     }
 }
