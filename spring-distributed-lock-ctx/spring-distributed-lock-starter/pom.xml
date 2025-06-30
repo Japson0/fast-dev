@@ -5,27 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.github.fast</groupId>
-        <artifactId>fast-dev</artifactId>
+        <artifactId>spring-distributed-lock-ctx</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>spring-distributed-lock-ctx</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>spring-distributed-lock-redis</module>
-        <module>spring-distributed-lock-zookeeper</module>
-        <module>spring-distributed-lock-starter</module>
-    </modules>
+    <artifactId>spring-distributed-lock-starter</artifactId>
 
     <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -38,10 +31,10 @@
             <optional>true</optional>
         </dependency>
 
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+
     </dependencies>
 </project>

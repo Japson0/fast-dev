@@ -1,4 +1,4 @@
-package net.github.fast.distributed.lock;
+package net.github.fast.distributed.lock.starter.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,7 +18,14 @@ import java.lang.annotation.Target;
 public @interface DistributedLock {
 
 
+    /**
+     * 分布式锁的key
+     */
     String value();
 
-
+    /**
+     * 尝试获取锁的时间，超过则报错
+     * 单位s
+     */
+    int time() default 0;
 }

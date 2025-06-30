@@ -210,7 +210,8 @@ public class RestResponse<T> {
         return traceId;
     }
 
-    public void setTraceId(String traceId) {
+    public RestResponse<T> setTraceId(String traceId) {
         this.traceId = traceId;
+        return this;
     }
 }
