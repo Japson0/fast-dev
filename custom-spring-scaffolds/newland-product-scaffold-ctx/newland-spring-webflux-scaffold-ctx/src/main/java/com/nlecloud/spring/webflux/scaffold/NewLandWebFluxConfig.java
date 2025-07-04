@@ -31,7 +31,6 @@ public class NewLandWebFluxConfig {
     /**
      * i18n配置
      */
-    @Bean
     public CustomAcceptHeaderLocaleResolver customAcceptHeaderLocaleResolver(){
         return new CustomAcceptHeaderLocaleResolver();
     }

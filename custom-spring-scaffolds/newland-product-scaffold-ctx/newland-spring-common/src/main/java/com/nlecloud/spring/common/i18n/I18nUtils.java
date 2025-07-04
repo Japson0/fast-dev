@@ -25,7 +25,11 @@ public class I18nUtils {
 
     public static String getMessage(String code, Object[] args) {
 
-        Locale locale = LocaleContextHolder.getLocale();
-        return  messageSource.getMessage(code, args, locale);
+        return getMessage(code,LocaleContextHolder.getLocale(),args);
+    }
+
+    public static String getMessage(String code,Locale locale, Object[] args) {
+
+        return  messageSource.getMessage(code, args, locale==null?Locale.SIMPLIFIED_CHINESE:locale);
     }
 }

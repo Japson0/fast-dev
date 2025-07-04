@@ -4,6 +4,8 @@ import com.nlecloud.spring.common.i18n.I18nUtils;
 import net.github.fastdev.common.exception.CommonError;
 import net.github.fastdev.common.exception.CommonException;
 
+import java.util.Locale;
+
 /**
  * <P><B>业务异常:</B></P>
  * RevisionTrail:(Date/Author/Description)
@@ -28,15 +30,23 @@ public class BusinessException extends CommonException {
     }
 
 
-    public BusinessException(String i18nKey,String...args) {
+    public BusinessException(String i18nKey,Object...args) {
         this(null, i18nKey,args);
     }
 
-    public BusinessException(Throwable throwable, String i18nKey,String...args) {
-        this(throwable, null,i18nKey,args);
+
+    public BusinessException(Throwable throwable, String i18nKey,Object...args) {
+        this(throwable, null,i18nKey,null,args);
     }
 
-    public BusinessException(Throwable throwable, String code, String i18nKey,String...args) {
-        super(throwable, code, I18nUtils.getMessage(i18nKey,args));
+    public BusinessException(Throwable throwable, String i18nKey,Locale locale,Object...args) {
+        this(throwable, null,i18nKey,locale,args);
     }
+
+
+    public BusinessException(Throwable throwable, String code, String i18nKey,Locale locale,Object...args) {
+        super(throwable, code, I18nUtils.getMessage(i18nKey,locale,args));
+    }
+
+
 }
