@@ -104,6 +104,8 @@ public class RedisCacheConfig extends CacheProperties {
         RedisTemplate template = new RedisTemplate<>();
         template.setKeySerializer(RedisSerializer.string());
         template.setValueSerializer(RedisSerializer.json());
+        template.setHashKeySerializer(RedisSerializer.string());
+        template.setHashValueSerializer(RedisSerializer.json());
 //        template.setValueSerializer(ProtoBufSerializationRedisSerializer.getInstance());
         template.setConnectionFactory(lettuceConnectionFactory);
         return template;
