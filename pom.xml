@@ -113,7 +113,7 @@
             <!--分布式锁依赖-->
             <dependency>
                 <groupId>net.github.fast</groupId>
-                <artifactId>spring-distributed-lock-zookeeper</artifactId>
+                <artifactId>spring-distributed-lock-redis</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
