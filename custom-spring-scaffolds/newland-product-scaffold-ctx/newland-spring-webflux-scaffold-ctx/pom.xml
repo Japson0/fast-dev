@@ -24,10 +24,11 @@
             <version>2.8.9</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.github.xingfudeshi/knife4j-openapi3-ui -->
         <dependency>
-            <groupId>com.github.xiaoymin</groupId>
+            <groupId>com.github.xingfudeshi</groupId>
             <artifactId>knife4j-openapi3-ui</artifactId>
-            <version>4.5.0</version>
+            <version>4.6.0</version>
         </dependency>
 
 
