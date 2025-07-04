@@ -27,4 +27,11 @@ public class NewLandWebFluxConfig {
     public GlobalExceptionHandle globalExceptionHandle(){
         return new GlobalExceptionHandle();
     }
+
+    /**
+     * i18n配置
+     */
+    public CustomAcceptHeaderLocaleResolver customAcceptHeaderLocaleResolver(){
+        return new CustomAcceptHeaderLocaleResolver();
+    }
 }

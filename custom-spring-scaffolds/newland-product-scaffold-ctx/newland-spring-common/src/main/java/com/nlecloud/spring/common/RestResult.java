@@ -5,6 +5,8 @@ import net.github.fastdev.common.exception.CommonError;
 import net.github.fastdev.common.exception.IErrorCode;
 import net.github.fastdev.common.model.RestResponse;
 
+import java.util.Locale;
+
 /**
  * <P><B>Description:</B></P>
  * RevisionTrail:(Date/Author/Description)
@@ -30,8 +32,12 @@ public class RestResult<T>  extends RestResponse<T> {
         this(success, data, null);
     }
 
-    public RestResult(boolean success, T data, String i18nKey) {
-        super(success,i18nKey,data,i18nKey==null?null: I18nUtils.getMessage(i18nKey,null));
+    public RestResult(boolean success, T data, String i18nKey,Object...args) {
+        super(success,i18nKey,data,i18nKey==null?null: I18nUtils.getMessage(i18nKey,args));
+    }
+
+    public RestResult(boolean success, T data, String i18nKey, Locale locale,Object...args) {
+        super(success,i18nKey,data,i18nKey==null?null: I18nUtils.getMessage(i18nKey,locale,args));
     }
 
     /**
