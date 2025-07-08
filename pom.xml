@@ -215,7 +215,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-            <url>http://192.168.133.162:9081/repository/maven-releases/</url>
+            <url>http://192.168.133.162:9081/repository/maven-public/</url>
         </repository>
     </repositories>
 
