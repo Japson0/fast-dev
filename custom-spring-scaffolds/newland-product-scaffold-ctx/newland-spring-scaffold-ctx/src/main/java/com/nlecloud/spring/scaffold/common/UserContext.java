@@ -5,6 +5,8 @@ package com.nlecloud.spring.scaffold.common;
 
 import com.nlecloud.spring.annotation.UserInfo;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -59,12 +61,6 @@ public class UserContext {
         return USER_INFO_LOCAL.get();
     }
 
-
-
-
-
-
-    
 
 
     public static void setUserInfo(UserWrapper userInfo){
