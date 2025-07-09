@@ -86,6 +86,6 @@ public class UserContext {
 
 
     public static boolean isRobot(){
-        return getUserInfo()!= robotUser;
+        return getUserInfo()== robotUser;
     }
 }
