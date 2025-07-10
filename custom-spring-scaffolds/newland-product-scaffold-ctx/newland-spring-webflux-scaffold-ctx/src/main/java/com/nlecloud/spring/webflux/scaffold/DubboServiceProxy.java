@@ -46,14 +46,12 @@ public class DubboServiceProxy<T> {
 
             return Mono.fromCallable(() -> {
                         // 恢复 OpenTelemetry 上下文
-                        try (Scope ignored = otelContext.makeCurrent()) {
-                            RpcContext rpcContext = RpcContext.getContext();
-                            try {
-                                rpcContext.setAttachments(new HashMap<>(attachments));
-                                return supplier.apply(api);
-                            } finally {
-                                rpcContext.clearAttachments(); // 恢复原 attachments
-                            }
+                        RpcContext rpcContext = RpcContext.getContext();
+                        try {
+                            rpcContext.setAttachments(new HashMap<>(attachments));
+                            return supplier.apply(api);
+                        } finally {
+                            rpcContext.clearAttachments(); // 恢复原 attachments
                         }
                     })
                     .onErrorResume(ex -> Mono.error(new RuntimeException("Dubbo service invoke failed", ex)))
