@@ -33,6 +33,7 @@ public class PermissionInterceptor  implements CustomInterceptor {
 
     private ReentrantReadWriteLock reentrantReadWriteLock=new ReentrantReadWriteLock();
 
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
