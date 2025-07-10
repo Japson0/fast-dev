@@ -40,7 +40,7 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
 
 
 
-    private static final TextMapGetter<Map<String,Object>> GETTER=new TextMapGetter<Map<String, Object>>() {
+    private static final TextMapGetter<Map<String,Object>> GETTER= new TextMapGetter<>() {
         @Override
         public Iterable<String> keys(Map<String, Object> stringObjectMap) {
             return stringObjectMap.keySet();
@@ -49,7 +49,7 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
         @Override
         public String get(Map<String, Object> stringObjectMap, String s) {
             Object value = stringObjectMap.get(s);
-            return value==null?null:value.toString();
+            return value == null ? null : value.toString();
         }
     };
     @Override
