@@ -36,7 +36,7 @@ public class GlobalExceptionHandle {
     @ExceptionHandler(CommonException.class)
     public Mono<ResponseEntity<RestResponse>> handleAllExceptions(CommonException ex,ServerWebExchange exchange) {
 
-        LOGGER.error("调用接口：{}，出错",exchange.getRequest().getPath(),ex);
+        LOGGER.error("调用接口：{}，出错,具体他原因：{}",exchange.getRequest().getPath(), ex.getMessage(),ex);
         return Mono.just(ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -46,7 +46,7 @@ public class GlobalExceptionHandle {
 
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<RestResponse>> handleAllExceptions(Exception ex,ServerWebExchange exchange) {
-        LOGGER.error("调用接口：{}，出错",exchange.getRequest().getPath(),ex);
+        LOGGER.error("调用接口：{}，出错,具体他原因：{}",exchange.getRequest().getPath(), ex.getMessage(),ex);
 
         return Mono.just(ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
