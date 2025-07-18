@@ -12,7 +12,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.IOException;
 
 /**
- * <P><B>用户通用拦截器:</B></P>
+ * <P><B>用户通用拦截器:，WebClient</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2025年05月09日 CREATE
  *
