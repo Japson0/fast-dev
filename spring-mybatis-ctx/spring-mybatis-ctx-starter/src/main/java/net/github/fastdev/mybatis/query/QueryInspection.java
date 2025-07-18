@@ -2,7 +2,6 @@
 
 package net.github.fastdev.mybatis.query;
 
-import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import net.github.fastdev.mybatis.annotation.Operation;
 import net.github.fastdev.mybatis.annotation.QueryClass;
 import net.github.fastdev.mybatis.annotation.QueryField;

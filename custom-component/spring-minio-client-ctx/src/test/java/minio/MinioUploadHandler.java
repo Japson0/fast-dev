@@ -1,13 +1,12 @@
 package minio;
 
-import io.minio.*;
-import io.minio.errors.*;
+import io.minio.GetObjectTagsArgs;
+import io.minio.GetPresignedObjectUrlArgs;
+import io.minio.MinioClient;
 import io.minio.http.Method;
 import io.minio.messages.Tags;
 import net.github.custom.minio.response.PresignedUpload;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

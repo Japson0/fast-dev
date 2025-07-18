@@ -3,7 +3,6 @@ package net.github.custom.minio;
 
 import io.minio.MinioClient;
 import net.github.custom.minio.driver.MinioDriver;
-import net.github.custom.minio.driver.ServerInfo;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

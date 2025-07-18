@@ -3,7 +3,6 @@ package com.nlecloud.spring.webflux.scaffold;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.webflux.scaffold.filter.UserWrapper;
 import io.opentelemetry.context.Context;
-import io.opentelemetry.context.Scope;
 import org.apache.dubbo.rpc.RpcContext;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
