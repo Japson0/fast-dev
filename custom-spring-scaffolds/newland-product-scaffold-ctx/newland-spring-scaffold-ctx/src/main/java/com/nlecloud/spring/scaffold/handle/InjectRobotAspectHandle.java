@@ -1,12 +1,12 @@
 package com.nlecloud.spring.scaffold.handle;
 
-import com.nlecloud.spring.scaffold.common.UserWrapper;
+import com.nlecloud.spring.scaffold.annotation.InjectRobot;
 import com.nlecloud.spring.scaffold.common.UserContext;
+import com.nlecloud.spring.scaffold.common.UserWrapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import com.nlecloud.spring.scaffold.annotation.InjectRobot;
 
 import java.util.Collections;
 

@@ -17,7 +17,6 @@ import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerIntercept
 import net.github.fastdev.mybatis.config.MybatisCtxProperties;
 import net.github.fastdev.mybatis.encrypt.EncryptCertificate;
 import net.github.fastdev.mybatis.encrypt.SkinMethodPredicate;
-import net.github.fastdev.mybatis.injector.method.InsertBatch;
 import net.github.fastdev.mybatis.injector.method.SelectRepetitionCount;
 import net.github.fastdev.mybatis.injector.method.UpdateAllColumnById;
 import net.github.fastdev.mybatis.sqlparser.DecryptResultSetInterceptor;

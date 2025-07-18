@@ -1,7 +1,7 @@
 package com.nlecloud.spring.scaffold.handle;
 
-import com.nlecloud.spring.common.i18n.I18nUtils;
 import com.nlecloud.spring.annotation.enums.I18nDisplay;
+import com.nlecloud.spring.common.i18n.I18nUtils;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
 import net.github.fastdev.common.model.ComEnum;
 import org.slf4j.Logger;

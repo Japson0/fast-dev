@@ -1,6 +1,5 @@
 package com.nlecloud.spring.scaffold.debug;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;

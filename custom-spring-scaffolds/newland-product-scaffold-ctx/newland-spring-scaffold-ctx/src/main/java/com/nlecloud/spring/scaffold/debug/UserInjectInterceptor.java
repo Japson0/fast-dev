@@ -1,8 +1,8 @@
 package com.nlecloud.spring.scaffold.debug;
 
-import com.nlecloud.spring.scaffold.common.UserWrapper;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.scaffold.common.UserContext;
+import com.nlecloud.spring.scaffold.common.UserWrapper;
 import net.github.fastdev.boot.handle.CustomInterceptor;
 
 import javax.servlet.http.HttpServletRequest;

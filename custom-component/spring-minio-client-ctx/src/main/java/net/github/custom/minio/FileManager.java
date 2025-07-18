@@ -3,7 +3,6 @@ package net.github.custom.minio;
 
 import io.minio.*;
 import io.minio.messages.Item;
-import net.github.custom.minio.driver.MinioDriver;
 import net.github.custom.minio.exception.MinioExcepition;
 
 import java.io.ByteArrayInputStream;
