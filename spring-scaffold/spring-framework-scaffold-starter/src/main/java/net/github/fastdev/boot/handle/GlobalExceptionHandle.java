@@ -83,7 +83,7 @@ public class GlobalExceptionHandle {
             LOGGER.error("系统异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
         }
         if(traceService!=null){
-            result.setTraceId(traceService.getTraceId());
+            response.addHeader("X-Trace-ID", traceService.getTraceId());
         }
         return result;
     }

@@ -39,10 +39,6 @@ public class RestResponse<T> {
     private String message;
 
     /**
-     * 链路Id
-     */
-    private String traceId;
-    /**
      * 成功
      */
     private final static RestResponse RENDER_SUCCESS = new RestResponse(true, CommonError.SUCCEED.getCode());
@@ -204,14 +200,5 @@ public class RestResponse<T> {
     public String toString() {
         return "RestResponse{" + "success=" + result + ", code='" + code + '\'' + ", data=" + data + ", errorMessage="
                 + message + '}';
-    }
-
-    public String getTraceId() {
-        return traceId;
-    }
-
-    public RestResponse<T> setTraceId(String traceId) {
-        this.traceId = traceId;
-        return this;
     }
 }
