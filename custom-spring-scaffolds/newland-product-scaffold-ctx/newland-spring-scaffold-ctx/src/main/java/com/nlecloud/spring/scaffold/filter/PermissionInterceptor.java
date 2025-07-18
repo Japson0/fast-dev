@@ -1,10 +1,15 @@
 package com.nlecloud.spring.scaffold.filter;
 
-import com.nlecloud.spring.annotation.PreAuthorize;
+import com.nlecloud.spring.annotation.ApiName;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import net.github.fastdev.boot.handle.CustomInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerExecutionChain;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,8 +38,29 @@ public class PermissionInterceptor  implements CustomInterceptor {
 
     private ReentrantReadWriteLock reentrantReadWriteLock=new ReentrantReadWriteLock();
 
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+
+        HandlerExecutionChain chain = requestMappingHandlerMapping.getHandler(request);
+        if (chain == null) return true;
+
+        Object currentHandler = chain.getHandler();
+        if (!(currentHandler instanceof ServletInvocableHandlerMethod)) return true;
+
+        ServletInvocableHandlerMethod method = (ServletInvocableHandlerMethod) currentHandler;
+
+        // 获取 RequestMappingInfo（Spring 内部保存的映射信息）
+        RequestMappingInfo info = requestMappingHandlerMapping.getMappingForMethod(method.getMethod(), method.getBean().getClass());
+
+        if (info != null) {
+            info.getPatternsCondition().getPatterns().forEach(pattern -> {
+                System.out.println("Controller 中定义的 URL 模式: " + pattern);
+            });
+        }
+
 
         if(handler instanceof HandlerMethod) {
             if(!containRole((HandlerMethod)handler)) {
@@ -91,11 +117,11 @@ public class PermissionInterceptor  implements CustomInterceptor {
     }
 
     private String[] getAnnotation(HandlerMethod handlerMethod) {
-        PreAuthorize methodAnnotation = handlerMethod.getMethod().getAnnotation(PreAuthorize.class);
+        ApiName methodAnnotation = handlerMethod.getMethod().getAnnotation(ApiName.class);
         if(methodAnnotation != null) {
             return methodAnnotation.value();
         }
-        PreAuthorize beanAnnotation = handlerMethod.getBeanType().getAnnotation(PreAuthorize.class);
+        ApiName beanAnnotation = handlerMethod.getBeanType().getAnnotation(ApiName.class);
         if(beanAnnotation != null) {
             return beanAnnotation.value();
         }

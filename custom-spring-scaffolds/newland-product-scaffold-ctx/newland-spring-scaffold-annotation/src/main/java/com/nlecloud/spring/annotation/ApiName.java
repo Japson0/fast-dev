@@ -15,13 +15,13 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.METHOD})
-public @interface PreAuthorize {
+public @interface ApiName {
 
 
     /**
-     * 角色名称
+     * 接口名称
      */
-    String[] value();
+    String value();
 
 
 }

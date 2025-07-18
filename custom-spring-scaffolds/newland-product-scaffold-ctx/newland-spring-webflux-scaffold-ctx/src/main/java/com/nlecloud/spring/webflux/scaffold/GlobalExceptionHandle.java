@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ServerWebExchange;
@@ -37,22 +38,29 @@ public class GlobalExceptionHandle {
     public Mono<ResponseEntity<RestResponse>> handleAllExceptions(CommonException ex,ServerWebExchange exchange) {
 
         LOGGER.error("调用接口：{}，出错,具体他原因：{}",exchange.getRequest().getPath(), ex.getMessage(),ex);
+        ServerHttpResponse response = exchange.getResponse();
+        response.beforeCommit(() -> {
+            response.getHeaders().add("X-Trace-ID", getTraceId());
+            return Mono.empty();
+        });
         return Mono.just(ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(RestResponse.renderError(ex.getCode(),ex.getMessage())
-                        .setTraceId(getTraceId())));
+                .body(RestResponse.renderError(ex.getCode(),ex.getMessage())));
     }
 
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<RestResponse>> handleAllExceptions(Exception ex,ServerWebExchange exchange) {
         LOGGER.error("调用接口：{}，出错,具体他原因：{}",exchange.getRequest().getPath(), ex.getMessage(),ex);
-
+        ServerHttpResponse response = exchange.getResponse();
+        response.beforeCommit(() -> {
+            response.getHeaders().add("X-Trace-ID", getTraceId());
+            return Mono.empty();
+        });
         return Mono.just(ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION)
-                        .setTraceId(getTraceId())));
+                .body(RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION)));
     }
 
 
