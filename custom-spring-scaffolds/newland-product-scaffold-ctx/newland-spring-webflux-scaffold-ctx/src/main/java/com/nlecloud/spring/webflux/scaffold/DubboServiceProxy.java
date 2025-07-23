@@ -3,7 +3,9 @@ package com.nlecloud.spring.webflux.scaffold;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.webflux.scaffold.filter.UserWrapper;
 import io.opentelemetry.context.Context;
+import io.opentelemetry.context.Scope;
 import org.apache.dubbo.rpc.RpcContext;
+import org.apache.dubbo.rpc.RpcServiceContext;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -28,32 +30,33 @@ public class DubboServiceProxy<T> {
     }
 
     public <R> Mono<R> invoke(Function<T, R> supplier) {
-        // 主线程中拷贝当前 RpcContext 的附件
-        Map<String, String> attachments = new HashMap<>(RpcContext.getContext().getAttachments());
-
+        // 1. 捕获当前 Reactor Context 中的 UserWrapper
         return Mono.deferContextual(contextView -> {
             UserWrapper userWrapper = UserWrapper.getUserWrapper(contextView);
-            if (userWrapper != null) {
-                attachments.put(AuthConstants.USER_HEADER, userWrapper.getUsername());
-                attachments.put(AuthConstants.USER_ID_HEADER, userWrapper.getUserId().toString());
-                attachments.put(AuthConstants.TENANT_ID_HEADER, userWrapper.getTenantId().toString());
-                attachments.put(AuthConstants.ROLE_HEADER, String.join(",", userWrapper.getRoles()));
-            }
+            Context otelContext = Context.current(); // 捕获当前 OTel 上下文
 
-            // 获取当前线程的 OpenTelemetry 上下文
-            Context otelContext = Context.current();
-
+            // 2. 构建要传递的 attachments
             return Mono.fromCallable(() -> {
-                        // 恢复 OpenTelemetry 上下文
-                        RpcContext rpcContext = RpcContext.getContext();
-                        try {
-                            rpcContext.setAttachments(new HashMap<>(attachments));
+                        // 3. 在 callable 线程中：设置 Dubbo 上下文
+                        RpcServiceContext serviceContext = RpcContext.getServiceContext();
+
+                        // 使用 setObjectAttachment，推荐方式
+                        if (userWrapper != null) {
+                            serviceContext.setObjectAttachment(AuthConstants.USER_HEADER, userWrapper.getUsername());
+                            serviceContext.setObjectAttachment(AuthConstants.USER_ID_HEADER, userWrapper.getUserId());
+                            serviceContext.setObjectAttachment(AuthConstants.TENANT_ID_HEADER, userWrapper.getTenantId());
+                            serviceContext.setObjectAttachment(AuthConstants.ROLE_HEADER, String.join(",", userWrapper.getRoles()));
+                        }
+
+                        // 4. 恢复 OpenTelemetry 上下文
+                        try (Scope scope = otelContext.makeCurrent()) {
+                            // 执行 Dubbo 调用
                             return supplier.apply(api);
-                        } finally {
-                            rpcContext.clearAttachments(); // 恢复原 attachments
+                        } catch (Throwable t) {
+                            throw new RuntimeException("Dubbo service invoke failed", t);
                         }
                     })
-                    .onErrorResume(ex -> Mono.error(new RuntimeException("Dubbo service invoke failed", ex)))
+                    .onErrorMap(t -> new RuntimeException("Dubbo service invoke failed", t))
                     .subscribeOn(Schedulers.boundedElastic());
         });
     }
