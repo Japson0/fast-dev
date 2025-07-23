@@ -56,19 +56,20 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
 
         if (RpcContext.getContext().isConsumerSide()) {
-            pushUser();
+            pushUser(invocation);
         } else {
-            popUser();
+            popUser(invocation);
         }
         return invoker.invoke(invocation);
     }
 
-    private void pushUser() {
+    private void pushUser(Invocation invocation) {
         Long userId = UserContext.getUserId();
         if(userId!=null) {
-            RpcContext.getContext().setAttachment(AuthConstants.USER_HEADER, UserContext.getUserName());
-            RpcContext.getContext().setAttachment(AuthConstants.USER_ID_HEADER, userId);
-            RpcContext.getContext().setAttachment(AuthConstants.TENANT_ID_HEADER, UserContext.getTenantId());
+            // 使用 setObjectAttachment 传递对象（推荐方式）
+            invocation.setObjectAttachment(AuthConstants.USER_ID_HEADER, userId);
+            invocation.setObjectAttachment(AuthConstants.USER_HEADER,UserContext.getUserName());
+            invocation.setObjectAttachment(AuthConstants.TENANT_ID_HEADER, UserContext.getTenantId());
 
             Set<String> roles = UserContext.getRoles();
             if (!CollectionUtils.isEmpty(roles)) {
@@ -77,12 +78,12 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
         }
     }
 
-    private void popUser() {
-        String userId = RpcContext.getContext().getAttachment(AuthConstants.USER_ID_HEADER);
+    private void popUser(Invocation invocation) {
+        Object userId = invocation.getObjectAttachment(AuthConstants.USER_ID_HEADER);
         if(userId!=null){
-            String tenantId = RpcContext.getContext().getAttachment(AuthConstants.TENANT_ID_HEADER);
-            String roles = RpcContext.getContext().getAttachment(AuthConstants.ROLE_HEADER);
-            String username =RpcContext.getContext().getAttachment(AuthConstants.USER_HEADER);
+            Long tenantId = (Long) invocation.getObjectAttachment(AuthConstants.TENANT_ID_HEADER);
+            String roles = (String) invocation.getObjectAttachment(AuthConstants.ROLE_HEADER);
+            String username = (String) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
             Set<String> rolesSet= Collections.EMPTY_SET;
             if(roles!=null) {
                 String[] rolesSplit = roles.split(",");
@@ -91,7 +92,7 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
                     rolesSet.add(role);
                 }
             }
-            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(tenantId),rolesSet));
+            UserContext.setUserInfo(new UserWrapper((Long)userId,username,tenantId,rolesSet));
         }
     }
 
