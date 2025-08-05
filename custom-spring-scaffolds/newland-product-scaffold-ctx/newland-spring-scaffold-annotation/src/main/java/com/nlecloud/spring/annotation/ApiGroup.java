@@ -6,22 +6,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <P><B>权限控制:方法上</B></P>
+ * <P><B>Description:</B></P>
  * RevisionTrail:(Date/Author/Description)
- * 2025年03月27日 CREATE
+ * 2025年08月04日 CREATE
  *
  * @author Japson Huang
  * @version1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-public @interface ApiName {
+@Target({ElementType.TYPE})
 
+public @interface ApiGroup {
 
-    /**
-     * 接口名称
-     */
-    String value();
-
-
+    String tag();
 }

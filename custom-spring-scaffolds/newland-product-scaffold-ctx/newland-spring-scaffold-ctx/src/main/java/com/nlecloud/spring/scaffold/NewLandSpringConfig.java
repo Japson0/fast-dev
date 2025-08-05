@@ -15,11 +15,13 @@ import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,7 +62,7 @@ public class NewLandSpringConfig {
     @Bean
     public UserProxy userProxy(IUPMSUserApi iupmsUserApi){
 
-        return new UserProxy(iupmsUserApi);
+        return new UserProxy(iupmsUserApi,null);
     }
     /**
      *枚举国际化

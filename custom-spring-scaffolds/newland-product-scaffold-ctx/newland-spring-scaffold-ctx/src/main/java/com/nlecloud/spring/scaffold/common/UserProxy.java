@@ -4,7 +4,10 @@ import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.Sex;
 import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
 import com.nlecloud.spring.scaffold.api.user.UPMSUserDTO;
+import net.github.fastdev.cache.redis.RedisTime;
 import net.github.fastdev.common.model.ComEnum;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 
 /**
@@ -19,10 +22,16 @@ public class UserProxy {
 
     private final IUPMSUserApi iupmsUserApi;
 
-    public UserProxy(IUPMSUserApi iupmsUserApi) {
+
+    private final RedisTemplate redisTemplate;
+
+
+    public UserProxy(IUPMSUserApi iupmsUserApi, RedisTemplate redisTemplate) {
         this.iupmsUserApi = iupmsUserApi;
+        this.redisTemplate = redisTemplate;
     }
 
+    @Cacheable(cacheNames = RedisTime.ONE_DAY)
     public UserInfo getUserInfo(Long userId) {
         UPMSUserDTO upmsUserDTO = iupmsUserApi.getUserDetailById(userId.toString());
         UserInfo userInfo = new UserInfo();
@@ -43,5 +52,9 @@ public class UserProxy {
         }
         userInfo.setPhone(upmsUserDTO.getPhone());
         return userInfo;
+    }
+
+    public boolean hasApiPermission(Long userId, String apiCode) {
+        return true;
     }
 }
