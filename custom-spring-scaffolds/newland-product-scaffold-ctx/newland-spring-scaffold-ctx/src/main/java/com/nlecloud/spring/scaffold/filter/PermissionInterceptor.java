@@ -38,7 +38,7 @@ public class PermissionInterceptor  implements CustomInterceptor {
                 return true;
             }
             ApiGroup apiGroup = AnnotationUtils.findAnnotation(controllerClass, ApiGroup.class);
-            String name=apiGroup==null?controllerClass.getSimpleName():apiGroup.tag()+"_"+apiName.value();
+            String name=apiGroup!=null?apiGroup.tag()+"_"+apiName.value():apiName.value();
 
             return userProxy.hasApiPermission(UserContext.getUserId(),name);
         }
