@@ -223,5 +223,6 @@ public class UserWrapper extends UserInfo {
                 }
             }
         }
+        return userProxy;
     }
 }
