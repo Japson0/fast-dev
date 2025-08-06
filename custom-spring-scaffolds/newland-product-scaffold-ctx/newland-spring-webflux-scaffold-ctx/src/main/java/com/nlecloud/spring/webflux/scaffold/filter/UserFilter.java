@@ -32,7 +32,6 @@ public class UserFilter implements WebFilter {
         if( userId!=null) {
             Set<String> rolesSet= Collections.EMPTY_SET;
             String username = headers.getFirst(AuthConstants.USER_HEADER);
-            String roles = headers.getFirst(AuthConstants.ROLE_HEADER);
             String schoolId = headers.getFirst(AuthConstants.SCHOOL_ID_HEADER);
             String tenantId = headers.getFirst(AuthConstants.TENANT_ID_HEADER);
             if(tenantId==null){
@@ -42,14 +41,7 @@ public class UserFilter implements WebFilter {
             if(!StringUtils.hasText(tenantId)){
                 tenantId="0";  //TODO， 有些历史数据没学校，后面改完可以删掉
             }
-            if(roles!=null) {
-                String[] rolesSplit = roles.split(",");
-                rolesSet = new HashSet<>(rolesSplit.length);
-                for (String role : rolesSplit) {
-                    rolesSet.add(role);
-                }
-            }
-            return chain.filter(exchange).contextWrite(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(tenantId),rolesSet).getContextView());
+            return chain.filter(exchange).contextWrite(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(tenantId)).getContextView());
         }
         return chain.filter(exchange);
     }

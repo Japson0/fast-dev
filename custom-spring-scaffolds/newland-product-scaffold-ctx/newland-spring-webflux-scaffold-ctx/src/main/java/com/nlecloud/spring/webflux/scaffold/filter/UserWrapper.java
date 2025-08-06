@@ -20,17 +20,14 @@ public class UserWrapper extends UserInfo {
 
     private String username;
 
-    private Set<String> roles;
-
     private Long tenantId;
 
 
     private static final String KEY_INFO = "USER_INFO_KEY";
 
-    public UserWrapper(Long userId, String username,Long tenantId, Set<String> roles) {
+    public UserWrapper(Long userId, String username,Long tenantId) {
         this.userId = userId;
         this.username = username;
-        this.roles = roles;
         this.tenantId=tenantId;
     }
 
@@ -63,15 +60,6 @@ public class UserWrapper extends UserInfo {
         this.username = username;
     }
 
-    @Override
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    @Override
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
 
     @Override
     public Long getTenantId() {
