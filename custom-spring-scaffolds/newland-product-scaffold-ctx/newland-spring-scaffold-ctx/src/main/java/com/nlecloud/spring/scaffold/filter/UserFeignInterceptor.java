@@ -1,10 +1,13 @@
 package com.nlecloud.spring.scaffold.filter;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+
+import java.util.Collections;
 
 /**
  * <P><B>用户通用拦截器:</B></P>
@@ -28,7 +31,9 @@ public class UserFeignInterceptor implements RequestInterceptor {
             if (userInfo.getTenantId() != null) {
                 requestTemplate.header(AuthConstants.TENANT_ID_HEADER, userInfo.getTenantId().toString());
             }
-
+            if(CollectionUtil.isEmpty(userInfo.getRoles())){
+                requestTemplate.header(AuthConstants.ROLE_HEADER, String.join(",",userInfo.getRoles()));
+            }
         }
 
     }

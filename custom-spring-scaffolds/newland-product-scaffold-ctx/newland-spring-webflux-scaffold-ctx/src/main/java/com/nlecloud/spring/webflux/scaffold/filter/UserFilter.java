@@ -9,6 +9,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,6 +35,7 @@ public class UserFilter implements WebFilter {
             String username = headers.getFirst(AuthConstants.USER_HEADER);
             String schoolId = headers.getFirst(AuthConstants.SCHOOL_ID_HEADER);
             String tenantId = headers.getFirst(AuthConstants.TENANT_ID_HEADER);
+            String roleStr = headers.getFirst(AuthConstants.ROLE_HEADER);
             if(tenantId==null){
                 //针对以前没有租户的，把学校当租户
                 tenantId=schoolId;
@@ -41,7 +43,9 @@ public class UserFilter implements WebFilter {
             if(!StringUtils.hasText(tenantId)){
                 tenantId="0";  //TODO， 有些历史数据没学校，后面改完可以删掉
             }
-            return chain.filter(exchange).contextWrite(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(tenantId)).getContextView());
+            return chain.filter(exchange).contextWrite(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(tenantId),
+                    StringUtils.hasText(roleStr)? Arrays.asList(roleStr.split(",")):Collections.EMPTY_SET
+            ).getContextView());
         }
         return chain.filter(exchange);
     }

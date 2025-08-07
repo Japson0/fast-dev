@@ -3,12 +3,10 @@ package com.nlecloud.spring.scaffold.common;
 import cn.hutool.extra.spring.SpringUtil;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.Sex;
+import javafx.print.Collation;
 import org.springframework.http.HttpHeaders;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <P><B>Description:</B></P>
@@ -27,6 +25,8 @@ public class UserWrapper extends UserInfo {
     private Long tenantId;
 
     private Long schoolId;
+
+    private Collection<String> roles;
 
     private  UserProxy userProxy;
 
@@ -64,11 +64,12 @@ public class UserWrapper extends UserInfo {
     }
 
 
-    public UserWrapper(Long userId, String username,Long tenantId,Long schoolId) {
+    public UserWrapper(Long userId, String username,Long tenantId,Long schoolId,Collection<String> roles) {
         this.userId = userId;
         this.username = username;
         this.tenantId=tenantId;
         this.schoolId=schoolId;
+        this.roles=roles;
     }
 
 
@@ -88,7 +89,6 @@ public class UserWrapper extends UserInfo {
     public Long getTenantId() {
         return tenantId;
     }
-
 
 
     @Override
@@ -112,13 +112,13 @@ public class UserWrapper extends UserInfo {
     }
 
     @Override
-    public Set<String> getRoles() {
-        return getUserInfo().getRoles();
+    public Collection<String> getRoles() {
+        return this.roles;
     }
 
     @Override
-    public void setRoles(Set<String> roles) {
-        getUserInfo().setRoles(roles);
+    public void setRoles(Collection<String> roles) {
+        this.roles=roles;
     }
 
     @Override
