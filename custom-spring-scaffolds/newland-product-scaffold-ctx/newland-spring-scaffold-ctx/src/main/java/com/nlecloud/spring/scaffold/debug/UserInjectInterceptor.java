@@ -31,7 +31,7 @@ public class UserInjectInterceptor  implements CustomInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        UserContext.setUserInfo(new UserWrapper(userInfo.getUserId(),userInfo.getUsername(),userInfo.getTenantId(), userInfo.getSchoolId()));
+        UserContext.setUserInfo(new UserWrapper(userInfo.getUserId(),userInfo.getUsername(),userInfo.getTenantId(), userInfo.getSchoolId(),userInfo.getRoles()));
 
         return CustomInterceptor.super.preHandle(request, response, handler);
     }
