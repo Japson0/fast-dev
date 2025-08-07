@@ -18,8 +18,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.annotation.Order;
-import springfox.documentation.swagger.common.SwaggerPluginSupport;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -136,7 +134,6 @@ public class NewLandSpringConfig {
     }
 
     @Bean
-    @Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER)
     public CustomApiPermissionPlugin customAnnotationOperationPlugin(){
         return new CustomApiPermissionPlugin();
     }

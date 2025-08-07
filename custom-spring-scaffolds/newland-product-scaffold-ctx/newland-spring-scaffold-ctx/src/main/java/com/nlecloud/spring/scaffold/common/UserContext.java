@@ -4,7 +4,7 @@ package com.nlecloud.spring.scaffold.common;
 
 import com.nlecloud.spring.annotation.UserInfo;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * <P><B>用户工具类:</B></P>
@@ -54,7 +54,7 @@ public class UserContext {
     }
 
 
-    public static Set<String> getRoles(){
+    public static Collection<String> getRoles(){
         return USER_INFO_LOCAL.get().getRoles();
     }
 
