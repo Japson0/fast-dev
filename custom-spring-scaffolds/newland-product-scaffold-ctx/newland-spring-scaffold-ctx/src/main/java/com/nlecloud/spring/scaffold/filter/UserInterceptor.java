@@ -9,9 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <P><B>用户拦截器:</B></P>
@@ -29,11 +27,11 @@ public class UserInterceptor implements CustomInterceptor {
         String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
 
         if(userId!=null) {
-            Set<String> rolesSet=Collections.EMPTY_SET;
             String username = request.getHeader(AuthConstants.USER_HEADER);
-            String roles = request.getHeader(AuthConstants.ROLE_HEADER);
             String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
             String tenantId = request.getHeader(AuthConstants.TENANT_ID_HEADER);
+            String roleStr = request.getHeader(AuthConstants.ROLE_HEADER);
+
             if(tenantId==null){
                 //针对以前没租户的，把学校当租户
                 tenantId=schoolId;
@@ -42,14 +40,9 @@ public class UserInterceptor implements CustomInterceptor {
                 //TODO， 有些历史数据没学校，后面改完可以删掉
                 tenantId="0";
             }
-            if(roles!=null) {
-                String[] rolesSplit = roles.split(",");
-                rolesSet = new HashSet<>(rolesSplit.length);
-                for (String role : rolesSplit) {
-                    rolesSet.add(role);
-                }
-            }
-            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username, Long.valueOf(tenantId),rolesSet));
+            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username, Long.valueOf(tenantId),Long.valueOf(schoolId),
+                    StringUtils.hasText(roleStr)?Arrays.asList(roleStr.split(",")):Collections.EMPTY_SET
+                    ));
         }
         return true;
     }

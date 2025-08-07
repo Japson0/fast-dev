@@ -3,6 +3,7 @@ package com.nlecloud.spring.annotation;
 import com.nlecloud.spring.annotation.enums.Sex;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -42,7 +43,7 @@ public class UserInfo implements Serializable {
     /**
      * 角色编码列表
      */
-    private Set<String> roles;
+    private Collection<String> roles;
 
     /**
      * 班级ID
@@ -101,11 +102,11 @@ public class UserInfo implements Serializable {
     }
 
 
-    public Set<String> getRoles() {
+    public Collection<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) {
+    public void setRoles(Collection<String> roles) {
         this.roles = roles;
     }
 

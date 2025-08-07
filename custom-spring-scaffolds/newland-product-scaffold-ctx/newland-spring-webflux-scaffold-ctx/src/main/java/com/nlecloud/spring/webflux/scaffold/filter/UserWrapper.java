@@ -4,6 +4,7 @@ import com.nlecloud.spring.annotation.UserInfo;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -20,18 +21,18 @@ public class UserWrapper extends UserInfo {
 
     private String username;
 
-    private Set<String> roles;
-
     private Long tenantId;
+
+    private Collection<String> roles;
 
 
     private static final String KEY_INFO = "USER_INFO_KEY";
 
-    public UserWrapper(Long userId, String username,Long tenantId, Set<String> roles) {
+    public UserWrapper(Long userId, String username,Long tenantId,Collection<String> roles) {
         this.userId = userId;
         this.username = username;
-        this.roles = roles;
         this.tenantId=tenantId;
+        this.roles=roles;
     }
 
     ContextView getContextView() {
@@ -63,15 +64,6 @@ public class UserWrapper extends UserInfo {
         this.username = username;
     }
 
-    @Override
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    @Override
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
 
     @Override
     public Long getTenantId() {
@@ -80,5 +72,15 @@ public class UserWrapper extends UserInfo {
 
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
+    }
+
+    @Override
+    public Collection<String> getRoles() {
+        return roles;
+    }
+
+    @Override
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
     }
 }

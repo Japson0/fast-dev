@@ -70,11 +70,9 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
             invocation.setObjectAttachment(AuthConstants.USER_ID_HEADER, userId);
             invocation.setObjectAttachment(AuthConstants.USER_HEADER,UserContext.getUserName());
             invocation.setObjectAttachment(AuthConstants.TENANT_ID_HEADER, UserContext.getTenantId());
+            invocation.setObjectAttachment(AuthConstants.SCHOOL_ID_HEADER, UserContext.getSchoolId());
+            invocation.setObjectAttachment(AuthConstants.ROLE_HEADER,UserContext.getRoles());
 
-            Set<String> roles = UserContext.getRoles();
-            if (!CollectionUtils.isEmpty(roles)) {
-                RpcContext.getContext().setAttachment(AuthConstants.ROLE_HEADER, String.join(",", roles));
-            }
         }
     }
 
@@ -82,17 +80,10 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
         Object userId = invocation.getObjectAttachment(AuthConstants.USER_ID_HEADER);
         if(userId!=null){
             Long tenantId = (Long) invocation.getObjectAttachment(AuthConstants.TENANT_ID_HEADER);
-            String roles = (String) invocation.getObjectAttachment(AuthConstants.ROLE_HEADER);
             String username = (String) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
-            Set<String> rolesSet= Collections.EMPTY_SET;
-            if(roles!=null) {
-                String[] rolesSplit = roles.split(",");
-                rolesSet = new HashSet<>(rolesSplit.length);
-                for (String role : rolesSplit) {
-                    rolesSet.add(role);
-                }
-            }
-            UserContext.setUserInfo(new UserWrapper((Long)userId,username,tenantId,rolesSet));
+            Long schoolId = (Long) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
+            Set<String> roles =(Set<String>) invocation.getObjectAttachment(AuthConstants.ROLE_HEADER);
+            UserContext.setUserInfo(new UserWrapper((Long)userId,username,tenantId,schoolId,roles));
         }
     }
 

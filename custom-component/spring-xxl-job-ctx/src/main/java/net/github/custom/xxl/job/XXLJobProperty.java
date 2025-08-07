@@ -13,6 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "xxl.job")
 public class XXLJobProperty {
 
+    private boolean enabled=true;
+
     private String adminAddresses;
 
     private String accessToken;
@@ -29,6 +31,13 @@ public class XXLJobProperty {
 
     private int logRetentionDays;
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public String getAdminAddresses() {
         return adminAddresses;

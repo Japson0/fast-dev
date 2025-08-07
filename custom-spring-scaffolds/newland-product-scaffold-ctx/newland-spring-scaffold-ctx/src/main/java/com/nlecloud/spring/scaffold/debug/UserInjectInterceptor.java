@@ -6,6 +6,7 @@ import com.nlecloud.spring.scaffold.common.UserWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.core.Ordered;
 
 
@@ -26,10 +27,11 @@ public class UserInjectInterceptor  implements CustomInterceptor {
         this.userInfo = userInfo;
     }
 
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        UserContext.setUserInfo(new UserWrapper(userInfo.getUserId(),userInfo.getUsername(),userInfo.getTenantId(),userInfo.getRoles()));
+        UserContext.setUserInfo(new UserWrapper(userInfo.getUserId(),userInfo.getUsername(),userInfo.getTenantId(), userInfo.getSchoolId()));
 
         return CustomInterceptor.super.preHandle(request, response, handler);
     }
