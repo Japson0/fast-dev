@@ -40,7 +40,7 @@ public class UserInterceptor implements CustomInterceptor {
                 //TODO， 有些历史数据没学校，后面改完可以删掉
                 tenantId="0";
             }
-            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username, Long.valueOf(tenantId)));
+            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username, Long.valueOf(tenantId),Long.valueOf(schoolId)));
         }
         return true;
     }

@@ -70,6 +70,8 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
             invocation.setObjectAttachment(AuthConstants.USER_ID_HEADER, userId);
             invocation.setObjectAttachment(AuthConstants.USER_HEADER,UserContext.getUserName());
             invocation.setObjectAttachment(AuthConstants.TENANT_ID_HEADER, UserContext.getTenantId());
+            invocation.setObjectAttachment(AuthConstants.SCHOOL_ID_HEADER, UserContext.getSchoolId());
+
         }
     }
 
@@ -78,7 +80,8 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
         if(userId!=null){
             Long tenantId = (Long) invocation.getObjectAttachment(AuthConstants.TENANT_ID_HEADER);
             String username = (String) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
-            UserContext.setUserInfo(new UserWrapper((Long)userId,username,tenantId));
+            Long schoolId = (Long) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
+            UserContext.setUserInfo(new UserWrapper((Long)userId,username,tenantId,schoolId));
         }
     }
 

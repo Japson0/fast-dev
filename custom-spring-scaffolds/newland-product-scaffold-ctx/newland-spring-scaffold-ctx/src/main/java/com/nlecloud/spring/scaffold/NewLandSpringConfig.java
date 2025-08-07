@@ -15,15 +15,12 @@ import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 import springfox.documentation.swagger.common.SwaggerPluginSupport;
 
 import java.util.HashSet;
@@ -145,8 +142,8 @@ public class NewLandSpringConfig {
 
     @Bean
     @Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER)
-    public CustomAnnotationOperationPlugin customAnnotationOperationPlugin(){
-        return new CustomAnnotationOperationPlugin();
+    public CustomApiPermissionPlugin customAnnotationOperationPlugin(){
+        return new CustomApiPermissionPlugin();
     }
 
 }

@@ -26,6 +26,8 @@ public class UserWrapper extends UserInfo {
 
     private Long tenantId;
 
+    private Long schoolId;
+
     private  UserProxy userProxy;
 
     private UserInfo userInfo;
@@ -54,12 +56,19 @@ public class UserWrapper extends UserInfo {
 //        }
 //    }
 
-
-
     public UserWrapper(Long userId, String username,Long tenantId) {
         this.userId = userId;
         this.username = username;
         this.tenantId=tenantId;
+        this.schoolId=tenantId;
+    }
+
+
+    public UserWrapper(Long userId, String username,Long tenantId,Long schoolId) {
+        this.userId = userId;
+        this.username = username;
+        this.tenantId=tenantId;
+        this.schoolId=schoolId;
     }
 
 
@@ -81,6 +90,7 @@ public class UserWrapper extends UserInfo {
     }
 
 
+
     @Override
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -91,6 +101,15 @@ public class UserWrapper extends UserInfo {
         this.username = username;
     }
 
+    @Override
+    public Long getSchoolId() {
+        return this.schoolId;
+    }
+
+    @Override
+    public void setSchoolId(Long schoolId) {
+        this.schoolId=schoolId;
+    }
 
     @Override
     public Set<String> getRoles() {
@@ -162,15 +181,7 @@ public class UserWrapper extends UserInfo {
         getUserInfo().setProfessionName(professionName);
     }
 
-    @Override
-    public Long getSchoolId() {
-        return getUserInfo().getSchoolId();
-    }
 
-    @Override
-    public void setSchoolId(Long schoolId) {
-        getUserInfo().setSchoolId(schoolId);
-    }
 
     @Override
     public String getAvatar() {

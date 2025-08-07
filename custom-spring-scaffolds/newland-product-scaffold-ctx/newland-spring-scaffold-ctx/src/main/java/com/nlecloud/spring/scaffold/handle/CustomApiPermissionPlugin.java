@@ -12,17 +12,18 @@ import java.util.Collections;
 import java.util.Optional;
 
 
-public class CustomAnnotationOperationPlugin implements OperationBuilderPlugin  {
-
+public class CustomApiPermissionPlugin implements OperationBuilderPlugin {
 
     @Override
     public void apply(OperationContext context) {
         Optional<ApiName> apiName = context.findAnnotation(ApiName.class);
-        if(apiName.isPresent()){
+        if (apiName.isPresent()) {
             Optional<ApiGroup> controllerAnnotation = context.findControllerAnnotation(ApiGroup.class);
-
+            String apiNameStr = controllerAnnotation.isPresent() ? controllerAnnotation.get().tag() + "_" + apiName.get().value() : apiName.get().value();
             context.operationBuilder()
-                    .extensions(Collections.singletonList(new StringVendorExtension("apiName", controllerAnnotation.isPresent()?controllerAnnotation.get().tag()+"_"+apiName.get().value():apiName.get().value())));
+                    .notes("api接口权限名称为:" + apiNameStr)
+                    .extensions(Collections.singletonList(new StringVendorExtension("apiName",
+                            apiNameStr)));
 
         }
 

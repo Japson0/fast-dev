@@ -49,6 +49,10 @@ public class UserContext {
         return USER_INFO_LOCAL.get().getTenantId();
     }
 
+    public static Long getSchoolId(){
+        return USER_INFO_LOCAL.get().getSchoolId();
+    }
+
 
     public static Set<String> getRoles(){
         return USER_INFO_LOCAL.get().getRoles();
@@ -62,17 +66,6 @@ public class UserContext {
 
     public static void setUserInfo(UserWrapper userInfo){
         USER_INFO_LOCAL.set(userInfo);
-    }
-
-    /**
-     * 是否包含角色
-     * RevisionTrail:(Date/Author/Description)
-     * 2022年10月27日
-     *
-     * @author Japson Huang
-     */
-    public static boolean hasRole(String role) {
-        return USER_INFO_LOCAL.get().getRoles().contains(role);
     }
 
 

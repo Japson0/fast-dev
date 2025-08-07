@@ -20,7 +20,7 @@ public class UserFeignInterceptor implements RequestInterceptor {
 
         UserInfo userInfo = UserContext.getUserInfo();
         if (userInfo != null) {
-            requestTemplate.header(AuthConstants.USER_ID_HEADER, userInfo.getUserId().toString())
+            requestTemplate.header(AuthConstants.USER_ID_HEADER, UserContext.getUserId().toString())
                     .header(AuthConstants.USER_HEADER, userInfo.getUsername());
             if (userInfo.getSchoolId() != null) {
                 requestTemplate.header(AuthConstants.SCHOOL_ID_HEADER, userInfo.getSchoolId().toString());
@@ -28,6 +28,7 @@ public class UserFeignInterceptor implements RequestInterceptor {
             if (userInfo.getTenantId() != null) {
                 requestTemplate.header(AuthConstants.TENANT_ID_HEADER, userInfo.getTenantId().toString());
             }
+
         }
 
     }
