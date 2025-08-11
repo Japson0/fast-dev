@@ -48,11 +48,6 @@
             <artifactId>spring-mybatis-ctx-starter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>

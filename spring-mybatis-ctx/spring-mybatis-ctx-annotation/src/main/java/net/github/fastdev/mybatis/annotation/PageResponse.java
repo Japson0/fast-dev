@@ -14,6 +14,7 @@ import java.util.List;
  * @author Japson Huang
  * @version1.0
  */
+@Schema(name = "分页返回类")
 public class PageResponse<DTO> extends PageRequest {
 
     /**

@@ -8,8 +8,6 @@ import net.github.fastdev.cache.redis.CacheHandle;
 import net.github.fastdev.common.model.RestResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * <P><B>缓存控制层:</B></P>
@@ -19,8 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Japson Huang
  * @version 1.0
  */
-@RequestMapping("cacheManage")
-@ResponseBody
+//@RequestMapping("cacheManage")
+//@ResponseBody
 @Tag(name = "缓存操作")
 public class CacheController {
 

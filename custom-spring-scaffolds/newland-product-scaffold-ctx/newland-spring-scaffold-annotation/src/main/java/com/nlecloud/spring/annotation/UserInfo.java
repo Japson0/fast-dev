@@ -4,7 +4,6 @@ import com.nlecloud.spring.annotation.enums.Sex;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * <P><B>用户信息:</B></P>
