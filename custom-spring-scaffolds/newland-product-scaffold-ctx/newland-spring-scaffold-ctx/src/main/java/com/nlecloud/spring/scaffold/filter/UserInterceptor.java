@@ -9,7 +9,8 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * <P><B>用户拦截器:</B></P>

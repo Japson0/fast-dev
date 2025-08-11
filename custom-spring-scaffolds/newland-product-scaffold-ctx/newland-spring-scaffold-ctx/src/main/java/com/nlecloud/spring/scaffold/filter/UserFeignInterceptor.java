@@ -7,8 +7,6 @@ import com.nlecloud.spring.scaffold.common.UserContext;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 
-import java.util.Collections;
-
 /**
  * <P><B>用户通用拦截器:</B></P>
  * RevisionTrail:(Date/Author/Description)

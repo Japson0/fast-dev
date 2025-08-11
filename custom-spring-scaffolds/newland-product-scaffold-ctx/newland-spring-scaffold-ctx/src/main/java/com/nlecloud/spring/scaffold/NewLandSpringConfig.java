@@ -140,7 +140,7 @@ public class NewLandSpringConfig {
         return new TenantHandle(predicate);
     }
 
-    @Bean
+//    @Bean
     @Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER)
     public CustomApiPermissionPlugin customAnnotationOperationPlugin(){
         return new CustomApiPermissionPlugin();

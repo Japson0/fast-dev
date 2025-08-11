@@ -4,7 +4,6 @@ import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
 import net.github.fastdev.boot.handle.CustomInterceptor;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

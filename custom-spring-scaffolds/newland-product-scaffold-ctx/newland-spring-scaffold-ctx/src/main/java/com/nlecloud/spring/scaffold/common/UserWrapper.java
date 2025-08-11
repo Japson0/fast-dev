@@ -3,10 +3,8 @@ package com.nlecloud.spring.scaffold.common;
 import cn.hutool.extra.spring.SpringUtil;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.Sex;
-import javafx.print.Collation;
-import org.springframework.http.HttpHeaders;
 
-import java.util.*;
+import java.util.Collection;
 
 /**
  * <P><B>Description:</B></P>
