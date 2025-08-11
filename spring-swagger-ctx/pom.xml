@@ -14,8 +14,6 @@
     <packaging>pom</packaging>
 
     <properties>
-
-        <swagger-annotations.version>1.6.6</swagger-annotations.version>
         <knife4j.version>4.5.0</knife4j.version>
     </properties>
 
@@ -25,4 +23,18 @@
     </modules>
 
 
+    <dependencyManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-dependencies</artifactId>
+                <version>${knife4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+
+
+    </dependencyManagement>
 </project>

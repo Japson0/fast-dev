@@ -4,8 +4,7 @@ package net.github.fastdev.mybatis.annotation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -22,7 +21,7 @@ import java.util.Map;
  * @author Japson Huang
  * @version 1.0
  */
-@ApiModel(value = "分页数据结构")
+@Schema(name = "分页数据结构")
 public class PageRequest<P> implements Serializable {
 
     /**
@@ -33,7 +32,7 @@ public class PageRequest<P> implements Serializable {
     /**
      * 开始页从0开始
      */
-    @ApiModelProperty(value = "当前页")
+    @Schema(name = "当前页")
     @JsonSerialize(using = LongSerializer.class)
 
     private long page;
@@ -41,7 +40,7 @@ public class PageRequest<P> implements Serializable {
     /**
      * 每页数量
      */
-    @ApiModelProperty(value = "每页数量", example = "20")
+    @Schema(name = "每页数量", example = "20")
     @JsonProperty("size")
     @JsonSerialize(using = LongSerializer.class)
 
@@ -49,7 +48,7 @@ public class PageRequest<P> implements Serializable {
     /**
      * 实体类参数对象
      */
-    @ApiModelProperty(value = "条件构造器", name = "condition")
+    @Schema(name = "条件构造器")
     @JsonProperty(value = "queryParams", access = JsonProperty.Access.WRITE_ONLY)
     private P condition;
 

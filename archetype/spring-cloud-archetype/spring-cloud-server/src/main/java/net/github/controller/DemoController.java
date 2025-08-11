@@ -1,6 +1,5 @@
 package net.github.controller;
 
-import io.swagger.annotations.Api;
 import net.github.fastdev.boot.template.BaseController;
 import net.github.fastdev.common.web.BaseService;
 import net.github.model.entity.DemoObjEntity;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("demo")
-@Api(tags = "测试")
 public class DemoController extends BaseController<Long, DemoObjEntity> {
 
 

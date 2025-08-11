@@ -32,9 +32,10 @@
         <fast-dev.version>2.0-SNAPSHOT</fast-dev.version>
         <revision>${fast-dev.version}</revision>
         <spring.version>2.7.18</spring.version>
-        <hutool.version>5.8.31</hutool.version>
         <spring-cloud-dependencies.version>2021.0.8</spring-cloud-dependencies.version>
         <spring-cloud-alibaba-dependencies.version>2021.0.6.1</spring-cloud-alibaba-dependencies.version>
+        <knife4j.version>4.5.0</knife4j.version>
+
     </properties>
 
     <dependencyManagement>
@@ -154,7 +155,11 @@
                 <scope>import</scope>
             </dependency>
 
-
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.8.38</version>
+            </dependency>
 
         </dependencies>
 

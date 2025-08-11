@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import net.github.fastdev.mybatis.BaseQuery;
 import net.github.fastdev.mybatis.annotation.OrderInfo;
 import net.github.fastdev.mybatis.annotation.PageRequest;
@@ -25,7 +25,7 @@ import java.util.function.Predicate;
  * @author Japson Huang
  * @version 1.0
  */
-@ApiModel(value = "分页数据结构")
+@Schema(name = "分页数据结构")
 public class PageWrapper<P,DTO>  extends Page<DTO> {
 
     /**

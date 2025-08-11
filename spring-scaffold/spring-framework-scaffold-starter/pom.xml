@@ -15,7 +15,6 @@
 
     <properties>
 
-        <hutool-all.version>5.8.31</hutool-all.version>
     </properties>
 
     <dependencies>
@@ -50,11 +49,6 @@
             <artifactId>spring-mybatis-ctx-starter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool-all.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>

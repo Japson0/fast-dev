@@ -2,8 +2,8 @@
 
 package net.github.fastdev.boot.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.github.fastdev.common.model.RestResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  */
 @RequestMapping("enums")
-@Api(tags = "枚举类查询")
+@Tag(name = "枚举类查询")
 public class EnumController {
 
     /**
@@ -43,7 +43,7 @@ public class EnumController {
     }
 
     @GetMapping
-    @ApiOperation(value = "根据全路径查询枚举", notes = "name是枚举类型的类全路径名称")
+    @Operation(summary = "根据全路径查询枚举", description = "name是枚举类型的类全路径名称")
     @ResponseBody
     private RestResponse enumByAllName(@RequestParam("name") String name) {
         try {
@@ -78,7 +78,7 @@ public class EnumController {
     }
 
     @GetMapping("name")
-    @ApiOperation(value = "根据枚举名称查询枚举")
+    @Operation(summary = "根据枚举名称查询枚举")
     @ResponseBody
     private RestResponse enumByName(@RequestParam("name") String name) {
         try {
