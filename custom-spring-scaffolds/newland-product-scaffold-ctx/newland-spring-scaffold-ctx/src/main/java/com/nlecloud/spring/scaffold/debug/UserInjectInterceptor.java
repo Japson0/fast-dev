@@ -33,4 +33,9 @@ public class UserInjectInterceptor  implements CustomInterceptor {
 
         return CustomInterceptor.super.preHandle(request, response, handler);
     }
+
+    @Override
+    public int order() {
+        return CustomInterceptor.super.order()-1;
+    }
 }

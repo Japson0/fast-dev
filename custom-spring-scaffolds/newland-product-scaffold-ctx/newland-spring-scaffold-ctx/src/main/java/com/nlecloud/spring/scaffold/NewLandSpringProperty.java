@@ -22,7 +22,13 @@ public class NewLandSpringProperty {
      */
     private String[] ignoreTenantTable;
 
+    /**
+     * 接口权限开关
+     */
+    private boolean apiPermissionEnabled=true;
+
     private DebugProperty debug;
+
 
     public boolean isTenantEnabled() {
         return tenantEnabled;
@@ -48,6 +54,13 @@ public class NewLandSpringProperty {
         this.debug = debug;
     }
 
+    public boolean isApiPermissionEnabled() {
+        return apiPermissionEnabled;
+    }
+
+    public void setApiPermissionEnabled(boolean apiPermissionEnabled) {
+        this.apiPermissionEnabled = apiPermissionEnabled;
+    }
 
     public static class DebugProperty {
 

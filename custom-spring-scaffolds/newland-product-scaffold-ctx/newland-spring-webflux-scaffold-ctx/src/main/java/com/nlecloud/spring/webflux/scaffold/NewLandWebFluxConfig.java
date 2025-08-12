@@ -4,6 +4,7 @@ import com.nlecloud.spring.webflux.scaffold.filter.UserFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * <P><B>配置:</B></P>
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(basePackages = {"cn.hutool.extra.spring"})
+@Import(RedisConfig.class)
 public class NewLandWebFluxConfig {
 
     @Bean

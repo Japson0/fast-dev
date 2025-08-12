@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
 import com.nlecloud.spring.scaffold.common.UserProxy;
 import com.nlecloud.spring.scaffold.debug.DebugConfig;
+import com.nlecloud.spring.scaffold.filter.PermissionInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserFeignInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserInterceptor;
 import com.nlecloud.spring.scaffold.handle.*;
@@ -20,6 +21,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -58,9 +61,9 @@ public class NewLandSpringConfig {
      *
     */
     @Bean
-    public UserProxy userProxy(IUPMSUserApi iupmsUserApi){
+    public UserProxy userProxy(@Lazy IUPMSUserApi iupmsUserApi, RedisTemplate<String,String> redisTemplate){
 
-        return new UserProxy(iupmsUserApi,null);
+        return new UserProxy(iupmsUserApi,redisTemplate);
     }
     /**
      *枚举国际化
@@ -138,10 +141,19 @@ public class NewLandSpringConfig {
         return new TenantHandle(predicate);
     }
 
-//    @Bean
-//    @Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER)
-//    public CustomApiPermissionPlugin customAnnotationOperationPlugin(){
-//        return new CustomApiPermissionPlugin();
-//    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "apiPermissionEnabled" ,havingValue = "true",matchIfMissing = true)
+    public PermissionInterceptor permissionInterceptor(UserProxy userProxy){
+       return new PermissionInterceptor(userProxy);
+    }
+
+
+    @Bean
+    public CustomApiPermissionPlugin customAnnotationOperationPlugin(){
+        return new CustomApiPermissionPlugin();
+    }
+
+
 
 }
