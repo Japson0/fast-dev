@@ -69,6 +69,10 @@ public class UserContext {
     }
 
 
+    public static boolean hasUser(){
+        return USER_INFO_LOCAL.get()!=null;
+    }
+
     public static boolean isRobot(){
         return getUserInfo()== robotUser;
     }

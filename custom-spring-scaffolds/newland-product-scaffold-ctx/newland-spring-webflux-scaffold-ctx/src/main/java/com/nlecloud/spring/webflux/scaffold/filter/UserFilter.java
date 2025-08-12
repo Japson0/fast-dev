@@ -30,7 +30,6 @@ public class UserFilter implements WebFilter {
         String userId = headers.getFirst(AuthConstants.USER_ID_HEADER);
 
         if( userId!=null) {
-            Set<String> rolesSet= Collections.EMPTY_SET;
             String username = headers.getFirst(AuthConstants.USER_HEADER);
             String schoolId = headers.getFirst(AuthConstants.SCHOOL_ID_HEADER);
             String tenantId = headers.getFirst(AuthConstants.TENANT_ID_HEADER);

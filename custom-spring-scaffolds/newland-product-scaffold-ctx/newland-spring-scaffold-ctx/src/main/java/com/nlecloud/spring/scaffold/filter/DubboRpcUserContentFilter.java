@@ -17,6 +17,8 @@ import org.apache.dubbo.rpc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -69,7 +71,6 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
             invocation.setObjectAttachment(AuthConstants.TENANT_ID_HEADER, UserContext.getTenantId());
             invocation.setObjectAttachment(AuthConstants.SCHOOL_ID_HEADER, UserContext.getSchoolId());
             invocation.setObjectAttachment(AuthConstants.ROLE_HEADER,UserContext.getRoles());
-
         }
     }
 
@@ -78,8 +79,8 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
         if(userId!=null){
             Long tenantId = (Long) invocation.getObjectAttachment(AuthConstants.TENANT_ID_HEADER);
             String username = (String) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
-            Long schoolId = (Long) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
-            Set<String> roles =(Set<String>) invocation.getObjectAttachment(AuthConstants.ROLE_HEADER);
+            Long schoolId = (Long) invocation.getObjectAttachment(AuthConstants.SCHOOL_ID_HEADER);
+            Collection<String> roles =(Collection<String>) invocation.getObjectAttachment(AuthConstants.ROLE_HEADER);
             UserContext.setUserInfo(new UserWrapper((Long)userId,username,tenantId,schoolId,roles));
         }
     }

@@ -18,5 +18,5 @@ import java.lang.annotation.Target;
 
 public @interface ApiGroup {
 
-    String tag();
+    String value();
 }

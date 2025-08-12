@@ -6,8 +6,6 @@ import com.nlecloud.spring.scaffold.common.UserWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.core.Ordered;
 
 
 /**

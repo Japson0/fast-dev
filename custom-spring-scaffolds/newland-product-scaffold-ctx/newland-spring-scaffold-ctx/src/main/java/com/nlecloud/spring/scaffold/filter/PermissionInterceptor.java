@@ -7,6 +7,7 @@ import com.nlecloud.spring.scaffold.common.UserProxy;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -21,13 +22,20 @@ import org.springframework.web.method.HandlerMethod;
  */
 public class PermissionInterceptor  implements CustomInterceptor {
 
+    private final UserProxy userProxy;
 
-    private UserProxy userProxy;
+    @Value("spring.application.name")
+    private String applicationName;
+
+    public PermissionInterceptor(UserProxy userProxy) {
+        this.userProxy = userProxy;
+    }
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
+            if(!UserContext.hasUser()) return true;
             HandlerMethod handlerMethod = (HandlerMethod) handler;
 
             // 2. 获取方法所属的类（Controller 类）
@@ -37,9 +45,13 @@ public class PermissionInterceptor  implements CustomInterceptor {
                 return true;
             }
             ApiGroup apiGroup = AnnotationUtils.findAnnotation(controllerClass, ApiGroup.class);
-            String name=apiGroup!=null?apiGroup.tag()+"_"+apiName.value():apiName.value();
+            String name=apiGroup!=null?apiGroup.value()+"_"+apiName.value():apiName.value();
 
-            return userProxy.hasApiPermission(UserContext.getUserId(),name);
+            if(userProxy.hasApiPermission(UserContext.getRoles(), applicationName+"_"+name)){
+                return true;
+            }
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return false;
         }
         return true;
     }
@@ -48,4 +60,7 @@ public class PermissionInterceptor  implements CustomInterceptor {
     public int order() {
         return Ordered.LOWEST_PRECEDENCE;
     }
+
+
+
 }

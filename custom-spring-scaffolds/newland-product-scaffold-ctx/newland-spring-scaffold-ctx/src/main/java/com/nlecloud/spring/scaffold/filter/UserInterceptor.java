@@ -7,7 +7,9 @@ import com.nlecloud.spring.scaffold.common.UserWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
+import org.springframework.core.Ordered;
 import org.springframework.util.StringUtils;
+import org.springframework.web.method.HandlerMethod;
 
 import java.util.*;
 
@@ -24,25 +26,28 @@ public class UserInterceptor implements CustomInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
+        if(handler instanceof HandlerMethod) {
 
-        if(userId!=null) {
-            String username = request.getHeader(AuthConstants.USER_HEADER);
-            String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
-            String tenantId = request.getHeader(AuthConstants.TENANT_ID_HEADER);
-            String roleStr = request.getHeader(AuthConstants.ROLE_HEADER);
+            String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
 
-            if(tenantId==null){
-                //针对以前没租户的，把学校当租户
-                tenantId=schoolId;
+            if (userId != null) {
+                String username = request.getHeader(AuthConstants.USER_HEADER);
+                String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
+                String tenantId = request.getHeader(AuthConstants.TENANT_ID_HEADER);
+                String roleStr = request.getHeader(AuthConstants.ROLE_HEADER);
+
+                if (tenantId == null) {
+                    //针对以前没租户的，把学校当租户
+                    tenantId = schoolId;
+                }
+                if (!StringUtils.hasText(tenantId)) {
+                    //TODO， 有些历史数据没学校，后面改完可以删掉
+                    tenantId = "0";
+                }
+                UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId), username, Long.valueOf(tenantId), Long.valueOf(schoolId),
+                        StringUtils.hasText(roleStr) ? Arrays.asList(roleStr.split(",")) : Collections.EMPTY_SET
+                ));
             }
-            if(!StringUtils.hasText(tenantId)){
-                //TODO， 有些历史数据没学校，后面改完可以删掉
-                tenantId="0";
-            }
-            UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),username, Long.valueOf(tenantId),Long.valueOf(schoolId),
-                    StringUtils.hasText(roleStr)?Arrays.asList(roleStr.split(",")):Collections.EMPTY_SET
-                    ));
         }
         return true;
     }
@@ -52,4 +57,8 @@ public class UserInterceptor implements CustomInterceptor {
         UserContext.clean();
     }
 
+    @Override
+    public int order() {
+        return Ordered.LOWEST_PRECEDENCE-2;
+    }
 }
