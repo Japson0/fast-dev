@@ -143,7 +143,7 @@ public class NewLandSpringConfig {
 
 
     @Bean
-    @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "apiPermissionEnabled" ,havingValue = "true",matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "apiPermissionEnabled" ,havingValue = "true")
     public PermissionInterceptor permissionInterceptor(UserProxy userProxy){
        return new PermissionInterceptor(userProxy);
     }

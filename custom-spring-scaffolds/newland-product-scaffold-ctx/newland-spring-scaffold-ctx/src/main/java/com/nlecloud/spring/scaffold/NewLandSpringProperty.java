@@ -25,7 +25,7 @@ public class NewLandSpringProperty {
     /**
      * 接口权限开关
      */
-    private boolean apiPermissionEnabled=true;
+    private boolean apiPermissionEnabled=false;
 
     private DebugProperty debug;
 

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 /**
  * <P><B>用户拦截器:</B></P>
@@ -45,7 +46,9 @@ public class UserInterceptor implements CustomInterceptor {
                     //TODO， 有些历史数据没学校，后面改完可以删掉
                     tenantId = "0";
                 }
-                UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId), username, Long.valueOf(tenantId), Long.valueOf(schoolId),
+                UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
+                        username, Long.valueOf(tenantId),
+                        StringUtils.hasText(schoolId)?Long.valueOf(schoolId):null,
                         StringUtils.hasText(roleStr) ? Arrays.asList(roleStr.split(",")) : Collections.EMPTY_SET
                 ));
             }
