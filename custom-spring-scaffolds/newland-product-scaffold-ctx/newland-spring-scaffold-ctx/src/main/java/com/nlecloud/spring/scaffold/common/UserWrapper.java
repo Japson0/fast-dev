@@ -61,6 +61,9 @@ public class UserWrapper extends UserInfo {
         this.schoolId=tenantId;
     }
 
+    public UserWrapper(Long userId, String username,Long schoolId,Collection<String> roles) {
+        this(userId, username, schoolId,schoolId,roles);
+    }
 
     public UserWrapper(Long userId, String username,Long tenantId,Long schoolId,Collection<String> roles) {
         this.userId = userId;
