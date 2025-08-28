@@ -14,6 +14,8 @@
     <properties>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <upms.client.version>2.0.8-SNAPSHOT</upms.client.version>
     </properties>
 
     <dependencies>
@@ -50,6 +52,18 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-loadbalancer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nledu.cloud</groupId>
+            <artifactId>nlecloud-upms-user-center-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <version>${upms.client.version}</version>
         </dependency>
     </dependencies>
 

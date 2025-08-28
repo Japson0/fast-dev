@@ -76,6 +76,10 @@ public class NewLandSpringProperty {
 
 
         /**
+         * 代理转发
+         */
+        private String forwardAddr;
+        /**
          * 注入用户
          */
         private boolean injectUser = false;
@@ -114,6 +118,14 @@ public class NewLandSpringProperty {
             this.enable = enable;
         }
 
+
+        public String getForwardAddr() {
+            return forwardAddr;
+        }
+
+        public void setForwardAddr(String forwardAddr) {
+            this.forwardAddr = forwardAddr;
+        }
 
         public static class DebugUser extends UserInfo {}
     }

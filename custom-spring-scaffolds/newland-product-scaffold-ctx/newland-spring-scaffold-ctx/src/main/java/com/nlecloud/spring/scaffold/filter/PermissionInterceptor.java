@@ -5,7 +5,9 @@ import com.nlecloud.spring.annotation.ApiGroup;
 import com.nlecloud.spring.annotation.ApiName;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserProxy;
+import com.nlecloud.upms.api.permission.PermissionService;
 import net.github.fastdev.boot.handle.CustomInterceptor;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -38,6 +41,9 @@ public class PermissionInterceptor  implements CustomInterceptor {
 
     @Value("spring.application.name")
     private String applicationName;
+
+    @DubboReference(lazy = true)
+    private  PermissionService permissionService;
 
     public PermissionInterceptor(UserProxy userProxy) {
         this.userProxy = userProxy;
@@ -58,8 +64,7 @@ public class PermissionInterceptor  implements CustomInterceptor {
             }
             ApiGroup apiGroup = AnnotationUtils.findAnnotation(controllerClass, ApiGroup.class);
             String name=apiGroup!=null?apiGroup.value()+"_"+apiName.value():apiName.value();
-
-            if(userProxy.hasApiPermission(UserContext.getRoles(), applicationName+"_"+name)){
+                if(hasApiPermission(UserContext.getRoles(), applicationName+"_"+name)){
                 return true;
             }
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -73,6 +78,9 @@ public class PermissionInterceptor  implements CustomInterceptor {
         return Ordered.LOWEST_PRECEDENCE;
     }
 
+    private boolean hasApiPermission(Collection<String> roles, String apiPermission) {
+        return permissionService.checkPermissions(roles,apiPermission)!=null;
+    }
 
 
 }
