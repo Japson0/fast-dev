@@ -6,6 +6,7 @@ import net.github.fastdev.boot.handle.CustomInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.io.UnsupportedEncodingException;
@@ -14,7 +15,6 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
 public class FullRequestLoggingInterceptor implements CustomInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(FullRequestLoggingInterceptor.class);
@@ -37,6 +37,11 @@ public class FullRequestLoggingInterceptor implements CustomInterceptor {
             );
             log.error("Exception: ", ex); // 打印异常堆栈
         }
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        CustomInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
     private String getHeaders(HttpServletRequest request) {
