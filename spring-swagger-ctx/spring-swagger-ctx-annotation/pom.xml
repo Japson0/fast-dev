@@ -21,5 +21,11 @@
             <groupId>io.swagger.core.v3</groupId>
             <version>${swagger-annotations-jakarta.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.6.6</version>
+        </dependency>
     </dependencies>
 </project>

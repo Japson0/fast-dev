@@ -52,7 +52,7 @@ public class CustomSpringCloudConfig {
 
     @Bean
     @LoadBalanced
-    RestTemplate restTemplate(@Autowired(required = false) ClientHttpRequestFactory factory, ObjectMapper objectMapper) {
+    public RestTemplate restTemplate(@Autowired(required = false) ClientHttpRequestFactory factory, ObjectMapper objectMapper) {
         if (factory == null) {
             SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
             simpleClientHttpRequestFactory.setConnectTimeout(restTemplateProperties.getConnectTimeOut());

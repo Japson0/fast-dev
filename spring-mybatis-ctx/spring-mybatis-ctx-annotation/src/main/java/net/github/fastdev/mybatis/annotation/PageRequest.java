@@ -32,7 +32,7 @@ public class PageRequest<P> implements Serializable {
     /**
      * 开始页从0开始
      */
-    @Schema(name = "当前页")
+    @Schema(description = "当前页")
     @JsonSerialize(using = LongSerializer.class)
 
     private long page;
@@ -40,7 +40,7 @@ public class PageRequest<P> implements Serializable {
     /**
      * 每页数量
      */
-    @Schema(name = "每页数量", example = "20")
+    @Schema(description = "每页数量", example = "20")
     @JsonProperty("size")
     @JsonSerialize(using = LongSerializer.class)
 
@@ -48,7 +48,7 @@ public class PageRequest<P> implements Serializable {
     /**
      * 实体类参数对象
      */
-    @Schema(name = "条件构造器")
+    @Schema(description = "条件构造器")
     @JsonProperty(value = "queryParams", access = JsonProperty.Access.WRITE_ONLY)
     private P condition;
 

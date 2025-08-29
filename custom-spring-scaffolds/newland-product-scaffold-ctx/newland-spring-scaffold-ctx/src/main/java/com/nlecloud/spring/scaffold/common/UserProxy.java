@@ -10,20 +10,16 @@ import net.github.fastdev.common.model.ComEnum;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * <P><B>Description:</B></P>
@@ -44,7 +40,7 @@ public class UserProxy {
     public UserProxy(IUPMSUserApi iupmsUserApi, RedisTemplate redisTemplate) {
         this.iupmsUserApi = iupmsUserApi;
         this.redisTemplate = redisTemplate;
-        init();
+//        init();
     }
 
     @Cacheable(cacheNames = RedisTime.ONE_DAY)
@@ -68,11 +64,6 @@ public class UserProxy {
         }
         userInfo.setPhone(upmsUserDTO.getPhone());
         return userInfo;
-    }
-
-    public boolean hasApiPermission(Collection<String> roles,String apiPermission) {
-
-        return containsValue(roles,apiPermission);
     }
 
 
