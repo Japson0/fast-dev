@@ -1,7 +1,6 @@
 package com.nlecloud.spring.scaffold.debug;
 
 import com.nlecloud.spring.scaffold.NewLandSpringProperty;
-import feign.Client;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.*;
@@ -49,17 +48,7 @@ public class DebugConfig{
         return new UserInjectInterceptor(newLandSpringProperty.getDebug().getUserInfo());
     }
 
-    @Bean
-    @ConditionalOnProperty(prefix ="nlecloud.product.debug", name = "forward-addr")
-    public FeignDebugForward feignDebugForward(){
-        return new FeignDebugForward(newLandSpringProperty.getDebug().getForwardAddr());
-    }
 
-    @Bean
-    @ConditionalOnProperty(prefix ="nlecloud.product.debug", name = "forward-addr")
-    public Client feignClient() {
-        return new Client.Default(null, null);  // 直接 HTTP 调用，不走 LB
-    }
 
     public static class DebugCondition implements Condition {
 

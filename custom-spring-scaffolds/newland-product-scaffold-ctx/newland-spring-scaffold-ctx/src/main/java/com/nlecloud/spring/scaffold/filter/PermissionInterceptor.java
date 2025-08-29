@@ -14,6 +14,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.method.HandlerMethod;
 
+import java.util.Collection;
+
 /**
  * <P><B>权限判断:</B></P>
  * RevisionTrail:(Date/Author/Description)
@@ -24,17 +26,11 @@ import org.springframework.web.method.HandlerMethod;
  */
 public class PermissionInterceptor  implements CustomInterceptor {
 
-    private final UserProxy userProxy;
-
     @Value("spring.application.name")
     private String applicationName;
 
     @DubboReference(lazy = true)
     private  PermissionService permissionService;
-
-    public PermissionInterceptor(UserProxy userProxy) {
-        this.userProxy = userProxy;
-    }
 
 
     @Override
