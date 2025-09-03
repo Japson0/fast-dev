@@ -37,16 +37,13 @@ import java.util.List;
  */
 public class PermissionInterceptor  implements CustomInterceptor {
 
-    private final UserProxy userProxy;
-
     @Value("spring.application.name")
     private String applicationName;
 
     @DubboReference(lazy = true)
     private  PermissionService permissionService;
 
-    public PermissionInterceptor(UserProxy userProxy) {
-        this.userProxy = userProxy;
+    public PermissionInterceptor() {
     }
 
 
