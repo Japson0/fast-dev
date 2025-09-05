@@ -26,11 +26,15 @@ import java.util.Collection;
  */
 public class PermissionInterceptor  implements CustomInterceptor {
 
-    @Value("spring.application.name")
+    @Value("${spring.application.name}")
     private String applicationName;
 
     @DubboReference(lazy = true)
     private  PermissionService permissionService;
+
+    public PermissionInterceptor(String applicationName) {
+        this.applicationName = applicationName;
+    }
 
 
     @Override

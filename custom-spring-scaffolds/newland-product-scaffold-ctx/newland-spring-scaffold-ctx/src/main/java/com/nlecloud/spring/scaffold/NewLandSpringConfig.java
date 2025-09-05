@@ -6,6 +6,7 @@ import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
 import com.nlecloud.spring.scaffold.common.UserProxy;
 import com.nlecloud.spring.scaffold.debug.DebugConfig;
 import com.nlecloud.spring.scaffold.filter.PermissionInterceptor;
+import com.nlecloud.spring.scaffold.filter.UserFeignInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserInterceptor;
 import com.nlecloud.spring.scaffold.handle.*;
 import com.nlecloud.spring.scaffold.service.DictServiceProxy;
@@ -37,7 +38,7 @@ import java.util.function.Predicate;
 @Configuration
 @EnableConfigurationProperties(NewLandSpringProperty.class)
 @AutoConfigureBefore({CustomSpringBootConfig.class})
-@Import({DebugConfig.class,WebClientConfig.class})
+@Import(DebugConfig.class)
 public class NewLandSpringConfig {
 
 
@@ -132,17 +133,18 @@ public class NewLandSpringConfig {
         return new TenantHandle(predicate);
     }
 
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
+    public PermissionInterceptor permissionInterceptor(@Value("${spring.application.name}") String applicationName){
+       return new PermissionInterceptor(applicationName);
+    }
+
+
     @Bean
     public CustomApiPermissionPlugin customAnnotationOperationPlugin(){
         return new CustomApiPermissionPlugin();
     }
-
-    @Bean
-    @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
-    public PermissionInterceptor permissionInterceptor(){
-       return new PermissionInterceptor();
-    }
-
 
 
 
