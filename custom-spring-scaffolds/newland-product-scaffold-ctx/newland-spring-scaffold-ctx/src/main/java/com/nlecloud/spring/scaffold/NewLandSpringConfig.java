@@ -6,7 +6,6 @@ import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
 import com.nlecloud.spring.scaffold.common.UserProxy;
 import com.nlecloud.spring.scaffold.debug.DebugConfig;
 import com.nlecloud.spring.scaffold.filter.PermissionInterceptor;
-import com.nlecloud.spring.scaffold.filter.UserFeignInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserInterceptor;
 import com.nlecloud.spring.scaffold.handle.*;
 import com.nlecloud.spring.scaffold.service.DictServiceProxy;
@@ -14,6 +13,7 @@ import net.github.fastdev.boot.CustomSpringBootConfig;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
 import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -38,7 +38,7 @@ import java.util.function.Predicate;
 @Configuration
 @EnableConfigurationProperties(NewLandSpringProperty.class)
 @AutoConfigureBefore({CustomSpringBootConfig.class})
-@Import(DebugConfig.class)
+@Import({DebugConfig.class,WebClientConfig.class})
 public class NewLandSpringConfig {
 
 
@@ -57,7 +57,7 @@ public class NewLandSpringConfig {
      * 2025年05月12日
      *@author Japson Huang
      *
-    */
+     */
     @Bean
     public UserProxy userProxy(@Lazy IUPMSUserApi iupmsUserApi, RedisTemplate<String,String> redisTemplate){
 
@@ -71,7 +71,7 @@ public class NewLandSpringConfig {
      * 2025年04月29日
      *@author Japson Huang
      *
-    */
+     */
     @Bean
     public ComEnumDisplayHandle i18n4EnumHandle(){
         return new I18n4EnumHandle();
@@ -83,7 +83,7 @@ public class NewLandSpringConfig {
      * 2025年04月29日
      *@author Japson Huang
      *
-    */
+     */
     @Bean
     public UserInterceptor userInterceptor(){
         return new UserInterceptor();
@@ -96,7 +96,7 @@ public class NewLandSpringConfig {
      * 2025年04月29日
      *@author Japson Huang
      *
-    */
+     */
     @Bean
     public DictServiceProxy dictServiceProxy(){
         return new DictServiceProxy();
@@ -113,7 +113,7 @@ public class NewLandSpringConfig {
      * 2025年04月29日
      *@author Japson Huang
      *
-    */
+     */
     @Bean
     public TraceServiceHandle traceServiceHandle(){
         return new TraceServiceHandle();
@@ -133,18 +133,17 @@ public class NewLandSpringConfig {
         return new TenantHandle(predicate);
     }
 
-
-    @Bean
-    @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
-    public PermissionInterceptor permissionInterceptor(@Value("${spring.application.name}") String applicationName){
-       return new PermissionInterceptor(applicationName);
-    }
-
-
     @Bean
     public CustomApiPermissionPlugin customAnnotationOperationPlugin(){
         return new CustomApiPermissionPlugin();
     }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
+    public PermissionInterceptor permissionInterceptor(@Value("${spring.application.name}") String applicationName){
+        return new PermissionInterceptor(applicationName);
+    }
+
 
 
 

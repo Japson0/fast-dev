@@ -26,7 +26,6 @@ import java.util.Collection;
  */
 public class PermissionInterceptor  implements CustomInterceptor {
 
-    @Value("${spring.application.name}")
     private String applicationName;
 
     @DubboReference(lazy = true)
