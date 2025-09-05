@@ -6,7 +6,7 @@
     <property name="log.charset" value="utf-8" />
     <property name="log.path" value="${spring.application.name}" />
     <property name="log.pattern"
-              value="%red(%d{yyyy-MM-dd HH:mm:ss}) %highlight(%-5level) %boldMagenta(%logger{36}) [traceId=%X{trace_id}, spanId=%X{span_id}] - %msg%n" />
+              value="%red(%d{yyyy-MM-dd HH:mm:ss})[%thread]%highlight(%-5level) %boldMagenta(%logger{36}) [traceId=%X{trace_id}, spanId=%X{span_id}] - %msg%n" />
 
 <!--     控制台日志：输出全部日志到控制台 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
