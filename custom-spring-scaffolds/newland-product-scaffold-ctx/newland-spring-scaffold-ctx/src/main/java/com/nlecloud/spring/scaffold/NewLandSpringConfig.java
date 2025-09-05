@@ -14,6 +14,7 @@ import net.github.fastdev.boot.CustomSpringBootConfig;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
 import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -140,8 +141,8 @@ public class NewLandSpringConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
-    public PermissionInterceptor permissionInterceptor(){
-       return new PermissionInterceptor();
+    public PermissionInterceptor permissionInterceptor(@Value("${spring.application.name}") String applicationName){
+       return new PermissionInterceptor(applicationName);
     }
 
 
