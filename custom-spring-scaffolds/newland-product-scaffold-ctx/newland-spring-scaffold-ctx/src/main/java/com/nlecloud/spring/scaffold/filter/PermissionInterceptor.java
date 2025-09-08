@@ -1,31 +1,20 @@
 package com.nlecloud.spring.scaffold.filter;
 
-import cn.hutool.core.io.IoUtil;
 import com.nlecloud.spring.annotation.ApiGroup;
 import com.nlecloud.spring.annotation.ApiName;
 import com.nlecloud.spring.scaffold.common.UserContext;
-import com.nlecloud.spring.scaffold.common.UserProxy;
 import com.nlecloud.upms.api.permission.PermissionService;
 import net.github.fastdev.boot.handle.CustomInterceptor;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.ReturnType;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * <P><B>权限判断:</B></P>
@@ -60,10 +49,12 @@ public class PermissionInterceptor  implements CustomInterceptor {
             if(apiName==null){
                 return true;
             }
-            ApiGroup apiGroup = AnnotationUtils.findAnnotation(controllerClass, ApiGroup.class);
-            String name=apiGroup!=null?apiGroup.value()+"_"+apiName.value():apiName.value();
-                if(hasApiPermission(UserContext.getRoles(), applicationName+"_"+name)){
-                return true;
+            if(!CollectionUtils.isEmpty(UserContext.getRoles())) {
+                ApiGroup apiGroup = AnnotationUtils.findAnnotation(controllerClass, ApiGroup.class);
+                String name = apiGroup != null ? apiGroup.value() + "_" + apiName.value() : apiName.value();
+                if (hasApiPermission(UserContext.getRoles(), applicationName + "_" + name)) {
+                    return true;
+                }
             }
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return false;
