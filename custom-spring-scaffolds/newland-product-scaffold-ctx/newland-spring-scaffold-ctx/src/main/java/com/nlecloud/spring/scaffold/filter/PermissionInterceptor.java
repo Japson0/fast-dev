@@ -64,7 +64,7 @@ public class PermissionInterceptor  implements CustomInterceptor {
         return Ordered.LOWEST_PRECEDENCE;
     }
 
-    private boolean hasApiPermission(Collection<String> roles, String apiPermission) {
+    protected boolean hasApiPermission(Collection<String> roles, String apiPermission) {
         return permissionService.checkPermissions(roles,apiPermission)!=null;
     }
 

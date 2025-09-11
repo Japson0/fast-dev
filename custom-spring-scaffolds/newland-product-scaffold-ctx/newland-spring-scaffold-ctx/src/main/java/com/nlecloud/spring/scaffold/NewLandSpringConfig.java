@@ -15,6 +15,7 @@ import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +47,7 @@ public class NewLandSpringConfig {
     private NewLandSpringProperty property;
 
     @Bean
+    @ConditionalOnMissingBean(MetaObjectHandler.class)
     public MetaObjectHandler metaObjectHandler(){
         return new AutoMetaObjectHandle();
     }
@@ -140,6 +142,7 @@ public class NewLandSpringConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
+    @ConditionalOnMissingBean(PermissionInterceptor.class)
     public PermissionInterceptor permissionInterceptor(@Value("${spring.application.name}") String applicationName){
         return new PermissionInterceptor(applicationName);
     }
