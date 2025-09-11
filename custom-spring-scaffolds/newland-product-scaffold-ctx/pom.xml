@@ -22,7 +22,7 @@
     <properties>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dubbo.version>3.2.15</dubbo.version>
+        <dubbo.version>3.3.5</dubbo.version>
     </properties>
 
 
