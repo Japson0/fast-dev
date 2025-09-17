@@ -50,6 +50,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.nledu.cloud</groupId>
+                <artifactId>nlecloud-components-adapter</artifactId>
+                <version>${fast-dev.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.necloud</groupId>
                 <artifactId>newland-spring-webflux-scaffold-ctx</artifactId>
                 <version>${fast-dev.version}</version>

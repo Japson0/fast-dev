@@ -12,6 +12,7 @@ import com.nlecloud.spring.scaffold.handle.*;
 import com.nlecloud.spring.scaffold.service.DictServiceProxy;
 import net.github.fastdev.boot.CustomSpringBootConfig;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
+import org.apache.dubbo.common.logger.FluentLogger;
 import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -142,10 +143,17 @@ public class NewLandSpringConfig {
 
 
     @Bean
+    @ConditionalOnMissingBean(PermissionHandle.class)
+    @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
+    public PermissionHandle permissionHandle(){
+        return new DefaultPermissionHandle();
+    }
+
+    @Bean
     @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
     @ConditionalOnMissingBean(PermissionInterceptor.class)
-    public PermissionInterceptor permissionInterceptor(@Value("${spring.application.name}") String applicationName){
-       return new PermissionInterceptor(applicationName);
+    public PermissionInterceptor permissionInterceptor(@Value("${spring.application.name}") String applicationName,PermissionHandle permissionHandle){
+       return new PermissionInterceptor(applicationName,permissionHandle);
     }
 
 

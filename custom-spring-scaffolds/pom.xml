@@ -19,5 +19,6 @@
 
     <modules>
         <module>newland-product-scaffold-ctx</module>
+        <module>nlecloud-components-adapter</module>
     </modules>
 </project>
