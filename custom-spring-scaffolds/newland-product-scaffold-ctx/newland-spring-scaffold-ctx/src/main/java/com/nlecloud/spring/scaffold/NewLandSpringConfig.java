@@ -140,11 +140,19 @@ public class NewLandSpringConfig {
         return new CustomApiPermissionPlugin();
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean(PermissionHandle.class)
+    @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
+    public PermissionHandle permissionHandle(){
+        return new DefaultPermissionHandle();
+    }
+
     @Bean
     @ConditionalOnProperty(prefix = "nlecloud.product" ,name = "api-permission-enabled" ,havingValue = "true")
     @ConditionalOnMissingBean(PermissionInterceptor.class)
-    public PermissionInterceptor permissionInterceptor(@Value("${spring.application.name}") String applicationName){
-        return new PermissionInterceptor(applicationName);
+    public PermissionInterceptor permissionInterceptor(@Value("${spring.application.name}") String applicationName,PermissionHandle permissionHandle){
+        return new PermissionInterceptor(applicationName,permissionHandle);
     }
 
 
