@@ -15,7 +15,7 @@ import java.util.Collection;
  */
 public class DefaultPermissionHandle implements PermissionHandle {
 
-    @DubboReference
+    @DubboReference(cache = "lfu")
     private PermissionService permissionService;
 
     @Override
