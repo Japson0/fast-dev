@@ -1,6 +1,7 @@
 
 package com.nlecloud.spring.scaffold.filter;
 
+import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
@@ -63,10 +64,10 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
     }
 
     private void pushUser(Invocation invocation) {
-        Long userId = UserContext.getUserId();
-        if(userId!=null) {
+        UserInfo userInfo = UserContext.getUserInfo();
+        if(userInfo!=null) {
             // 使用 setObjectAttachment 传递对象（推荐方式）
-            invocation.setObjectAttachment(AuthConstants.USER_ID_HEADER, userId);
+            invocation.setObjectAttachment(AuthConstants.USER_ID_HEADER, userInfo.getUserId());
             invocation.setObjectAttachment(AuthConstants.USER_HEADER,UserContext.getUserName());
             invocation.setObjectAttachment(AuthConstants.TENANT_ID_HEADER, UserContext.getTenantId());
             invocation.setObjectAttachment(AuthConstants.SCHOOL_ID_HEADER, UserContext.getSchoolId());

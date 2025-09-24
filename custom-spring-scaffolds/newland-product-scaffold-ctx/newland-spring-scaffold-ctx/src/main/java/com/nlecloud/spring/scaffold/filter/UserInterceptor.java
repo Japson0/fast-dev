@@ -1,6 +1,7 @@
 
 package com.nlecloud.spring.scaffold.filter;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 
 /**
@@ -49,7 +51,7 @@ public class UserInterceptor implements CustomInterceptor {
                 UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
                         username, Long.valueOf(tenantId),
                         StringUtils.hasText(schoolId)?Long.valueOf(schoolId):null,
-                        StringUtils.hasText(roleStr) ? Arrays.asList(roleStr.split(",")) : Collections.EMPTY_SET
+                        StringUtils.hasText(roleStr) ? CollectionUtil.newHashSet(roleStr.split(",")) : Collections.EMPTY_SET
                 ));
             }
         }

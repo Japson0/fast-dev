@@ -5,6 +5,7 @@ import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.Sex;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * <P><B>Description:</B></P>
@@ -55,10 +56,7 @@ public class UserWrapper extends UserInfo {
 //    }
 
     public UserWrapper(Long userId, String username,Long tenantId) {
-        this.userId = userId;
-        this.username = username;
-        this.tenantId=tenantId;
-        this.schoolId=tenantId;
+        this(userId,username,tenantId,tenantId, Collections.EMPTY_SET);
     }
 
     public UserWrapper(Long userId, String username,Long schoolId,Collection<String> roles) {

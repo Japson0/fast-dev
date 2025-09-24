@@ -1,5 +1,6 @@
 package com.nlecloud.spring.webflux.scaffold.filter;
 
+import cn.hutool.aop.ProxyUtil;
 import com.nlecloud.spring.annotation.UserInfo;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;
@@ -24,8 +25,8 @@ public class UserWrapper extends UserInfo {
 
     private Collection<String> roles;
 
-
     private static final String KEY_INFO = "USER_INFO_KEY";
+
 
     public UserWrapper(Long userId, String username,Long tenantId,Collection<String> roles) {
         this.userId = userId;
@@ -40,7 +41,7 @@ public class UserWrapper extends UserInfo {
 
 
     public static UserWrapper getUserWrapper(ContextView contextView) {
-        return contextView.get(KEY_INFO);
+        return contextView.getOrDefault(KEY_INFO,null);
     }
 
     @Override
