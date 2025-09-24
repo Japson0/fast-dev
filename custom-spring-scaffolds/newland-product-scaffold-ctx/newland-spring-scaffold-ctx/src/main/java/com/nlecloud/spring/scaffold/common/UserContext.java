@@ -20,7 +20,7 @@ public class UserContext {
     /**
      * 用户信息
      */
-    private final static ThreadLocal<UserWrapper> USER_INFO_LOCAL=new ThreadLocal<>();
+    private final static ThreadLocal<UserInfo> USER_INFO_LOCAL=new ThreadLocal<>();
 
     private static final UserWrapper robotUser=new UserWrapper(0L,"system",0L);
 
@@ -41,30 +41,32 @@ public class UserContext {
     }
 
     public static String getUserName() {
-        UserWrapper userWrapper = USER_INFO_LOCAL.get();
-        return userWrapper==null?null:userWrapper.getUsername();
+        return getUserInfo().getUsername();
     }
 
     public static Long getTenantId() {
-        return USER_INFO_LOCAL.get().getTenantId();
+        return getUserInfo().getTenantId();
     }
 
     public static Long getSchoolId(){
-        return USER_INFO_LOCAL.get().getSchoolId();
+        return getUserInfo().getSchoolId();
     }
 
 
     public static Collection<String> getRoles(){
-        return USER_INFO_LOCAL.get().getRoles();
+        return getUserInfo().getRoles();
     }
 
     public static UserInfo getUserInfo() {
         return USER_INFO_LOCAL.get();
     }
 
+    public static boolean isAdmin(){
+        return getRoles().contains("admin");
+    }
 
 
-    public static void setUserInfo(UserWrapper userInfo){
+    public static void setUserInfo(UserInfo userInfo){
         USER_INFO_LOCAL.set(userInfo);
     }
 

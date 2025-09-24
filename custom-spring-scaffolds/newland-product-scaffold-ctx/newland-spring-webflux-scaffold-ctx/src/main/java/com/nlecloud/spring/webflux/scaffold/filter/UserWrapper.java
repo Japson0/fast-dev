@@ -40,7 +40,7 @@ public class UserWrapper extends UserInfo {
 
 
     public static UserWrapper getUserWrapper(ContextView contextView) {
-        return contextView.get(KEY_INFO);
+        return contextView.getOrDefault(KEY_INFO,null);
     }
 
     @Override
