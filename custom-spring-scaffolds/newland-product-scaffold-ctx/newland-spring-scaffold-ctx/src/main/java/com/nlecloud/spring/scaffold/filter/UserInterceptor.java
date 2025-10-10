@@ -12,10 +12,7 @@ import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <P><B>用户拦截器:</B></P>
@@ -37,19 +34,28 @@ public class UserInterceptor implements CustomInterceptor {
             if (userId != null) {
                 String username = request.getHeader(AuthConstants.USER_HEADER);
                 String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
-                String tenantId = request.getHeader(AuthConstants.TENANT_ID_HEADER);
+                String currentId = request.getHeader(AuthConstants.CURRENT_TENANT_ID_HEADER);
                 String roleStr = request.getHeader(AuthConstants.ROLE_HEADER);
 
-                if (tenantId == null) {
-                    //针对以前没租户的，把学校当租户
-                    tenantId = schoolId;
-                }
-                if (!StringUtils.hasText(tenantId)) {
-                    //TODO， 有些历史数据没学校，后面改完可以删掉
-                    tenantId = "0";
+
+                String[] tenantIds = StringUtils.split(request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
+
+                String veryCurrentTenantId = null;
+                if(tenantIds!=null){
+                    if(tenantIds.length==1||currentId==null){
+                        veryCurrentTenantId = tenantIds[0];
+                    }else {
+                        for (String tenantId : tenantIds) {
+                            if(tenantId.equals(currentId)){
+                                veryCurrentTenantId=tenantId;
+                                break;
+                            }
+                        }
+                    }
+
                 }
                 UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
-                        username, Long.valueOf(tenantId),
+                        username, veryCurrentTenantId==null?0L:Long.valueOf(veryCurrentTenantId),
                         StringUtils.hasText(schoolId)?Long.valueOf(schoolId):null,
                         StringUtils.hasText(roleStr) ? CollectionUtil.newHashSet(roleStr.split(",")) : Collections.EMPTY_SET
                 ));

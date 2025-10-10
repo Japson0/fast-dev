@@ -48,6 +48,7 @@ public class UserContext {
         return getUserInfo().getTenantId();
     }
 
+    @Deprecated
     public static Long getSchoolId(){
         return getUserInfo().getSchoolId();
     }

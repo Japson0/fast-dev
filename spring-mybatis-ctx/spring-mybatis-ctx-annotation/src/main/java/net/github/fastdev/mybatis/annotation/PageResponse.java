@@ -30,7 +30,6 @@ public class PageResponse<DTO> extends PageRequest {
      */
     @Schema(name = "总数")
     @JsonSerialize(using = LongSerializer.class)
-
     private long total;
 
 
