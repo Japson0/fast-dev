@@ -1,6 +1,7 @@
 
 package com.nlecloud.spring.scaffold.filter;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
@@ -33,21 +34,30 @@ public class UserInterceptor implements CustomInterceptor {
             if (userId != null) {
                 String username = request.getHeader(AuthConstants.USER_HEADER);
                 String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
-                String tenantId = request.getHeader(AuthConstants.TENANT_ID_HEADER);
+                String currentId = request.getHeader(AuthConstants.CURRENT_TENANT_ID_HEADER);
                 String roleStr = request.getHeader(AuthConstants.ROLE_HEADER);
 
-                if (tenantId == null) {
-                    //针对以前没租户的，把学校当租户
-                    tenantId = schoolId;
-                }
-                if (!StringUtils.hasText(tenantId)) {
-                    //TODO， 有些历史数据没学校，后面改完可以删掉
-                    tenantId = "0";
+
+                String[] tenantIds = StringUtils.split(request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
+
+                String veryCurrentTenantId = null;
+                if(tenantIds!=null){
+                    if(tenantIds.length==1||currentId==null){
+                        veryCurrentTenantId = tenantIds[0];
+                    }else {
+                        for (String tenantId : tenantIds) {
+                            if(tenantId.equals(currentId)){
+                                veryCurrentTenantId=tenantId;
+                                break;
+                            }
+                        }
+                    }
+
                 }
                 UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
-                        username, Long.valueOf(tenantId),
+                        username, veryCurrentTenantId==null?0L:Long.valueOf(veryCurrentTenantId),
                         StringUtils.hasText(schoolId)?Long.valueOf(schoolId):null,
-                        StringUtils.hasText(roleStr) ? Arrays.asList(roleStr.split(",")) : Collections.EMPTY_SET
+                        StringUtils.hasText(roleStr) ? CollectionUtil.newHashSet(roleStr.split(",")) : Collections.EMPTY_SET
                 ));
             }
         }

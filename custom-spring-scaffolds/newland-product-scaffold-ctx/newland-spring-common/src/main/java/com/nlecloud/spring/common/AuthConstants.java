@@ -20,4 +20,6 @@ public class AuthConstants {
 
 
     public static final String TENANT_ID_HEADER = "v1-tenant-header";
+
+    public static final String CURRENT_TENANT_ID_HEADER = "x-current-tenant-header";
 }
