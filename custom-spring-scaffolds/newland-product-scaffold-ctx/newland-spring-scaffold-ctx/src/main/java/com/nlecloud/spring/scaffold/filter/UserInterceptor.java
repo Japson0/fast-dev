@@ -6,13 +6,13 @@ import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
 import net.github.fastdev.boot.handle.CustomInterceptor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.Ordered;
-import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Collections;
 
 /**
  * <P><B>用户拦截器:</B></P>
@@ -56,8 +56,8 @@ public class UserInterceptor implements CustomInterceptor {
                 }
                 UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
                         username, veryCurrentTenantId==null?0L:Long.valueOf(veryCurrentTenantId),
-                        StringUtils.hasText(schoolId)?Long.valueOf(schoolId):null,
-                        StringUtils.hasText(roleStr) ? CollectionUtil.newHashSet(roleStr.split(",")) : Collections.EMPTY_SET
+                        StringUtils.isNotEmpty(schoolId)?Long.valueOf(schoolId):null,
+                        !StringUtils.isNotEmpty(roleStr) ? CollectionUtil.newHashSet(StringUtils.split(",")) : Collections.EMPTY_SET
                 ));
             }
         }
