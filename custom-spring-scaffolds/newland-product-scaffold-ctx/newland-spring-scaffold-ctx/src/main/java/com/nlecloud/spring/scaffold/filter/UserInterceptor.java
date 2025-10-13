@@ -6,6 +6,7 @@ import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
 import net.github.fastdev.boot.handle.CustomInterceptor;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.Ordered;
 import org.springframework.web.method.HandlerMethod;
@@ -41,7 +42,7 @@ public class UserInterceptor implements CustomInterceptor {
                 String[] tenantIds = StringUtils.split(request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
 
                 String veryCurrentTenantId = null;
-                if(tenantIds!=null){
+                if(!ArrayUtils.isEmpty(tenantIds)){
                     if(tenantIds.length==1||currentId==null){
                         veryCurrentTenantId = tenantIds[0];
                     }else {
