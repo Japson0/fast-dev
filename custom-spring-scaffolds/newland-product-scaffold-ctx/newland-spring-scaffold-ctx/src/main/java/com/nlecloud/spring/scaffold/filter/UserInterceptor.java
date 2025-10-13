@@ -8,6 +8,7 @@ import com.nlecloud.spring.scaffold.common.UserWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.github.fastdev.boot.handle.CustomInterceptor;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.Ordered;
 import org.springframework.web.method.HandlerMethod;
@@ -38,10 +39,10 @@ public class UserInterceptor implements CustomInterceptor {
                 String roleStr = request.getHeader(AuthConstants.ROLE_HEADER);
 
 
-                String[] tenantIds = org.apache.commons.lang3.StringUtils.split(request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
+                String[] tenantIds = StringUtils.split(request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
 
                 String veryCurrentTenantId = null;
-                if(tenantIds!=null){
+                if(!ArrayUtils.isEmpty(tenantIds)){
                     if(tenantIds.length==1||currentId==null){
                         veryCurrentTenantId = tenantIds[0];
                     }else {
@@ -56,8 +57,8 @@ public class UserInterceptor implements CustomInterceptor {
                 }
                 UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
                         username, veryCurrentTenantId==null?0L:Long.valueOf(veryCurrentTenantId),
-                        org.apache.commons.lang3.StringUtils.isNotEmpty(schoolId)?Long.valueOf(schoolId):null,
-                        org.apache.commons.lang3.StringUtils.isNotEmpty(roleStr) ? CollectionUtil.newHashSet(StringUtils.split(roleStr,",")) : Collections.EMPTY_SET
+                        StringUtils.isNotEmpty(schoolId)?Long.valueOf(schoolId):null,
+                        StringUtils.isNotEmpty(roleStr) ? CollectionUtil.newHashSet(StringUtils.split(roleStr,",")) : Collections.EMPTY_SET
                 ));
             }
         }
