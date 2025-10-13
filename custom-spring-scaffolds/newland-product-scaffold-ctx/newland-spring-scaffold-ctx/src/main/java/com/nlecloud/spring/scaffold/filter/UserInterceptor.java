@@ -57,7 +57,7 @@ public class UserInterceptor implements CustomInterceptor {
                 UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
                         username, veryCurrentTenantId==null?0L:Long.valueOf(veryCurrentTenantId),
                         StringUtils.isNotEmpty(schoolId)?Long.valueOf(schoolId):null,
-                        !StringUtils.isNotEmpty(roleStr) ? CollectionUtil.newHashSet(StringUtils.split(",")) : Collections.EMPTY_SET
+                        StringUtils.isNotEmpty(roleStr) ? CollectionUtil.newHashSet(StringUtils.split(roleStr,",")) : Collections.EMPTY_SET
                 ));
             }
         }
