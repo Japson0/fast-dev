@@ -34,7 +34,7 @@ public class UserFilter implements WebFilter {
             String currentId = headers.getFirst(AuthConstants.CURRENT_TENANT_ID_HEADER);
             String roleStr = headers.getFirst(AuthConstants.ROLE_HEADER);
 
-            String[] tenantIds = org.apache.commons.lang3.StringUtils.split(headers.getFirst(AuthConstants.TENANT_ID_HEADER), ",");
+            String[] tenantIds = StringUtils.split(headers.getFirst(AuthConstants.TENANT_ID_HEADER), ",");
 
             String veryCurrentTenantId = null;
             if(!ArrayUtils.isEmpty(tenantIds)){
