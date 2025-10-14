@@ -18,6 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -60,6 +61,7 @@ public class CustomSpringBootConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(annotation = ControllerAdvice.class)
     public GlobalExceptionHandle globalExceptionConfig(@Autowired(required = false) TraceService traceService) {
         return new GlobalExceptionHandle(traceService == null ? () -> null : traceService);
     }

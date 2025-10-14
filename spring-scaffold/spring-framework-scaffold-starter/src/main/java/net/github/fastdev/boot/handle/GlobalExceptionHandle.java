@@ -62,15 +62,12 @@ public class GlobalExceptionHandle {
             } else {
                 LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
             }
-        }else if(e instanceof IllegalArgumentException){
-            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), e.getMessage());
-            LOGGER.warn("系统运行时异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
         } else if (e.getClass() == MethodArgumentNotValidException.class) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(),
                     printValidError((MethodArgumentNotValidException) e));
         } else if (e.getClass() == ConstraintViolationException.class) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(),
                     printValidateError((ConstraintViolationException) e));
         } else if (e instanceof RuntimeException) {
@@ -82,7 +79,7 @@ public class GlobalExceptionHandle {
             result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), "system error");
             LOGGER.error("系统异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
         }
-        if(traceService!=null){
+        if (traceService != null) {
             response.addHeader("X-Trace-ID", traceService.getTraceId());
         }
         return result;
