@@ -29,7 +29,7 @@ public class UserFilter implements WebFilter {
 
         String userId = headers.getFirst(AuthConstants.USER_ID_HEADER);
 
-        if( userId!=null) {
+        if( StringUtils.isNotEmpty(userId)) {
             String username = headers.getFirst(AuthConstants.USER_HEADER);
             String currentId = headers.getFirst(AuthConstants.CURRENT_TENANT_ID_HEADER);
             String roleStr = headers.getFirst(AuthConstants.ROLE_HEADER);

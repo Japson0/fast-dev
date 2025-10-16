@@ -32,7 +32,7 @@ public class UserInterceptor implements CustomInterceptor {
 
             String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
 
-            if (userId != null) {
+            if (StringUtils.isNotEmpty(userId)) {
                 String username = request.getHeader(AuthConstants.USER_HEADER);
                 String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
                 String currentId = request.getHeader(AuthConstants.CURRENT_TENANT_ID_HEADER);
