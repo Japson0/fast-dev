@@ -3,6 +3,7 @@ package net.github.fastdev.boot.validate;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import net.github.fastdev.boot.validate.handle.HttpUrlValidator;
+import net.github.fastdev.boot.validate.handle.IpValidator;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -18,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author Japson Huang
  * @version1.0
  */
-@Constraint(validatedBy = HttpUrlValidator.class) // 指定验证器
+@Constraint(validatedBy = IpValidator.class) // 指定验证器
 @Target({METHOD, FIELD, ANNOTATION_TYPE, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 public @interface Ip {

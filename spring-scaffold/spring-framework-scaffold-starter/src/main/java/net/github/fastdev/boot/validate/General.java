@@ -2,9 +2,8 @@ package net.github.fastdev.boot.validate;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import net.github.fastdev.boot.validate.handle.IdCardValidator;
+import net.github.fastdev.boot.validate.handle.GeneralValidator;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -12,23 +11,21 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * <P><B>Description:</B></P>
+ * <P><B>英文字母 、数字和下划线:</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2025年10月23日 CREATE
  *
  * @author Japson Huang
  * @version1.0
  */
-@Documented
-@Constraint(validatedBy = IdCardValidator.class) // 指定验证器
+@Constraint(validatedBy = GeneralValidator.class) // 指定验证器
 @Target({METHOD, FIELD, ANNOTATION_TYPE, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
-public @interface IdCard {
+public @interface General {
 
-
-    String message() default "身份证格式错误";
-
+    String message() default "只允许英文字母 、数字和下划线";
 
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }
