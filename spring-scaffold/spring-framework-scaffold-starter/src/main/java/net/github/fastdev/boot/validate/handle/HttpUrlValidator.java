@@ -6,6 +6,7 @@ import net.github.fastdev.boot.validate.HttpUrl;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+
 /**
  * <P><B>http校验:</B></P>
  * RevisionTrail:(Date/Author/Description)

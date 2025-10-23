@@ -1,10 +1,10 @@
 package net.github.fastdev.boot.validate.handle;
 
 import cn.hutool.core.util.IdcardUtil;
-import net.github.fastdev.boot.validate.IdCard;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import net.github.fastdev.boot.validate.IdCard;
+
 
 /**
  * <P><B>身份证:</B></P>
