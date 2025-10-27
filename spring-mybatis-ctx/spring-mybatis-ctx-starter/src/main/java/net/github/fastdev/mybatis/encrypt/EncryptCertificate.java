@@ -4,7 +4,7 @@ import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.digest.SM3;
 import cn.hutool.crypto.symmetric.SM4;
 import net.github.fastdev.mybatis.annotation.EncryptType;
-import net.github.fastdev.mybatis.config.MybatisCtxProperties;
+import net.github.fastdev.mybatis.MybatisCtxProperties;
 
 import java.util.Optional;
 
@@ -40,6 +40,9 @@ public class EncryptCertificate {
                 throw new IllegalArgumentException("key of length in SM3 must be equal to 24");
             }
             sm3=Optional.of(new SM3(HexUtil.decodeHex(sm3key)));
+        }
+        if(!sm3.isPresent()|| !sm4.isPresent()){
+            throw new IllegalArgumentException("SM3 or SM4 must be present");
         }
     }
 

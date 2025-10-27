@@ -15,23 +15,19 @@ import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
-import net.github.fastdev.mybatis.config.MybatisCtxProperties;
-import net.github.fastdev.mybatis.encrypt.EncryptCertificate;
+import net.github.fastdev.mybatis.config.EncryptConfig;
 import net.github.fastdev.mybatis.encrypt.SkinMethodPredicate;
 import net.github.fastdev.mybatis.injector.method.SelectRepetitionCount;
 import net.github.fastdev.mybatis.injector.method.UpdateAllColumnById;
-import net.github.fastdev.mybatis.sqlparser.DecryptResultSetInterceptor;
-import net.github.fastdev.mybatis.sqlparser.EncryptParamInterceptor;
-import org.apache.ibatis.plugin.Interceptor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 
 import java.util.Collections;
@@ -48,6 +44,7 @@ import java.util.List;
  */
 @Configuration
 @EnableConfigurationProperties(MybatisCtxProperties.class)
+@Import(EncryptConfig.class)
 public class MyBatisPlusConfig {
 
     /**
@@ -73,39 +70,8 @@ public class MyBatisPlusConfig {
 
 
     @Bean
-    @ConditionalOnExpression("#{environment['mybatis-plus.encrcypt.sm4-key']!=null||environment['mybatis-plus.encrcypt.sm3-key']!=null}")
-    public EncryptCertificate encryptCertificate(MybatisCtxProperties mybaitsCtxProperties) {
-        return new EncryptCertificate(mybaitsCtxProperties.getEncrcypt());
-    }
-
-    /**
-     * 加密拦截器
-     * RevisionTrail:(Date/Author/Description)
-     * 2020年10月13日
-     *
-     * @author Japson Huang
-     */
-    @Bean
-    @Order(11)
-    @ConditionalOnBean(EncryptCertificate.class)
-    public Interceptor encryptParamParser(EncryptCertificate encryptCertificate, SkinMethodPredicate skinMethodPredicate) {
-        return new EncryptParamInterceptor(encryptCertificate,skinMethodPredicate);
-    }
-
-
-    @Bean
     public SkinMethodPredicate skinMethodPredicate(){
         return new SkinMethodPredicate();
-    }
-    /**
-     * 解密拦截器
-     *
-     * @return
-     */
-    @Bean
-    @ConditionalOnBean(EncryptCertificate.class)
-    public DecryptResultSetInterceptor encryptResultSetHandle(EncryptCertificate encryptCertificate) {
-        return new DecryptResultSetInterceptor(encryptCertificate);
     }
 
     /**
