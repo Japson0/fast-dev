@@ -1,7 +1,7 @@
 
 
 
-package net.github.fastdev.mybatis.config;
+package net.github.fastdev.mybatis;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -37,6 +37,10 @@ public class MybatisCtxProperties {
     public static class Encrcypt {
 
         /**
+         * 是否开启
+         */
+        private boolean enable=false;
+        /**
          * 密钥
          */
         private String sm4Key;
@@ -57,6 +61,14 @@ public class MybatisCtxProperties {
 
         public void setSm3key(String sm3key) {
             this.sm3key = sm3key;
+        }
+
+        public boolean getEnable() {
+            return enable;
+        }
+
+        public void setEnable(boolean enable) {
+            this.enable = enable;
         }
     }
 

@@ -4,7 +4,7 @@ import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.digest.SM3;
 import cn.hutool.crypto.symmetric.SM4;
 import net.github.fastdev.mybatis.annotation.EncryptType;
-import net.github.fastdev.mybatis.config.MybatisCtxProperties;
+import net.github.fastdev.mybatis.MybatisCtxProperties;
 
 import java.util.Optional;
 

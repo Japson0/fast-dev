@@ -11,7 +11,7 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * <P><B>英文字母 、数字和下划线:</B></P>
+ * <P><B>英文字母、中文 、数字和下划线:</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2025年10月23日 CREATE
  *

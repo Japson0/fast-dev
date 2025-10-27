@@ -14,16 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface WebTransSecurityServer {
 
     /**
-     * 脱敏Key
-     */
-    String FUZZY_KEY = "FUZZY_KEY";
-
-    /**
-     * 加密的Key
-     */
-    String CRYPTO_KET = "CRYPTO_KET";
-
-    /**
      * 是否需要脱敏，返回false标识不需要脱敏
      * RevisionTrail:(Date/Author/Description)
      * 2020年10月16日
