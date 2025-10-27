@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
@@ -42,9 +43,9 @@ public class CustomSpringBootConfig {
      * ym文件不支持DEFAULT_VIEW_INCLUSION属性配置，通过代码形式配置
      * 为true时候没有被JSONView修饰的属性也会默认输出，用于控制VO或DTO中属性的序列化
      * Revision Trail: (Date/Author/Description)
-     * 2019/5/11 Timer He CREATE
+     * 2019/5/11 Japson Huang
      *
-     * @author Timer He
+     * @author Japson Huang
      */
     @Bean
     @Primary
@@ -68,7 +69,7 @@ public class CustomSpringBootConfig {
 
     @Bean
     public WebMvcConfigurer mvcConfigurer(CustomSpringBootProperies customSpringBootProperies,
-                                          WebTransSecurityServer webTransSecurityServer,
+                                          @Autowired(required = false) WebTransSecurityServer webTransSecurityServer,
                                           List<ResourceClean> resourceCleans,
                                           List<CustomInterceptor> interceptors) {
         return new CustomSpringBootMvcSpringConfig(customSpringBootProperies, webTransSecurityServer, resourceCleans,interceptors);
@@ -104,6 +105,7 @@ public class CustomSpringBootConfig {
      */
     @Bean
     @ConditionalOnMissingBean(WebTransSecurityServer.class)
+    @ConditionalOnProperty(value = "custom.web-trans-security-filter.enable" ,havingValue = "true")
     public DefaultWebTransSecurityService defaultDesensitizationService() {
         return new DefaultWebTransSecurityService();
     }

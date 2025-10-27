@@ -48,7 +48,7 @@ public class PageRequest<P> implements Serializable {
     /**
      * 实体类参数对象
      */
-    @Schema(description = "条件构造器")
+    @Schema(name = "queryParams",description = "条件构造器")
     @JsonProperty(value = "queryParams", access = JsonProperty.Access.WRITE_ONLY)
     private P condition;
 

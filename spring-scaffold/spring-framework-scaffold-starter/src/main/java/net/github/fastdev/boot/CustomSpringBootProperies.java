@@ -24,7 +24,7 @@ public class CustomSpringBootProperies {
     private EnumsProperties enums;
 
     public static class WebTransSecurityFilter {
-        private boolean enable = true;
+        private boolean enable = false;
 
         private String path = "/**";
 
