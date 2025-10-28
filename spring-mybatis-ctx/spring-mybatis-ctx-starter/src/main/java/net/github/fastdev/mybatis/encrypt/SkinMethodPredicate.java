@@ -7,6 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.util.ReflectionUtils;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -22,7 +23,7 @@ import java.util.function.Predicate;
 public class SkinMethodPredicate implements Predicate<String> {
 
 
-    private Set<String> skinMethSet;
+    private Set<String> skinMethSet= Collections.emptySet();
 
 
     @EventListener

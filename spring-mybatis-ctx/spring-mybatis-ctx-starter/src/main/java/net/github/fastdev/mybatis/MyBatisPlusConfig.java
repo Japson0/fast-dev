@@ -69,10 +69,7 @@ public class MyBatisPlusConfig {
     }
 
 
-    @Bean
-    public SkinMethodPredicate skinMethodPredicate(){
-        return new SkinMethodPredicate();
-    }
+
 
     /**
      * 可自定义注入，下面的是逻辑删除注入，根据项目需要判断是否需要

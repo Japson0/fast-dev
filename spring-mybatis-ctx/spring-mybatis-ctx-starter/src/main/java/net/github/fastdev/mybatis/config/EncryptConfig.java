@@ -51,4 +51,9 @@ public class EncryptConfig  {
     public EncryptCertificate encryptCertificate(MybatisCtxProperties mybaitsCtxProperties) {
         return new EncryptCertificate(mybaitsCtxProperties.getEncrcypt());
     }
+
+    @Bean
+    public SkinMethodPredicate skinMethodPredicate(){
+        return new SkinMethodPredicate();
+    }
 }

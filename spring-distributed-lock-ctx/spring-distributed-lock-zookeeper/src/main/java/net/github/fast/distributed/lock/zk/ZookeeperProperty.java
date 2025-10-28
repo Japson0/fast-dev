@@ -13,12 +13,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "zookeeper")
 public class ZookeeperProperty {
 
-
-    private String connectString;
-
     /**
      * 服务器地址
      */
+    private String connectString;
+
+
     private int sessionTimeoutMs=3000;
 
     /**

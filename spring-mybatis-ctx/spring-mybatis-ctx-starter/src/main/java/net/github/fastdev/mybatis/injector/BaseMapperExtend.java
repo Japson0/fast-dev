@@ -3,6 +3,7 @@ package net.github.fastdev.mybatis.injector;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
+import net.github.fastdev.mybatis.encrypt.SkinEncrypt;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -31,5 +32,6 @@ public interface BaseMapperExtend<T> extends BaseMapper<T> {
      *@author Japson Huang
      *
     */
+    @SkinEncrypt
     Long selectRepetitionCount(@Param(Constants.ENTITY) T entity);
 }
