@@ -34,7 +34,7 @@ public class EncryptCertificate {
 
         }
 
-        String sm3key = encrcypt.getSm3key();
+        String sm3key = encrcypt.getSm3Key();
         if (sm3key != null) {
             if(sm3key.length() != 24){
                 throw new IllegalArgumentException("key of length in SM3 must be equal to 24");

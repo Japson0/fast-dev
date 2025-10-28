@@ -21,7 +21,7 @@ import org.springframework.core.annotation.Order;
  */
 @Configuration
 @ConditionalOnProperty(value = "mybatis-plus.encrcypt.enable",havingValue = "true")
-public class EncryptConfig {
+public class EncryptConfig  {
     /**
      * 解密拦截器
      *
@@ -50,5 +50,10 @@ public class EncryptConfig {
     @Bean
     public EncryptCertificate encryptCertificate(MybatisCtxProperties mybaitsCtxProperties) {
         return new EncryptCertificate(mybaitsCtxProperties.getEncrcypt());
+    }
+
+    @Bean
+    public SkinMethodPredicate skinMethodPredicate(){
+        return new SkinMethodPredicate();
     }
 }

@@ -72,6 +72,7 @@ public class NewLandSpringProperty {
         /**
          * 日志debug，会输出所有参数
          */
+        @Deprecated
         private boolean logger = false;
 
 

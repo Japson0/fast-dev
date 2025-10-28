@@ -45,7 +45,15 @@ public class MybatisCtxProperties {
          */
         private String sm4Key;
 
-        private String sm3key;
+        private String sm3Key;
+
+        public boolean isEnable() {
+            return enable;
+        }
+
+        public void setEnable(boolean enable) {
+            this.enable = enable;
+        }
 
         public String getSm4Key() {
             return sm4Key;
@@ -55,20 +63,12 @@ public class MybatisCtxProperties {
             this.sm4Key = sm4Key;
         }
 
-        public String getSm3key() {
-            return sm3key;
+        public String getSm3Key() {
+            return sm3Key;
         }
 
-        public void setSm3key(String sm3key) {
-            this.sm3key = sm3key;
-        }
-
-        public boolean getEnable() {
-            return enable;
-        }
-
-        public void setEnable(boolean enable) {
-            this.enable = enable;
+        public void setSm3Key(String sm3Key) {
+            this.sm3Key = sm3Key;
         }
     }
 
