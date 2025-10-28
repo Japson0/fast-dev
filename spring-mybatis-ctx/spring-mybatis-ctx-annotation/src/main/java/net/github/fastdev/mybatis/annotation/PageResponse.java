@@ -21,14 +21,14 @@ public class PageResponse<DTO> extends PageRequest {
      * 记录
      */
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Schema(name = "返回数据")
+    @Schema(description = "返回数据")
     @JsonProperty("data")
     protected List<DTO> records;
 
     /**
      * 总数
      */
-    @Schema(name = "总数")
+    @Schema(description = "总数")
     @JsonSerialize(using = LongSerializer.class)
     private long total;
 

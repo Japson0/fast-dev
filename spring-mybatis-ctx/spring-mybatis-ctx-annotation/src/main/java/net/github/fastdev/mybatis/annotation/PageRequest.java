@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Japson Huang
  * @version 1.0
  */
-@Schema(name = "分页数据结构")
+@Schema(description = "分页数据结构")
 public class PageRequest<P> implements Serializable {
 
     /**
@@ -34,7 +34,6 @@ public class PageRequest<P> implements Serializable {
      */
     @Schema(description = "当前页")
     @JsonSerialize(using = LongSerializer.class)
-
     private long page;
 
     /**
@@ -43,7 +42,6 @@ public class PageRequest<P> implements Serializable {
     @Schema(description = "每页数量", example = "20")
     @JsonProperty("size")
     @JsonSerialize(using = LongSerializer.class)
-
     private long size;
     /**
      * 实体类参数对象
