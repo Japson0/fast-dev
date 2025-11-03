@@ -5,6 +5,7 @@ package net.github.fastdev.boot.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.github.fastdev.common.model.RestResponse;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @RequestMapping("enums")
 @Tag(name = "枚举类查询")
+@RestController
 public class EnumController {
 
     /**

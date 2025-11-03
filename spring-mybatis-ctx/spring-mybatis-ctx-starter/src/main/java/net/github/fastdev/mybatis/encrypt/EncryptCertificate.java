@@ -19,9 +19,9 @@ import java.util.Optional;
 public class EncryptCertificate {
 
 
-    private Optional<SM4> sm4;
+    private Optional<SM4> sm4=Optional.empty();
 
-    private Optional<SM3> sm3;
+    private Optional<SM3> sm3=Optional.empty();
 
 
     public EncryptCertificate(MybatisCtxProperties.Encrcypt encrcypt) {

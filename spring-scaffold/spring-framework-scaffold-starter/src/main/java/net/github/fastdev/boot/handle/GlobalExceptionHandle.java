@@ -45,6 +45,7 @@ public class GlobalExceptionHandle {
         this.traceService = traceService;
     }
 
+
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Object customerExceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
@@ -62,7 +63,12 @@ public class GlobalExceptionHandle {
             } else {
                 LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
             }
-        } else if (e.getClass() == MethodArgumentNotValidException.class) {
+        }else if(e instanceof IllegalArgumentException||e instanceof ConstraintViolationException){
+            //这里是为了配合Spring的Assert
+            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), e.getMessage());
+            LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
+        }
+        else if (e.getClass() == MethodArgumentNotValidException.class) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(),
                     printValidError((MethodArgumentNotValidException) e));
@@ -84,6 +90,7 @@ public class GlobalExceptionHandle {
         }
         return result;
     }
+
 
     private String printValidateError(ConstraintViolationException e) {
         Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
