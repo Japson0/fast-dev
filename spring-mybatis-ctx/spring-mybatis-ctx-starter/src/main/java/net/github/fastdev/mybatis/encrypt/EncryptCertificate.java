@@ -41,7 +41,7 @@ public class EncryptCertificate {
             }
             sm3=Optional.of(new SM3(HexUtil.decodeHex(sm3key)));
         }
-        if(!sm3.isPresent()|| !sm4.isPresent()){
+        if(!sm3.isPresent()&& !sm4.isPresent()){
             throw new IllegalArgumentException("SM3 or SM4 must be present");
         }
     }

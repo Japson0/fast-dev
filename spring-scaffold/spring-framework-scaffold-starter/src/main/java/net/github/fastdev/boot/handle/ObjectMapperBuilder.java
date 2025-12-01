@@ -18,6 +18,7 @@ import java.lang.annotation.Annotation;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <P><B>Description:</B></P>
@@ -45,7 +46,8 @@ public class ObjectMapperBuilder {
     public  ObjectMapper builder() {
 
         builder.annotationIntrospector(new CustomJacksonAnnotationIntrospector());
-        builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+        builder.serializationInclusion(Optional.ofNullable(jacksonProperties.getDefaultPropertyInclusion()).orElse(JsonInclude.Include.NON_NULL));
+
         Map<DeserializationFeature, Boolean> deserialization = jacksonProperties.getDeserialization();
         Boolean nullAccept = deserialization.get(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
         if (nullAccept == null || nullAccept) {
