@@ -57,10 +57,15 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
 
         if (RpcContext.getContext().isConsumerSide()) {
             pushUser(invocation);
+            return invoker.invoke(invocation);
         } else {
-            popUser(invocation);
+            try {
+                popUser(invocation);
+                return invoker.invoke(invocation);
+            }finally {
+                UserContext.clean();
+            }
         }
-        return invoker.invoke(invocation);
     }
 
     private void pushUser(Invocation invocation) {
