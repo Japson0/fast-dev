@@ -54,6 +54,8 @@
             <artifactId>spring-cloud-loadbalancer</artifactId>
         </dependency>
 
+
+
         <dependency>
             <groupId>com.nledu.cloud</groupId>
             <artifactId>nlecloud-upms-user-center-api</artifactId>

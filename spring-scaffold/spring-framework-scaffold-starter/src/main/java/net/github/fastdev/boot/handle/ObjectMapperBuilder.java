@@ -18,6 +18,7 @@ import java.lang.annotation.Annotation;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <P><B>Description:</B></P>
@@ -45,20 +46,12 @@ public class ObjectMapperBuilder {
     public  ObjectMapper builder() {
 
         builder.annotationIntrospector(new CustomJacksonAnnotationIntrospector());
-        builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+        builder.serializationInclusion(Optional.ofNullable(jacksonProperties.getDefaultPropertyInclusion()).orElse(JsonInclude.Include.NON_NULL));
         Map<DeserializationFeature, Boolean> deserialization = jacksonProperties.getDeserialization();
-        Boolean nullAccept = deserialization.get(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        if (nullAccept == null || nullAccept) {
-            // “”字符串转NULL
-            builder.featuresToEnable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-            SimpleModule module = new SimpleModule();
-            module.addDeserializer(String.class, new StringDeserializer());
-            module.addSerializer(ComEnum.class,new DefaultEnumSerializer(comEnumDisplayHandle));
-            //Long 转成字符串，不然精度会丢失，前端Numbic最多只能存在17位
-            module.addSerializer(Long.class, ToStringSerializer.instance);
-//            module.addSerializer(Long.TYPE, ToStringSerializer.instance);
-            builder.modules(module);
-        }
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(ComEnum.class,new DefaultEnumSerializer(comEnumDisplayHandle));
+        module.addSerializer(Long.class, ToStringSerializer.instance);
+        builder.modules(module);
 
         if (deserialization.get(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) == null) {
             builder.failOnUnknownProperties(false);

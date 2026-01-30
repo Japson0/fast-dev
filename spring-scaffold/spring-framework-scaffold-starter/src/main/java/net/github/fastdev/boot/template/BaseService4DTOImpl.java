@@ -25,7 +25,7 @@ public class BaseService4DTOImpl<ID extends Serializable, R extends BaseObjEntit
     /**
      * 基础DAO
      */
-    private final BaseMapperExtend<R> baseMapper;
+    protected final BaseMapperExtend<R> baseMapper;
 
 
     public BaseService4DTOImpl(BaseMapperExtend<R> baseMapper) {
