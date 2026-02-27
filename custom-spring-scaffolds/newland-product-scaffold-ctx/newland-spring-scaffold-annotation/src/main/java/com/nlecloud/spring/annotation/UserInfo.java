@@ -24,6 +24,11 @@ public class UserInfo implements Serializable {
      */
     private String username;
 
+    /**
+     * 用户昵称
+     */
+    private String nickName;
+
 
     /**
      * 学校ID
@@ -191,5 +196,13 @@ public class UserInfo implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }
