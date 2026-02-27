@@ -22,7 +22,7 @@ public class UserContext {
      */
     private final static ThreadLocal<UserInfo> USER_INFO_LOCAL=new ThreadLocal<>();
 
-    private static final UserWrapper robotUser=new UserWrapper(0L,"system",0L);
+    private static final UserWrapper robotUser=new UserWrapper(0L,"机器人","system",0L);
 
     public static UserWrapper getRobotUser() {
         return  robotUser;

@@ -5,6 +5,7 @@ import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.Sex;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * <P><B>Description:</B></P>
@@ -20,6 +21,11 @@ public class UserWrapper extends UserInfo {
 
     private String username;
 
+    /**
+     * 用户名称
+     */
+    private String nickName;
+
     private Long tenantId;
 
     private Long schoolId;
@@ -29,6 +35,8 @@ public class UserWrapper extends UserInfo {
     private  UserProxy userProxy;
 
     private UserInfo userInfo;
+
+    private String token;
 
 
 //    public UserWrapper(HttpHeaders headers){
@@ -54,23 +62,32 @@ public class UserWrapper extends UserInfo {
 //        }
 //    }
 
-    public UserWrapper(Long userId, String username,Long tenantId) {
-        this.userId = userId;
-        this.username = username;
-        this.tenantId=tenantId;
-        this.schoolId=tenantId;
+    public UserWrapper(Long userId, String nickName,String username,Long tenantId) {
+        this(userId,nickName,username,tenantId,tenantId, Collections.EMPTY_SET);
     }
 
-    public UserWrapper(Long userId, String username,Long schoolId,Collection<String> roles) {
-        this(userId, username, schoolId,schoolId,roles);
+    public UserWrapper(Long userId,String nickName, String username,Long schoolId,Collection<String> roles) {
+        this(userId, nickName,username, schoolId,schoolId,roles);
     }
 
-    public UserWrapper(Long userId, String username,Long tenantId,Long schoolId,Collection<String> roles) {
+    public UserWrapper(Long userId,String nickName, String username,Long tenantId,Long schoolId,Collection<String> roles) {
         this.userId = userId;
+        this.nickName=nickName;
         this.username = username;
         this.tenantId=tenantId;
         this.schoolId=schoolId;
         this.roles=roles;
+    }
+
+
+    public UserWrapper(Long userId,String nickName, String username,Long tenantId,Long schoolId,Collection<String> roles,String token) {
+        this.userId = userId;
+        this.nickName=nickName;
+        this.username = username;
+        this.tenantId=tenantId;
+        this.schoolId=schoolId;
+        this.roles=roles;
+        this.token=token;
     }
 
 
@@ -219,9 +236,19 @@ public class UserWrapper extends UserInfo {
         getUserInfo().setPhone(phone);
     }
 
+    @Override
+    public String getNickName() {
+        return nickName;
+    }
+
+    @Override
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     private UserInfo getUserInfo() {
         if(userInfo == null){
-              this.userInfo = checkUserProxy().getUserInfo(this.userId); //这里通过远程调用获取用户信息
+            this.userInfo = token!=null?checkUserProxy().getUserInfo(this.userId,token.substring("Bearer ".length())):checkUserProxy().getUserInfo(this.userId); //这里通过远程调用获取用户信息
         }
         return userInfo;
     }

@@ -19,6 +19,11 @@ public class UserInfo implements Serializable {
      * 用户ID
      */
     private Long userId;
+
+    /**
+     * 用户昵称
+     */
+    private String nickName;
     /**
      * 账号信息
      */
@@ -191,5 +196,13 @@ public class UserInfo implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }
