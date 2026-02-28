@@ -2,6 +2,7 @@
 package com.nlecloud.spring.scaffold.filter;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.URLUtil;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
@@ -39,8 +40,9 @@ public class UserInterceptor implements CustomInterceptor {
                 String currentId = request.getHeader(AuthConstants.CURRENT_TENANT_ID_HEADER);
                 String roleStr = request.getHeader(AuthConstants.ROLE_HEADER);
                 String nickName = request.getHeader(AuthConstants.NICK_NAME_HEADER);
-
-
+                if(nickName!=null){
+                    nickName= URLUtil.decode(nickName);
+                }
 
                 String[] tenantIds = StringUtils.split(request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
 
