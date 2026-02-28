@@ -27,7 +27,6 @@ import java.util.Map;
  */
 public class UserFeignInterceptor implements RequestInterceptor {
 
-    private static final Logger LOGGER= LoggerFactory.getLogger(UserFeignInterceptor.class);
     @Override
     public void apply(RequestTemplate requestTemplate) {
 
