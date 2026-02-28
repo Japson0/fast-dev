@@ -36,10 +36,7 @@ public class EnumDeserializer extends DicDeserializerFormat<ComEnum> implements 
     public ComEnum deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 
         Object value = getValue(p);
-        if (value == null) return null;
-        if (value == "" && ctxt.isEnabled(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)) {
-            return null;
-        }
+        if (value == null||"".equals(value)) return null;
         for (ComEnum c : targetEnum.getEnumConstants()) {
             if (value.equals(c.getValue().toString())) {
                 return c;
@@ -54,6 +51,9 @@ public class EnumDeserializer extends DicDeserializerFormat<ComEnum> implements 
     }
 
     public String values() {
+
+
+
         ComEnum[] enums = targetEnum.getEnumConstants();
         StringBuilder str = new StringBuilder(enums.length * 4);
 
