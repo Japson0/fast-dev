@@ -89,7 +89,7 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
             Long schoolId = (Long) invocation.getObjectAttachment(AuthConstants.SCHOOL_ID_HEADER);
             String nickName = (String) invocation.getObjectAttachment(AuthConstants.NICK_NAME_HEADER);
             Collection<String> roles =(Collection<String>) invocation.getObjectAttachment(AuthConstants.ROLE_HEADER);
-            UserContext.setUserInfo(new UserWrapper((Long) userId,nickName, username, tenantId, schoolId, roles));
+            UserContext.setUserInfo(new UserWrapper((Long) userId, username, tenantId, schoolId, roles));
         }
     }
 

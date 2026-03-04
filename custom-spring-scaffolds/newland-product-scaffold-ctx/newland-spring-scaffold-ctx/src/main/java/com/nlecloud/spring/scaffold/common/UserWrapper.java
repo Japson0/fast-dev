@@ -21,10 +21,6 @@ public class UserWrapper extends UserInfo {
 
     private String username;
 
-    /**
-     * 用户名称
-     */
-    private String nickName;
 
     private Long tenantId;
 
@@ -62,17 +58,16 @@ public class UserWrapper extends UserInfo {
 //        }
 //    }
 
-    public UserWrapper(Long userId, String nickName,String username,Long tenantId) {
-        this(userId,nickName,username,tenantId,tenantId, Collections.EMPTY_SET);
+    public UserWrapper(Long userId, String username,Long tenantId) {
+        this(userId,username,tenantId,tenantId, Collections.EMPTY_SET);
     }
 
-    public UserWrapper(Long userId,String nickName, String username,Long schoolId,Collection<String> roles) {
-        this(userId, nickName,username, schoolId,schoolId,roles);
+    public UserWrapper(Long userId,String username,Long schoolId,Collection<String> roles) {
+        this(userId,username, schoolId,schoolId,roles);
     }
 
-    public UserWrapper(Long userId,String nickName, String username,Long tenantId,Long schoolId,Collection<String> roles) {
+    public UserWrapper(Long userId,String username,Long tenantId,Long schoolId,Collection<String> roles) {
         this.userId = userId;
-        this.nickName=nickName;
         this.username = username;
         this.tenantId=tenantId;
         this.schoolId=schoolId;
@@ -80,9 +75,8 @@ public class UserWrapper extends UserInfo {
     }
 
 
-    public UserWrapper(Long userId,String nickName, String username,Long tenantId,Long schoolId,Collection<String> roles,String token) {
+    public UserWrapper(Long userId,String username,Long tenantId,Long schoolId,Collection<String> roles,String token) {
         this.userId = userId;
-        this.nickName=nickName;
         this.username = username;
         this.tenantId=tenantId;
         this.schoolId=schoolId;
@@ -236,14 +230,15 @@ public class UserWrapper extends UserInfo {
         getUserInfo().setPhone(phone);
     }
 
+
     @Override
     public String getNickName() {
-        return nickName;
+        return userInfo.getNickName();
     }
 
     @Override
     public void setNickName(String nickName) {
-        this.nickName = nickName;
+        userInfo.setNickName(nickName);
     }
 
     private UserInfo getUserInfo() {
