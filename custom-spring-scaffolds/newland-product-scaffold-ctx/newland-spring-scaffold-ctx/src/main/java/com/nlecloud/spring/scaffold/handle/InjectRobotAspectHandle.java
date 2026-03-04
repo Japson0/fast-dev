@@ -19,7 +19,7 @@ public class InjectRobotAspectHandle {
     public Object doAround(ProceedingJoinPoint joinPoint,InjectRobot injectRobot) throws Throwable {
         try {
             if(injectRobot.update()){
-                UserContext.setUserInfo(new UserWrapper(injectRobot.userId(),null, injectRobot.username(), injectRobot.tenantId()));
+                UserContext.setUserInfo(new UserWrapper(injectRobot.userId(), injectRobot.username(), injectRobot.tenantId()));
             }else{
                 UserContext.setUserInfo(UserContext.getRobotUser());
             }

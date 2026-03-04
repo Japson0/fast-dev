@@ -205,4 +205,6 @@ public class UserInfo implements Serializable {
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
+
+
 }

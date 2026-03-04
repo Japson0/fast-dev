@@ -17,6 +17,7 @@ import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Enumeration;
 
@@ -42,10 +43,6 @@ public class UserInterceptor implements CustomInterceptor {
                 String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
                 String currentId = request.getHeader(AuthConstants.CURRENT_TENANT_ID_HEADER);
                 String roleStr = request.getHeader(AuthConstants.ROLE_HEADER);
-                String nickName = request.getHeader(AuthConstants.NICK_NAME_HEADER);
-                if(nickName!=null){
-                    nickName= URLUtil.decode(nickName);
-                }
 
                 String[] tenantIds = StringUtils.split(request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
 
@@ -63,7 +60,7 @@ public class UserInterceptor implements CustomInterceptor {
                     }
 
                 }
-                UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),nickName,
+                UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
                         username, veryCurrentTenantId == null ? 0L : Long.valueOf(veryCurrentTenantId),
                         StringUtils.isNotEmpty(schoolId) ? Long.valueOf(schoolId) : null,
                         StringUtils.isNotEmpty(roleStr) ? CollectionUtil.newHashSet(StringUtils.split(roleStr, ",")) : Collections.EMPTY_SET,

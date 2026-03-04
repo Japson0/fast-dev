@@ -75,11 +75,6 @@ public class NewLandSpringProperty {
         @Deprecated
         private boolean logger = false;
 
-
-        /**
-         * 代理转发
-         */
-        private String forwardAddr;
         /**
          * 注入用户
          */
@@ -117,15 +112,6 @@ public class NewLandSpringProperty {
 
         public void setEnable(boolean enable) {
             this.enable = enable;
-        }
-
-
-        public String getForwardAddr() {
-            return forwardAddr;
-        }
-
-        public void setForwardAddr(String forwardAddr) {
-            this.forwardAddr = forwardAddr;
         }
 
         public static class DebugUser extends UserInfo {}

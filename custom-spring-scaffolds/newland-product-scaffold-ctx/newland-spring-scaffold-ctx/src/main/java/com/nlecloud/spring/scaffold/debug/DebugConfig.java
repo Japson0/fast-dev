@@ -33,12 +33,6 @@ public class DebugConfig{
 
     @Bean
     @ConditionalOnProperty(prefix ="nlecloud.product.debug", name = "forward-addr")
-    public FeignDebugForward feignDebugForward(){
-        return new FeignDebugForward(newLandSpringProperty.getDebug().getForwardAddr());
-    }
-
-    @Bean
-    @ConditionalOnProperty(prefix ="nlecloud.product.debug", name = "forward-addr")
     public Client feignClient() {
         return new Client.Default(null, null);  // 直接 HTTP 调用，不走 LB
     }
