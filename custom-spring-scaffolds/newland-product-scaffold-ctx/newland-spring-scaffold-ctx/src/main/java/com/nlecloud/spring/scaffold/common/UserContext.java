@@ -5,6 +5,7 @@ package com.nlecloud.spring.scaffold.common;
 import com.nlecloud.spring.annotation.UserInfo;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * <P><B>用户工具类:</B></P>
@@ -27,7 +28,6 @@ public class UserContext {
     public static UserWrapper getRobotUser() {
         return  robotUser;
     }
-
 
     private UserContext() {
     }

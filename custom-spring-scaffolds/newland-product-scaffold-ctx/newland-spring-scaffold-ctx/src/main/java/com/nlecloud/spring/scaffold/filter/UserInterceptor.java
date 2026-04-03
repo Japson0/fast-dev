@@ -11,6 +11,8 @@ import net.github.fastdev.boot.handle.CustomInterceptor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.HeaderUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.HandlerMethod;
@@ -31,6 +33,7 @@ import java.util.Enumeration;
  */
 public class UserInterceptor implements CustomInterceptor {
 
+    private static final Logger LOGGER= LoggerFactory.getLogger(UserInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -57,8 +60,10 @@ public class UserInterceptor implements CustomInterceptor {
                                 break;
                             }
                         }
+                        veryCurrentTenantId=veryCurrentTenantId==null?tenantIds[0]:veryCurrentTenantId;
                     }
-
+                }else{
+                    LOGGER.warn("用户：{} 不存在租户",userId);
                 }
                 UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
                         username, veryCurrentTenantId == null ? 0L : Long.valueOf(veryCurrentTenantId),

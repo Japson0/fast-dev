@@ -21,6 +21,7 @@ import java.util.Collections;
  * @author Japson Huang
  * @version1.0
  */
+
 public class UserFilter implements WebFilter {
 
     @Override
@@ -47,8 +48,9 @@ public class UserFilter implements WebFilter {
                             break;
                         }
                     }
-                }
+                    veryCurrentTenantId=veryCurrentTenantId==null?tenantIds[0]:veryCurrentTenantId;
 
+                }
             }
             return chain.filter(exchange).contextWrite(new UserWrapper(Long.valueOf(userId),username,Long.valueOf(veryCurrentTenantId),
                     StringUtils.isNotEmpty(roleStr) ? CollectionUtil.newHashSet(StringUtils.split(roleStr,",")) :Collections.EMPTY_SET
