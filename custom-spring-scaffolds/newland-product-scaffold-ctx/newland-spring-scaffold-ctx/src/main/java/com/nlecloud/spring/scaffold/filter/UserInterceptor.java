@@ -53,6 +53,8 @@ public class UserInterceptor implements CustomInterceptor {
                                 break;
                             }
                         }
+                        veryCurrentTenantId=veryCurrentTenantId==null?tenantIds[0]:veryCurrentTenantId;
+
                     }
                 }
                 UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),

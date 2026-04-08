@@ -1,10 +1,12 @@
 package com.nlecloud.spring.webflux.scaffold;
 
 import com.nlecloud.spring.webflux.scaffold.filter.UserFilter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 
 /**
  * <P><B>配置:</B></P>
@@ -17,7 +19,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan(basePackages = {"cn.hutool.extra.spring"})
-@Import(RedisConfig.class)
 public class NewLandWebFluxConfig {
 
     @Bean
@@ -35,5 +36,12 @@ public class NewLandWebFluxConfig {
      */
     public CustomAcceptHeaderLocaleResolver customAcceptHeaderLocaleResolver(){
         return new CustomAcceptHeaderLocaleResolver();
+    }
+
+
+    @Bean
+    @ConditionalOnBean(ReactiveRedisConnectionFactory.class)
+    public RedisConfig redisConfig(){
+        return new RedisConfig();
     }
 }
