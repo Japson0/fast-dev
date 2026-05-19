@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+  application:
+    name: demo
+  config:
+    import:
+      - nacos:${spring.application.name}.yaml?group=AGI_GROUP
+      - nacos:dify-config.yaml?group=AGI_GROUP
+      - nacos:spring-common.yaml
+      - nacos:dubbo-config.yaml
+      - nacos:rocket-mq.yaml
+      - nacos:redis-storage.yml
+      - nacos:xxl-job.yaml
+

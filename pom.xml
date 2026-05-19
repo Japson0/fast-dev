@@ -20,7 +20,6 @@
         <module>spring-cache-ctx</module>
         <module>spring-scaffold</module>
         <module>spring-swagger-ctx</module>
-        <module>archetype/spring-cloud-archetype</module>
         <module>custom-component</module>
         <module>custom-spring-scaffolds</module>
         <module>spring-distributed-lock-ctx</module>
@@ -37,6 +36,7 @@
         <knife4j.version>4.5.0</knife4j.version>
 
     </properties>
+
 
     <dependencyManagement>
 

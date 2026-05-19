@@ -27,7 +27,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>com.necloud</groupId>
             <artifactId>newland-spring-common</artifactId>
@@ -53,8 +52,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-loadbalancer</artifactId>
         </dependency>
-
-
 
         <dependency>
             <groupId>com.nledu.cloud</groupId>
