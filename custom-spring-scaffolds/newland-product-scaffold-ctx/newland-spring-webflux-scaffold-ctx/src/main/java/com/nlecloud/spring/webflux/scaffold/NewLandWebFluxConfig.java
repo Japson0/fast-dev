@@ -1,12 +1,15 @@
 package com.nlecloud.spring.webflux.scaffold;
 
 import com.nlecloud.spring.webflux.scaffold.filter.UserFilter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
+import org.springframework.web.server.i18n.LocaleContextResolver;
 
 /**
  * <P><B>配置:</B></P>
@@ -19,6 +22,7 @@ import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 
 @Configuration
 @ComponentScan(basePackages = {"cn.hutool.extra.spring"})
+@AutoConfigureBefore(WebFluxAutoConfiguration.class)
 public class NewLandWebFluxConfig {
 
     @Bean
@@ -34,7 +38,8 @@ public class NewLandWebFluxConfig {
     /**
      * i18n配置
      */
-    public CustomAcceptHeaderLocaleResolver customAcceptHeaderLocaleResolver(){
+    @Bean
+    public LocaleContextResolver localeContextResolver() {
         return new CustomAcceptHeaderLocaleResolver();
     }
 
