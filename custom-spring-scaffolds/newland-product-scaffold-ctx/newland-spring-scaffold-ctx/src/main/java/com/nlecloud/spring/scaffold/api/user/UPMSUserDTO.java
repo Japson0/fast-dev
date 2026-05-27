@@ -1,6 +1,10 @@
 package com.nlecloud.spring.scaffold.api.user;
 
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author llj
  * @since 2025/5/12 13:41
@@ -45,12 +49,6 @@ public class UPMSUserDTO {
      * 状态
      */
     private Integer status;
-
-
-    /**
-     * 注册IP
-     */
-    private String registerIp;
 
 
     /**
@@ -103,6 +101,16 @@ public class UPMSUserDTO {
     private String professionName;
 
     private String studentNo;
+
+    /**
+     * 租户管理员的租户ID列表
+     */
+    private Set<Long> tenantAdminTenantIds;
+
+    /**
+     * 机构管理员的机构ID列表
+     */
+    private Map<Long,Long> orgAdminOrgIds;
 
     public String getId() {
         return id;
@@ -168,13 +176,6 @@ public class UPMSUserDTO {
         this.status = status;
     }
 
-    public String getRegisterIp() {
-        return registerIp;
-    }
-
-    public void setRegisterIp(String registerIp) {
-        this.registerIp = registerIp;
-    }
 
     public String getLastLoginIp() {
         return lastLoginIp;
@@ -270,5 +271,21 @@ public class UPMSUserDTO {
 
     public void setStudentNo(String studentNo) {
         this.studentNo = studentNo;
+    }
+
+    public Set<Long> getTenantAdminTenantIds() {
+        return tenantAdminTenantIds;
+    }
+
+    public void setTenantAdminTenantIds(Set<Long> tenantAdminTenantIds) {
+        this.tenantAdminTenantIds = tenantAdminTenantIds;
+    }
+
+    public Map<Long, Long> getOrgAdminOrgIds() {
+        return orgAdminOrgIds;
+    }
+
+    public void setOrgAdminOrgIds(Map<Long, Long> orgAdminOrgIds) {
+        this.orgAdminOrgIds = orgAdminOrgIds;
     }
 }
