@@ -4,6 +4,8 @@ import com.nlecloud.spring.annotation.enums.Sex;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <P><B>用户信息:</B></P>
@@ -84,6 +86,17 @@ public class UserInfo implements Serializable {
     private Sex sex;
 
     private String phone;
+
+
+    /**
+     * 租户管理员的租户ID列表
+     */
+    private Set<Long> adminTenant;
+
+    /**
+     * 机构管理员的机构ID列表
+     */
+    private Map<Long,Long> adminOrg;
 
     public Long getUserId() {
         return userId;
@@ -206,5 +219,19 @@ public class UserInfo implements Serializable {
         this.nickName = nickName;
     }
 
+    public Set<Long> getAdminTenant() {
+        return adminTenant;
+    }
 
+    public void setAdminTenant(Set<Long> adminTenant) {
+        this.adminTenant = adminTenant;
+    }
+
+    public Map<Long, Long> getAdminOrg() {
+        return adminOrg;
+    }
+
+    public void setAdminOrg(Map<Long, Long> adminOrg) {
+        this.adminOrg = adminOrg;
+    }
 }

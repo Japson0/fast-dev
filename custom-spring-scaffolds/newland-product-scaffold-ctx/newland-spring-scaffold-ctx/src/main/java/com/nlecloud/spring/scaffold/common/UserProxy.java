@@ -104,6 +104,8 @@ public class UserProxy {
             userInfo.setSex(ComEnum.getEnum(upmsUserDTO.getSex(), Sex.class));
         }
         userInfo.setPhone(upmsUserDTO.getPhone());
+        userInfo.setAdminOrg(upmsUserDTO.getOrgAdminOrgIds());
+        userInfo.setAdminTenant(upmsUserDTO.getTenantAdminTenantIds());
         return userInfo;
     }
 }

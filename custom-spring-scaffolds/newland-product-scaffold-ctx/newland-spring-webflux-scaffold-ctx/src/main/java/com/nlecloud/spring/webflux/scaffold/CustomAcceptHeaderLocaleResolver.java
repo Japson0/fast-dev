@@ -25,7 +25,7 @@ public class CustomAcceptHeaderLocaleResolver implements LocaleContextResolver {
 
     @Override
     public LocaleContext resolveLocaleContext(ServerWebExchange exchange) {
-        String header = exchange.getRequest().getHeaders().getFirst("Accept-Language");
+        String header = exchange.getRequest().getHeaders().getFirst("X-Accept-Language");
         if (header != null) {
             return new SimpleLocaleContext(LocaleUtils.toLocale(header));
         }
