@@ -2,6 +2,7 @@ package com.nlecloud.common.adapter.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.nlecloud.common.constant.SecurityConstants;
+import com.nlecloud.spring.scaffold.common.UserContext;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -73,13 +74,16 @@ public class DateMetaObjectHandler implements MetaObjectHandler {
     }
 
     private String getUserId(){
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if(servletRequestAttributes == null){
-            return "";
-        }
-        HttpServletRequest request = servletRequestAttributes.getRequest();
-        String userId = request.getHeader(SecurityConstants.USER_ID_HEADER);
-        return userId;
+        Long userId = UserContext.getUserId();
+
+        return String.valueOf(userId);
+//        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        if(servletRequestAttributes == null){
+//            return "";
+//        }
+//        HttpServletRequest request = servletRequestAttributes.getRequest();
+//        String userId = request.getHeader(SecurityConstants.USER_ID_HEADER);
+//        return userId;
     }
 
 }
