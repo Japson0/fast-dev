@@ -6,8 +6,8 @@ import com.nlecloud.spring.annotation.UserInfo;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * <P><B>用户工具类:</B></P>
@@ -84,18 +84,28 @@ public class UserContext {
     }
 
     /**
-     *是否是组织管理员
+     *是否机构管理员
      *RevisionTrail:(Date/Author/Description)
-     * 2026年05月27日
+     * 2026年05月29日
      *@author Japson Huang
      *
     */
-    public static Optional<Long> hasOrgAdmin(){
-        if(CollectionUtils.isEmpty(getUserInfo().getAdminOrg())){
-            return Optional.empty();
-        }
-        return Optional.ofNullable(getUserInfo().getAdminOrg().get(getTenantId()));
+    public static boolean isOrgAdmin(){
+        return getUserInfo().getOrgId()!=null;
     }
+
+
+    /**
+     *获取当前机构ID
+     *RevisionTrail:(Date/Author/Description)
+     * 2026年05月29日
+     *@author Japson Huang
+     *
+    */
+    public static Long getOrgId(){
+        return getUserInfo().getOrgId();
+    }
+
 
     public static void setUserInfo(UserInfo userInfo){
         USER_INFO_LOCAL.set(userInfo);

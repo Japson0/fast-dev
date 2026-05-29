@@ -3,9 +3,7 @@ package com.nlecloud.spring.annotation;
 import com.nlecloud.spring.annotation.enums.Sex;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <P><B>用户信息:</B></P>
@@ -50,6 +48,7 @@ public class UserInfo implements Serializable {
      * 角色编码列表
      */
     private Collection<String> roles;
+
 
     /**
      * 班级ID
@@ -96,7 +95,8 @@ public class UserInfo implements Serializable {
     /**
      * 机构管理员的机构ID列表
      */
-    private Map<Long,Long> adminOrg;
+    private Map<Long,List<Long>> tenantOrg;
+
 
     public Long getUserId() {
         return userId;
@@ -227,11 +227,24 @@ public class UserInfo implements Serializable {
         this.adminTenant = adminTenant;
     }
 
-    public Map<Long, Long> getAdminOrg() {
-        return adminOrg;
+    public Map<Long, List<Long>> getTenantOrg() {
+        return tenantOrg;
     }
 
-    public void setAdminOrg(Map<Long, Long> adminOrg) {
-        this.adminOrg = adminOrg;
+    public void setTenantOrg(Map<Long, List<Long>> tenantOrg) {
+        this.tenantOrg = tenantOrg;
     }
+
+
+    public Long getOrgId(){
+        return getManagerOrges().get(0);
+    }
+
+    public List<Long> getManagerOrges(){
+        if(getTenantId()==null){
+            return Collections.EMPTY_LIST;
+        }
+        return getTenantOrg().get(getTenantId());
+    }
+
 }

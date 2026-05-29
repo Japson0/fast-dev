@@ -6,6 +6,7 @@ import com.nlecloud.spring.annotation.enums.Sex;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * <P><B>Description:</B></P>
@@ -239,6 +240,16 @@ public class UserWrapper extends UserInfo {
     @Override
     public void setNickName(String nickName) {
         userInfo.setNickName(nickName);
+    }
+
+    @Override
+    public List<Long> getManagerOrges() {
+        return getUserInfo().getManagerOrges();
+    }
+
+    @Override
+    public Long getOrgId() {
+        return getUserInfo().getOrgId();
     }
 
     private UserInfo getUserInfo() {
