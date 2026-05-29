@@ -1,6 +1,8 @@
 package com.nlecloud.spring.scaffold.common;
 
 import com.nlecloud.spring.annotation.UserInfo;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 /**
  * <P><B>Description:</B></P>
@@ -10,6 +12,8 @@ import com.nlecloud.spring.annotation.UserInfo;
  * @author Japson Huang
  * @version1.0
  */
+@SuperBuilder
+@Getter
 public class CacheUser extends UserInfo {
 
     private long exp;

@@ -1,6 +1,9 @@
 package com.nlecloud.spring.annotation;
 
 import com.nlecloud.spring.annotation.enums.Sex;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.*;
@@ -13,6 +16,8 @@ import java.util.*;
  * @author Japson Huang
  * @version1.0
  */
+@SuperBuilder
+@Getter
 public class UserInfo implements Serializable {
 
     /**
@@ -96,144 +101,6 @@ public class UserInfo implements Serializable {
      * 机构管理员的机构ID列表
      */
     private Map<Long,List<Long>> tenantOrg;
-
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Long getTenantId() {
-        return tenantId==null?schoolId:tenantId;
-    }
-
-
-    public Collection<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<String> roles) {
-        this.roles = roles;
-    }
-
-    public Long getClassId() {
-        return classId;
-    }
-
-    public void setClassId(Long classId) {
-        this.classId = classId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSchoolName() {
-        return schoolName;
-    }
-
-    public void setSchoolName(String schoolName) {
-        this.schoolName = schoolName;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getStudentNo() {
-        return studentNo;
-    }
-
-    public void setStudentNo(String studentNo) {
-        this.studentNo = studentNo;
-    }
-
-    public String getProfessionName() {
-        return professionName;
-    }
-
-    public void setProfessionName(String professionName) {
-        this.professionName = professionName;
-    }
-
-    public Long getSchoolId() {
-        return schoolId;
-    }
-
-    public void setSchoolId(Long schoolId) {
-        this.schoolId = schoolId;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public Sex getSex() {
-        return sex;
-    }
-
-    public void setSex(Sex sex) {
-        this.sex = sex;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public Set<Long> getAdminTenant() {
-        return adminTenant;
-    }
-
-    public void setAdminTenant(Set<Long> adminTenant) {
-        this.adminTenant = adminTenant;
-    }
-
-    public Map<Long, List<Long>> getTenantOrg() {
-        return tenantOrg;
-    }
-
-    public void setTenantOrg(Map<Long, List<Long>> tenantOrg) {
-        this.tenantOrg = tenantOrg;
-    }
 
 
     public Long getOrgId(){
