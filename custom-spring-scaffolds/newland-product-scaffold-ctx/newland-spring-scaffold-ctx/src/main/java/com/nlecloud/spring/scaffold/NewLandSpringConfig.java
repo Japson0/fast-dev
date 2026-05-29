@@ -2,6 +2,9 @@ package com.nlecloud.spring.scaffold;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
+import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
+import com.nlecloud.spring.annotation.api.UserInfoService;
 import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
 import com.nlecloud.spring.scaffold.common.UserProxy;
 import com.nlecloud.spring.scaffold.debug.DebugConfig;
@@ -25,8 +28,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * <P><B>配置:</B></P>
@@ -61,9 +66,11 @@ public class NewLandSpringConfig {
      *
      */
     @Bean
-    public UserProxy userProxy(@Lazy IUPMSUserApi iupmsUserApi, RedisTemplate<String,String> redisTemplate){
-
-        return new UserProxy(iupmsUserApi,redisTemplate);
+    public UserProxy userProxy(@Lazy IUPMSUserApi iupmsUserApi, @Autowired(required = false)UserInfoService userInfoService, RedisTemplate<String,String> redisTemplate){
+        UserInfoService finalService = userInfoService != null
+                ? userInfoService
+                : (id) -> iupmsUserApi.getUserDetailById(id);
+        return new UserProxy(finalService,redisTemplate);
     }
 
 
@@ -123,16 +130,38 @@ public class NewLandSpringConfig {
 
 
     @Bean
-    @ConditionalOnProperty(prefix = "nlecloud.product",name = "tenantEnabled",havingValue = "true")
+    @ConditionalOnProperty(prefix = "nlecloud.product.table-config",name = "tenant-enabled",havingValue = "true")
     public TenantLineHandler tenantLineHandler(){
         Predicate<String> predicate;
-        if(Arrays.isNullOrEmpty(property.getIgnoreTenantTable())){
-            Set<String> objects = new HashSet<>(java.util.Arrays.asList(property.getIgnoreTenantTable()));
-            predicate=f->objects.contains(f);
+        if(Arrays.isNullOrEmpty(property.getTableConfig().getIgnoreTenantTable())){
+            Set<String> tables = java.util.Arrays.stream(property.getTableConfig().getIgnoreTenantTable()).map(String::toUpperCase).collect(Collectors.toSet());
+            predicate=f->tables.contains(f.toUpperCase());
         }else{
             predicate=f->false;
         }
-        return new TenantHandle(predicate);
+        return new TenantHandle(predicate,property.getTableConfig().getTenantColumnName());
+    }
+
+
+    /**
+     *数据权限注入
+     *RevisionTrail:(Date/Author/Description)
+     * 2026年05月29日
+     *@author Japson Huang
+     *
+    */
+    @Bean
+    @ConditionalOnProperty(prefix = "nlecloud.product.table-config",name = "data-permission-enabled",havingValue = "true")
+    public InnerInterceptor OrgPermissionDataInterceptor(){
+        Predicate<String> predicate;
+        if(Arrays.isNullOrEmpty(property.getTableConfig().getIgnoreDataPermissionTable())){
+            Set<String> tables = java.util.Arrays.stream(property.getTableConfig().getIgnoreTenantTable()).map(String::toUpperCase).collect(Collectors.toSet());
+            predicate=f->tables.contains(f.toUpperCase());
+        }else{
+            predicate=f->false;
+        }
+        OrgPermissionDataHandle orgPermissionDataHandle = new OrgPermissionDataHandle(predicate,property.getTableConfig().getOrgColumnName());
+        return new DataPermissionInterceptor(orgPermissionDataHandle);
     }
 
     @Bean

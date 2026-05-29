@@ -1,6 +1,8 @@
 package com.nlecloud.spring.scaffold;
 
 import com.nlecloud.spring.annotation.UserInfo;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -14,13 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "nlecloud.product")
 public class NewLandSpringProperty {
 
-    private boolean tenantEnabled=false;
 
-
-    /**
-     * 租户忽略的表信息
-     */
-    private String[] ignoreTenantTable;
 
     /**
      * 接口权限开关
@@ -30,21 +26,7 @@ public class NewLandSpringProperty {
     private DebugProperty debug;
 
 
-    public boolean isTenantEnabled() {
-        return tenantEnabled;
-    }
-
-    public void setTenantEnabled(boolean tenantEnabled) {
-        this.tenantEnabled = tenantEnabled;
-    }
-
-    public String[] getIgnoreTenantTable() {
-        return ignoreTenantTable;
-    }
-
-    public void setIgnoreTenantTable(String[] ignoreTenantTable) {
-        this.ignoreTenantTable = ignoreTenantTable;
-    }
+    private TableConfigProperty tableConfig;
 
     public DebugProperty getDebug() {
         return debug;
@@ -62,6 +44,52 @@ public class NewLandSpringProperty {
         this.apiPermissionEnabled = apiPermissionEnabled;
     }
 
+    public TableConfigProperty getTableConfig() {
+        return tableConfig;
+    }
+
+    public void setTableConfig(TableConfigProperty tableConfig) {
+        this.tableConfig = tableConfig;
+    }
+
+    @Getter
+    @Setter
+    public static class TableConfigProperty{
+
+        /**
+         * 接口权限开关
+         */
+        private boolean tenantEnabled=false;
+        /**
+         * 租户忽略的表信息
+         */
+        private String[] ignoreTenantTable;
+
+        /**
+         * 租户字段名称
+         */
+        private String tenantColumnName="tenant_id";
+
+        /**
+         * 接口权限开关
+         */
+        private boolean dataPermissionEnabled=false;
+
+        /**
+         * 数据权限忽略表
+         */
+        private String[] ignoreDataPermissionTable;
+
+        /**
+         * 机构字段名称
+         */
+        private String orgColumnName="org_id";
+
+
+    }
+
+    @Getter
+    @Setter
     public static class DebugProperty {
 
         /**
@@ -84,7 +112,7 @@ public class NewLandSpringProperty {
          */
         private boolean injectUser = false;
 
-        private DebugUser userInfo;
+        private UserInfo userInfo;
 
         public boolean isLogger() {
             return logger;
@@ -102,11 +130,11 @@ public class NewLandSpringProperty {
             this.injectUser = injectUser;
         }
 
-        public DebugUser getUserInfo() {
+        public UserInfo getUserInfo() {
             return userInfo;
         }
 
-        public void setUserInfo(DebugUser userInfo) {
+        public void setUserInfo(UserInfo userInfo) {
             this.userInfo = userInfo;
         }
 
@@ -116,15 +144,6 @@ public class NewLandSpringProperty {
 
         public void setEnable(boolean enable) {
             this.enable = enable;
-        }
-
-
-        public String getForwardAddr() {
-            return forwardAddr;
-        }
-
-        public void setForwardAddr(String forwardAddr) {
-            this.forwardAddr = forwardAddr;
         }
 
         public static class DebugUser extends UserInfo {}

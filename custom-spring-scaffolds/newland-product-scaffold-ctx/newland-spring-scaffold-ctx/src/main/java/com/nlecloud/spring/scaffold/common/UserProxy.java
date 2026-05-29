@@ -1,31 +1,19 @@
 package com.nlecloud.spring.scaffold.common;
 
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.RegisteredPayload;
 import com.nlecloud.spring.annotation.UserInfo;
+import com.nlecloud.spring.annotation.api.UserInfoService;
 import com.nlecloud.spring.annotation.enums.Sex;
-import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
-import com.nlecloud.spring.scaffold.api.user.UPMSUserDTO;
+import com.nlecloud.spring.annotation.api.UPMSUserDTO;
 import net.github.fastdev.boot.utils.JacksonUtils;
-import net.github.fastdev.cache.redis.RedisTime;
 import net.github.fastdev.common.model.ComEnum;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.ReturnType;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 
 /**
  * <P><B>Description:</B></P>
@@ -37,15 +25,15 @@ import java.util.Collection;
  */
 public class UserProxy {
 
-    private final IUPMSUserApi iupmsUserApi;
+    private final UserInfoService userinfoService;
 
     private static final String USER_KEY = "USER_INFO:%d";
 
     private final RedisTemplate<String, String> redisTemplate;
 
 
-    public UserProxy(IUPMSUserApi iupmsUserApi, RedisTemplate redisTemplate) {
-        this.iupmsUserApi = iupmsUserApi;
+    public UserProxy(UserInfoService userinfoService, RedisTemplate redisTemplate) {
+        this.userinfoService = userinfoService;
         this.redisTemplate = redisTemplate;
     }
 
@@ -85,7 +73,7 @@ public class UserProxy {
 
 
     private CacheUser getRemoteUserInfo(Long userId) {
-        UPMSUserDTO upmsUserDTO = iupmsUserApi.getUserDetailById(userId.toString());
+        UPMSUserDTO upmsUserDTO = userinfoService.getUserDetailById(userId.toString());
         CacheUser userInfo = new CacheUser();
         userInfo.setUserId(Long.valueOf(upmsUserDTO.getId()));
         userInfo.setUsername(upmsUserDTO.getUsername());
@@ -104,7 +92,7 @@ public class UserProxy {
             userInfo.setSex(ComEnum.getEnum(upmsUserDTO.getSex(), Sex.class));
         }
         userInfo.setPhone(upmsUserDTO.getPhone());
-        userInfo.setAdminOrg(upmsUserDTO.getOrgAdminOrgIds());
+        userInfo.setTenantOrg(upmsUserDTO.getOrgAdminOrgIds());
         userInfo.setAdminTenant(upmsUserDTO.getTenantAdminTenantIds());
         return userInfo;
     }

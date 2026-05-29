@@ -19,8 +19,11 @@ public class TenantHandle implements TenantLineHandler {
 
     private Predicate<String> ignoreTenantPredicate;
 
-    public TenantHandle(Predicate<String> ignoreTenantPredicate) {
+    private final String columnName;
+
+    public TenantHandle(Predicate<String> ignoreTenantPredicate, String columnName) {
         this.ignoreTenantPredicate = ignoreTenantPredicate;
+        this.columnName = columnName;
     }
 
     @Override
@@ -28,6 +31,10 @@ public class TenantHandle implements TenantLineHandler {
         return new LongValue(UserContext.getUserInfo().getTenantId());
     }
 
+    @Override
+    public String getTenantIdColumn() {
+        return columnName;
+    }
 
     @Override
     public boolean ignoreTable(String tableName) {

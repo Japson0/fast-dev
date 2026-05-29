@@ -1,4 +1,4 @@
-package com.nlecloud.spring.scaffold.api.user;
+package com.nlecloud.spring.annotation.api;
 
 
 import java.util.List;
@@ -110,7 +110,7 @@ public class UPMSUserDTO {
     /**
      * 机构管理员的机构ID列表
      */
-    private Map<Long,Long> orgAdminOrgIds;
+    private Map<Long,List<Long>> orgAdminOrgIds;
 
     public String getId() {
         return id;
@@ -281,11 +281,11 @@ public class UPMSUserDTO {
         this.tenantAdminTenantIds = tenantAdminTenantIds;
     }
 
-    public Map<Long, Long> getOrgAdminOrgIds() {
+    public Map<Long, List<Long>> getOrgAdminOrgIds() {
         return orgAdminOrgIds;
     }
 
-    public void setOrgAdminOrgIds(Map<Long, Long> orgAdminOrgIds) {
+    public void setOrgAdminOrgIds(Map<Long, List<Long>> orgAdminOrgIds) {
         this.orgAdminOrgIds = orgAdminOrgIds;
     }
 }
