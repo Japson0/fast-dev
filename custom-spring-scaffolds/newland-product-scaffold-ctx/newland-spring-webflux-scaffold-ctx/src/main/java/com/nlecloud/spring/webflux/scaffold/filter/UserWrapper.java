@@ -1,7 +1,9 @@
 package com.nlecloud.spring.webflux.scaffold.filter;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nlecloud.spring.annotation.UserInfo;
+import com.nlecloud.spring.annotation.UserInfoImpl;
 import com.nlecloud.spring.webflux.scaffold.user.UserProxy;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -11,6 +13,7 @@ import reactor.util.context.ContextView;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * <P><B>Description:</B></P>
@@ -36,7 +39,7 @@ public class UserWrapper  {
 
     private UserProxy userProxy;
 
-    private Mono<UserInfo> userInfo;
+    private Mono<UserInfoImpl> userInfo;
 
     private String token;
 
@@ -140,7 +143,7 @@ public class UserWrapper  {
      *
      */
     public  Mono<Boolean> isTenantAdmin(){
-        return getUserInfo().map(user -> !CollectionUtils.isEmpty(user.getAdminTenant())
+        return getUserInfoImpl().map(user -> !CollectionUtils.isEmpty(user.getAdminTenant())
                 && user.getAdminTenant().contains(getTenantId()));
     }
 
@@ -152,15 +155,25 @@ public class UserWrapper  {
      *
      */
     public  Mono<Boolean> isOrgAdmin(){
-        return getUserInfo().map(user -> user.getOrgId() != null);
+        return getManagerOrges().map(orges->!orges.isEmpty());
     }
 
-    public Mono<UserInfo> getUserInfoMono() {
-        return getUserInfo();
+    public Mono<Long> getOrgId() {
+        return getManagerOrges().map(orges->orges.isEmpty()?null: orges.get(0));
     }
 
+    public Mono<List<Long>> getManagerOrges(){
+        return getUserInfoImpl().map(user->{
+            if(this.tenantId==null||user.getTenantOrg().isEmpty()){
+                return Collections.EMPTY_LIST;
+            }
+            List<Long> orges = user.getTenantOrg().get(this.tenantId);
+            return orges==null?Collections.EMPTY_LIST:orges;
+        });
 
-    private Mono<UserInfo> getUserInfo() {
+    }
+
+    private Mono<UserInfoImpl> getUserInfoImpl() {
         if(userInfo == null){
               this.userInfo = StringUtils.startsWithIgnoreCase(token, "Bearer ")
                       ? checkUserProxy().getUserInfo(this.userId, token.substring("Bearer ".length())).cache()

@@ -5,6 +5,7 @@ import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.RegisteredPayload;
 import com.alibaba.nacos.common.utils.JacksonUtils;
 import com.nlecloud.spring.annotation.UserInfo;
+import com.nlecloud.spring.annotation.UserInfoImpl;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
@@ -36,7 +37,7 @@ public class UserProxy {
 
 
 
-    public Mono<UserInfo> getUserInfo(Long userId, String jwtToken) {
+    public Mono<UserInfoImpl> getUserInfo(Long userId, String jwtToken) {
         String cacheKey = String.format(USER_KEY, userId);
         JWT jwt = JWTUtil.parseToken(jwtToken);
         long iat =((Number) jwt.getPayload(RegisteredPayload.ISSUED_AT)).longValue();
@@ -51,7 +52,7 @@ public class UserProxy {
                 .switchIfEmpty(cacheUser(cacheKey, userId, iat, exp));
     }
 
-    public Mono<UserInfo> getUserInfo(Long userId) {
+    public Mono<UserInfoImpl> getUserInfo(Long userId) {
         String cacheKey = String.format(USER_KEY, userId);
         return redisTemplate.opsForValue().get(cacheKey)
                 .cast(String.class)
@@ -60,7 +61,7 @@ public class UserProxy {
                 .switchIfEmpty(cacheUser(cacheKey, userId, null, null));
     }
 
-    private Mono<UserInfo> cacheUser(String cacheKey, Long userId, Long iat, Long exp) {
+    private Mono<UserInfoImpl> cacheUser(String cacheKey, Long userId, Long iat, Long exp) {
         return getRemoteUserInfo(userId)
                 .flatMap(userInfo -> {
                     CacheUser cacheUser = iat == null || exp == null ? new CacheUser(userInfo) : new CacheUser(userInfo, iat, exp);
@@ -72,8 +73,8 @@ public class UserProxy {
     }
 
 
-    private Mono<UserInfo> getRemoteUserInfo(Long userId) {
-        return userinfoService.getUserDetailById(userId).cast(UserInfo.class);
+    private Mono<UserInfoImpl> getRemoteUserInfo(Long userId) {
+        return userinfoService.getUserDetailById(userId);
     }
 
 }
