@@ -166,7 +166,7 @@ public class NewLandSpringConfig {
         }else{
             predicate=f->false;
         }
-        OrgPermissionDataHandle orgPermissionDataHandle = new OrgPermissionDataHandle(predicate,property.getTableConfig().getOrgColumnName());
+        OrgPermissionDataHandle orgPermissionDataHandle = new OrgPermissionDataHandle(predicate,property.getTableConfig().getOrgColumnName(),property.getTableConfig().getCreatePersonColumnName());
         return new DataPermissionInterceptor(orgPermissionDataHandle);
     }
 
