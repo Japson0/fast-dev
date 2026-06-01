@@ -4,7 +4,12 @@ import com.baomidou.mybatisplus.extension.plugins.handler.MultiDataPermissionHan
 import com.nlecloud.spring.scaffold.common.UserContext;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.LongValue;
+import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
+import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
+import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import org.springframework.util.CollectionUtils;
 
@@ -24,35 +29,28 @@ public class OrgPermissionDataHandle implements MultiDataPermissionHandler {
 
     private Predicate<String> ignoreTenantPredicate;
 
-    private  final String columnName;
+    private final String orgColumn;
 
-    private static final String NO_DATA_PERMISSION = "1 = 0";
+    private final String createPersonColumn;
 
-    public OrgPermissionDataHandle(Predicate<String> ignoreTenantPredicate,String columnName) {
+    public OrgPermissionDataHandle(Predicate<String> ignoreTenantPredicate, String orgColumn, String createPersonColumn) {
         this.ignoreTenantPredicate = ignoreTenantPredicate;
-        this.columnName=columnName;
+        this.orgColumn = orgColumn;
+        this.createPersonColumn = createPersonColumn;
     }
 
     @Override
     public Expression getSqlSegment(Table table, Expression where, String mappedStatementId) {
-        if(ignoreTenantPredicate.test(table.getName())||UserContext.isTenantAdmin()){
+        if (ignoreTenantPredicate.test(table.getName()) || UserContext.isTenantAdmin()) {
             return null;
         }
 
         List<Long> dataOrg = UserContext.getUserInfo().getManagerOrges();
         if (CollectionUtils.isEmpty(dataOrg)) {
-            return parseCondition(NO_DATA_PERMISSION);
+            return new EqualsTo(new Column(table,createPersonColumn), new LongValue(UserContext.getUserId()));
         }
-        String tableName = table.getAlias() == null ? table.getFullyQualifiedName() : table.getAlias().getName();
-        String orgIds = dataOrg.stream().map(String::valueOf).collect(Collectors.joining(","));
-        return parseCondition(tableName + "." + columnName + " IN (" + orgIds + ")");
+
+        return new InExpression(new Column(table,orgColumn),new ExpressionList(dataOrg.stream().map(LongValue::new).collect(Collectors.toList())));
     }
 
-    private Expression parseCondition(String sqlSegment) {
-        try {
-            return CCJSqlParserUtil.parseCondExpression(sqlSegment);
-        } catch (JSQLParserException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
