@@ -20,8 +20,7 @@ import java.io.Serializable;
 @Setter
 public class CacheUser implements Serializable {
 
-    @JsonDeserialize(as = UserInfoImpl.class)
-    private UserInfo userInfo;
+    private UserInfoImpl userInfo;
 
     private long exp;
 
@@ -30,11 +29,11 @@ public class CacheUser implements Serializable {
     public CacheUser() {
     }
 
-    public CacheUser(UserInfo userInfo) {
+    public CacheUser(UserInfoImpl userInfo) {
         this.userInfo = userInfo;
     }
 
-    public CacheUser(UserInfo userInfo, long iat, long exp ) {
+    public CacheUser(UserInfoImpl userInfo, long iat, long exp ) {
         this.userInfo = userInfo;
         this.exp = exp;
         this.iat = iat;
