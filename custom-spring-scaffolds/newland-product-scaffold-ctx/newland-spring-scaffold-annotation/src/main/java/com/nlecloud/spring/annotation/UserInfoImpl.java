@@ -46,6 +46,7 @@ public class UserInfoImpl implements UserInfo {
      * tenantId
      */
     private Long tenantId;
+
     /**
      * 学校名称
      */
@@ -101,27 +102,29 @@ public class UserInfoImpl implements UserInfo {
      * 租户管理员的租户ID列表
      */
     @JsonProperty("tenantAdminTenantIds")
-    private Set<Long> adminTenant;
+    private Set<Long> adminTenant=Collections.EMPTY_SET;
 
     /**
      * 机构管理员的机构ID列表
      */
     @JsonProperty("orgAdminOrgIds")
-    private Map<Long,List<Long>> tenantOrg;
+    private Map<Long,List<Long>> tenantOrg=Collections.EMPTY_MAP;
 
 
     @Override
     @JsonIgnore
     public Long getOrgId() {
-        return tenantOrg.get(getTenantId()).get(0);
+        List<Long> managerOrges = getManagerOrges();
+        return managerOrges.isEmpty()?null:managerOrges.get(0);
     }
 
     @Override
     @JsonIgnore
     public List<Long> getManagerOrges(){
-        if(getTenantId()==null){
+        if(getTenantId()==null||getTenantOrg().isEmpty()){
             return Collections.EMPTY_LIST;
         }
-        return getTenantOrg().get(getTenantId());
+        List<Long> orges = getTenantOrg().get(getTenantId());
+        return orges==null?Collections.EMPTY_LIST:orges;
     }
 }
