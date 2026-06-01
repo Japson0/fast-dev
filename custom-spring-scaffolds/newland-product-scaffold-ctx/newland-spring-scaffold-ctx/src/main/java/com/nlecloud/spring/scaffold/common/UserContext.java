@@ -91,19 +91,8 @@ public class UserContext {
      *
     */
     public static boolean isOrgAdmin(){
-        return getUserInfo().getOrgId()!=null;
-    }
 
-
-    /**
-     *获取当前机构ID
-     *RevisionTrail:(Date/Author/Description)
-     * 2026年05月29日
-     *@author Japson Huang
-     *
-    */
-    public static Long getOrgId(){
-        return getUserInfo().getOrgId();
+        return getUserInfo().getManagerOrges().isEmpty();
     }
 
 
