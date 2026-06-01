@@ -1,6 +1,6 @@
 package com.nlecloud.spring.scaffold;
 
-import com.nlecloud.spring.annotation.UserInfo;
+import com.nlecloud.spring.annotation.UserInfoImpl;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -108,7 +108,7 @@ public class NewLandSpringProperty {
          */
         private boolean injectUser = false;
 
-        private UserInfo userInfo;
+        private UserInfoImpl userInfo;
 
         public boolean isLogger() {
             return logger;
@@ -126,11 +126,11 @@ public class NewLandSpringProperty {
             this.injectUser = injectUser;
         }
 
-        public UserInfo getUserInfo() {
+        public UserInfoImpl getUserInfo() {
             return userInfo;
         }
 
-        public void setUserInfo(UserInfo userInfo) {
+        public void setUserInfo(UserInfoImpl userInfo) {
             this.userInfo = userInfo;
         }
 

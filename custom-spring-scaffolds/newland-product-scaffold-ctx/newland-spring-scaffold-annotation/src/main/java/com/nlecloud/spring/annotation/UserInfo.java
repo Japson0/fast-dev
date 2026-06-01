@@ -1,117 +1,53 @@
 package com.nlecloud.spring.annotation;
 
 import com.nlecloud.spring.annotation.enums.Sex;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.*;
 
 /**
- * <P><B>用户信息:</B></P>
+ * <P><B>Description:</B></P>
  * RevisionTrail:(Date/Author/Description)
- * 2025年04月09日 CREATE
+ * 2026年05月29日 CREATE
  *
  * @author Japson Huang
  * @version1.0
  */
-@SuperBuilder
-@Getter
-public class UserInfo implements Serializable {
+public interface UserInfo extends Serializable {
 
-    /**
-     * 用户ID
-     */
-    private Long userId;
-    /**
-     * 账号信息
-     */
-    private String username;
+    Long getUserId();
 
-    /**
-     * 用户昵称
-     */
-    private String nickName;
+    String getUsername();
 
+    String getNickName();
 
-    /**
-     * 学校ID
-     */
-    private Long schoolId;
+    Long getSchoolId();
 
-    /**
-     * tenantId
-     */
-    private Long tenantId;
-    /**
-     * 学校名称
-     */
-    private String schoolName;
+    Long getTenantId();
 
-    /**
-     * 角色编码列表
-     */
-    private Collection<String> roles;
+    String getSchoolName();
 
+    Collection<String> getRoles();
 
-    /**
-     * 班级ID
-     */
-    private Long classId;
+    Long getClassId();
 
-    /**
-     * 帮班级名称
-     */
-    private String className;
+    String getClassName();
 
-    /**
-     * 学号
-     */
-    private String studentNo;
+    String getStudentNo();
 
-    /**
-     * 专业名称
-     */
-    private String professionName;
-    /**
-     * 又想
-     */
-    private String email;
+    String getProfessionName();
 
-    /**
-     * 头像url
-     */
-    private String avatar;
+    String getEmail();
 
-    /**
-     * 性别
-     */
-    private Sex sex;
+    String getAvatar();
 
-    private String phone;
+    Sex getSex();
 
+    String getPhone();
 
-    /**
-     * 租户管理员的租户ID列表
-     */
-    private Set<Long> adminTenant;
+    Set<Long> getAdminTenant();
 
-    /**
-     * 机构管理员的机构ID列表
-     */
-    private Map<Long,List<Long>> tenantOrg;
+    Long getOrgId();
 
-
-    public Long getOrgId(){
-        return getManagerOrges().get(0);
-    }
-
-    public List<Long> getManagerOrges(){
-        if(getTenantId()==null){
-            return Collections.EMPTY_LIST;
-        }
-        return getTenantOrg().get(getTenantId());
-    }
-
+    List<Long> getManagerOrges();
 }

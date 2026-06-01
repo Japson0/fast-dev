@@ -44,6 +44,7 @@ public class DubboServiceProxy<T> {
                             serviceContext.setObjectAttachment(AuthConstants.USER_ID_HEADER, userWrapper.getUserId());
                             serviceContext.setObjectAttachment(AuthConstants.TENANT_ID_HEADER, userWrapper.getTenantId());
                             serviceContext.setObjectAttachment(AuthConstants.ROLE_HEADER, userWrapper.getRoles());
+                            serviceContext.setObjectAttachment(AuthConstants.SCHOOL_ID_HEADER, userWrapper.getSchoolId());
                         }
 
                         // 4. 恢复 OpenTelemetry 上下文

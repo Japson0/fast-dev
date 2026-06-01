@@ -1,4 +1,4 @@
-package com.nlecloud.spring.scaffold.common;
+package com.nlecloud.spring.webflux.scaffold.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.nlecloud.spring.annotation.UserInfo;
@@ -23,12 +23,12 @@ public class CacheUser implements Serializable {
     @JsonDeserialize(as = UserInfoImpl.class)
     private UserInfo userInfo;
 
-    public CacheUser() {
-    }
-
     private long exp;
 
     private long iat;
+
+    public CacheUser() {
+    }
 
     public CacheUser(UserInfo userInfo) {
         this.userInfo = userInfo;

@@ -1,6 +1,6 @@
 package com.nlecloud.spring.scaffold.api.user;
 
-import com.nlecloud.spring.annotation.api.UPMSUserDTO;
+import com.nlecloud.spring.annotation.UserInfoImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface IUPMSUserApi {
 
     @GetMapping("/api/user/detail/{id}")
-    UPMSUserDTO getUserDetailById(@PathVariable("id") String id);
+    UserInfoImpl getUserDetailById(@PathVariable("id") String id);
 }

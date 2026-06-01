@@ -1,6 +1,8 @@
 package com.nlecloud.spring.annotation.api;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -105,12 +107,14 @@ public class UPMSUserDTO {
     /**
      * 租户管理员的租户ID列表
      */
-    private Set<Long> tenantAdminTenantIds;
+    @JsonProperty("tenantAdminTenantIds")
+    private Set<Long> adminTenant;
 
     /**
      * 机构管理员的机构ID列表
      */
-    private Map<Long,List<Long>> orgAdminOrgIds;
+    @JsonProperty("orgAdminOrgIds")
+    private Map<Long,List<Long>> tenantOrg;
 
     public String getId() {
         return id;
@@ -273,19 +277,5 @@ public class UPMSUserDTO {
         this.studentNo = studentNo;
     }
 
-    public Set<Long> getTenantAdminTenantIds() {
-        return tenantAdminTenantIds;
-    }
 
-    public void setTenantAdminTenantIds(Set<Long> tenantAdminTenantIds) {
-        this.tenantAdminTenantIds = tenantAdminTenantIds;
-    }
-
-    public Map<Long, List<Long>> getOrgAdminOrgIds() {
-        return orgAdminOrgIds;
-    }
-
-    public void setOrgAdminOrgIds(Map<Long, List<Long>> orgAdminOrgIds) {
-        this.orgAdminOrgIds = orgAdminOrgIds;
-    }
 }

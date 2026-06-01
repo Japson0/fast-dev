@@ -28,7 +28,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <fast-dev.version>2.0-SNAPSHOT</fast-dev.version>
+        <fast-dev.version>3.0-SNAPSHOT</fast-dev.version>
         <revision>${fast-dev.version}</revision>
         <spring.version>2.7.18</spring.version>
         <spring-cloud-dependencies.version>2021.0.8</spring-cloud-dependencies.version>

@@ -1,21 +1,12 @@
 package com.nlecloud.spring.scaffold.filter;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.URLUtil;
 import com.nlecloud.spring.annotation.UserInfo;
+import com.nlecloud.spring.annotation.UserInfoImpl;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import net.github.fastdev.boot.utils.JacksonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * <P><B>用户通用拦截器:</B></P>
