@@ -75,6 +75,7 @@ public class NewLandSpringProperty {
          */
         private boolean dataPermissionEnabled=false;
 
+
         /**
          * 数据权限忽略表
          */
@@ -84,6 +85,8 @@ public class NewLandSpringProperty {
          * 机构字段名称
          */
         private String orgColumnName="org_id";
+
+        private String createPersonColumnName="create_person";
 
 
     }
