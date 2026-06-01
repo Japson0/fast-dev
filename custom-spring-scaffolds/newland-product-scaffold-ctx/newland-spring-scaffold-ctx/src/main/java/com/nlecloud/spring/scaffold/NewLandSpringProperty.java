@@ -95,8 +95,6 @@ public class NewLandSpringProperty {
 
         private DebugUserInfo userInfo;
 
-
-        public static class DebugUser extends UserInfo {}
     }
 
 

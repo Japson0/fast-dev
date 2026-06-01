@@ -8,6 +8,6 @@ import org.springframework.web.service.annotation.HttpExchange;
 @HttpExchange(url = "http://nlecloud-upms-user-center-server.upms:19192") // 使用服务名称
 public interface IUPMSUserApi {
 
-    @GetMapping("/api/user/detail/{id}")
+    @GetExchange("/api/user/detail/{id}")
     UserInfoImpl getUserDetailById(@PathVariable("id") String id);
 }
