@@ -29,7 +29,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <fast-dev.version>2.0-jdk17-SNAPSHOT</fast-dev.version>
+        <fast-dev.version>3.0-jdk17-SNAPSHOT</fast-dev.version>
         <revision>${fast-dev.version}</revision>
         <spring.version>3.4.5</spring.version>
         <hutool.version>5.8.38</hutool.version>

@@ -1,6 +1,6 @@
 package com.nlecloud.spring.scaffold.debug;
 
-import com.nlecloud.spring.annotation.UserInfo;
+import com.nlecloud.spring.annotation.UserInfoImpl;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,9 +20,9 @@ import org.springframework.core.Ordered;
 public class UserInjectInterceptor  implements CustomInterceptor {
 
 
-    private final UserInfo userInfo;
+    private final UserInfoImpl userInfo;
 
-    public UserInjectInterceptor(UserInfo userInfo) {
+    public UserInjectInterceptor(UserInfoImpl userInfo) {
         this.userInfo = userInfo;
     }
 

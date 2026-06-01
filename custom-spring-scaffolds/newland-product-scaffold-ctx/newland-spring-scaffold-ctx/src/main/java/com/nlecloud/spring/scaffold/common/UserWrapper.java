@@ -7,6 +7,7 @@ import com.nlecloud.spring.annotation.enums.Sex;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <P><B>Description:</B></P>
@@ -16,7 +17,7 @@ import java.util.List;
  * @author Japson Huang
  * @version1.0
  */
-public class UserWrapper extends UserInfo {
+public class UserWrapper implements UserInfo {
 
     private Long userId;
 
@@ -104,95 +105,54 @@ public class UserWrapper extends UserInfo {
     }
 
 
-    @Override
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     @Override
     public Long getSchoolId() {
         return this.schoolId;
     }
 
-    @Override
-    public void setSchoolId(Long schoolId) {
-        this.schoolId=schoolId;
-    }
 
     @Override
     public Collection<String> getRoles() {
         return this.roles;
     }
 
-    @Override
-    public void setRoles(Collection<String> roles) {
-        this.roles=roles;
-    }
 
     @Override
     public Long getClassId() {
         return getUserInfo().getClassId();
     }
 
-    @Override
-    public void setClassId(Long classId) {
-        getUserInfo().setClassId(classId);
-    }
 
     @Override
     public String getEmail() {
         return getUserInfo().getEmail();
     }
 
-    @Override
-    public void setEmail(String email) {
-        getUserInfo().setEmail(email);
-    }
 
     @Override
     public String getSchoolName() {
         return getUserInfo().getSchoolName();
     }
 
-    @Override
-    public void setSchoolName(String schoolName) {
-        getUserInfo().setSchoolName(schoolName);
-    }
 
     @Override
     public String getClassName() {
         return getUserInfo().getClassName();
     }
 
-    @Override
-    public void setClassName(String className) {
-        getUserInfo().setClassName(className);
-    }
 
     @Override
     public String getStudentNo() {
         return getUserInfo().getStudentNo();
     }
 
-    @Override
-    public void setStudentNo(String studentNo) {
-        getUserInfo().setStudentNo(studentNo);
-    }
 
     @Override
     public String getProfessionName() {
         return getUserInfo().getProfessionName();
     }
 
-    @Override
-    public void setProfessionName(String professionName) {
-        getUserInfo().setProfessionName(professionName);
-    }
 
 
 
@@ -201,25 +161,13 @@ public class UserWrapper extends UserInfo {
         return getUserInfo().getAvatar();
     }
 
-    @Override
-    public void setAvatar(String avatar) {
-        getUserInfo().setAvatar(avatar);
-    }
 
     @Override
     public Sex getSex() {
         return getUserInfo().getSex();
     }
 
-    @Override
-    public void setSex(Sex sex) {
-        getUserInfo().setSex(sex);
-    }
 
-    @Override
-    public void setTenantId(Long tenantId) {
-        getUserInfo().setTenantId(tenantId);
-    }
 
     @Override
     public String getPhone() {
@@ -227,20 +175,16 @@ public class UserWrapper extends UserInfo {
     }
 
     @Override
-    public void setPhone(String phone) {
-        getUserInfo().setPhone(phone);
+    public Set<Long> getAdminTenant() {
+        return getUserInfo().getAdminTenant();
     }
 
 
     @Override
     public String getNickName() {
-        return userInfo.getNickName();
+        return getUserInfo().getNickName();
     }
 
-    @Override
-    public void setNickName(String nickName) {
-        userInfo.setNickName(nickName);
-    }
 
     @Override
     public List<Long> getManagerOrges() {

@@ -5,10 +5,7 @@ import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.RegisteredPayload;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.api.UserInfoService;
-import com.nlecloud.spring.annotation.enums.Sex;
-import com.nlecloud.spring.annotation.api.UPMSUserDTO;
 import net.github.fastdev.boot.utils.JacksonUtils;
-import net.github.fastdev.common.model.ComEnum;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 
@@ -27,7 +24,7 @@ public class UserProxy {
 
     private final UserInfoService userinfoService;
 
-    private static final String USER_KEY = "USER_INFO:%d";
+    private static final String USER_KEY = "USER_INFO_KEY:%d";
 
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -45,7 +42,7 @@ public class UserProxy {
         long exp =((Number) jwt.getPayload(RegisteredPayload.EXPIRES_AT)).longValue();
         if (StringUtils.hasText(userJson)) {
             CacheUser cacheUser = JacksonUtils.toBean(userJson, CacheUser.class);
-            return iat>cacheUser.getIat()? cacheUser(cacheKey, userId, iat, exp) : cacheUser;
+            return iat>cacheUser.getIat()? cacheUser(cacheKey, userId, iat, exp) : cacheUser.getUserInfo();
         } else {
             return cacheUser(cacheKey, userId, iat, exp);
         }
@@ -55,45 +52,24 @@ public class UserProxy {
         String cacheKey = String.format(USER_KEY, userId);
         String userJson = redisTemplate.opsForValue().get(cacheKey);
         if (userJson != null) {
-            return JacksonUtils.toBean(userJson, CacheUser.class);
+            return JacksonUtils.toBean(userJson, CacheUser.class).getUserInfo();
         } else {
-            CacheUser remoteUserInfo = getRemoteUserInfo(userId);
-            redisTemplate.opsForValue().set(cacheKey, JacksonUtils.toJson(remoteUserInfo), Duration.ofDays(1));
+            UserInfo remoteUserInfo = getRemoteUserInfo(userId);
+            redisTemplate.opsForValue().set(cacheKey, JacksonUtils.toJson(new CacheUser(remoteUserInfo)), Duration.ofDays(1));
             return remoteUserInfo;
         }
     }
 
     private UserInfo cacheUser(String cacheKey, Long userId, Long iat, Long exp) {
-        CacheUser remoteUserInfo = getRemoteUserInfo(userId);
-        remoteUserInfo.setIat(iat);
-        remoteUserInfo.setExp(exp);
-        redisTemplate.opsForValue().set(cacheKey, JacksonUtils.toJson(remoteUserInfo), Duration.of(exp - iat, ChronoUnit.SECONDS));
-        return remoteUserInfo;
+        UserInfo userInfo = getRemoteUserInfo(userId);
+        CacheUser cacheUser=new CacheUser(userInfo,iat,exp);
+        redisTemplate.opsForValue().set(cacheKey, JacksonUtils.toJson(cacheUser), Duration.of(exp - iat, ChronoUnit.SECONDS));
+        return cacheUser.getUserInfo();
     }
 
 
-    private CacheUser getRemoteUserInfo(Long userId) {
-        UPMSUserDTO upmsUserDTO = userinfoService.getUserDetailById(userId.toString());
-        CacheUser userInfo = new CacheUser();
-        userInfo.setUserId(Long.valueOf(upmsUserDTO.getId()));
-        userInfo.setUsername(upmsUserDTO.getUsername());
-        if (StringUtils.hasText(upmsUserDTO.getClassId())) {
-            userInfo.setClassId(Long.valueOf(upmsUserDTO.getClassId()));
-            userInfo.setClassName(upmsUserDTO.getClassName());
-        }
-        if (StringUtils.hasText(upmsUserDTO.getCollegeId())) {
-            userInfo.setSchoolId(Long.valueOf(upmsUserDTO.getCollegeId()));
-            userInfo.setSchoolName(upmsUserDTO.getCollegeName());
-        }
-        userInfo.setProfessionName(upmsUserDTO.getProfessionName());
-        userInfo.setNickName(upmsUserDTO.getName());
-        userInfo.setStudentNo(upmsUserDTO.getStudentNo());
-        if (upmsUserDTO.getSex() != null) {
-            userInfo.setSex(ComEnum.getEnum(upmsUserDTO.getSex(), Sex.class));
-        }
-        userInfo.setPhone(upmsUserDTO.getPhone());
-        userInfo.setTenantOrg(upmsUserDTO.getOrgAdminOrgIds());
-        userInfo.setAdminTenant(upmsUserDTO.getTenantAdminTenantIds());
-        return userInfo;
+    private UserInfo getRemoteUserInfo(Long userId) {
+        return userinfoService.getUserDetailById(userId.toString());
     }
+
 }

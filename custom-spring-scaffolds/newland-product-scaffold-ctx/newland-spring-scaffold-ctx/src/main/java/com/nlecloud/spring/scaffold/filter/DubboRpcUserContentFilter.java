@@ -2,6 +2,7 @@
 package com.nlecloud.spring.scaffold.filter;
 
 import com.nlecloud.spring.annotation.UserInfo;
+import com.nlecloud.spring.annotation.UserInfoImpl;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
@@ -19,9 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * <P><B>dubbo用户信息过滤器:</B></P>

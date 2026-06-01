@@ -6,8 +6,6 @@ import com.nlecloud.spring.annotation.UserInfo;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * <P><B>用户工具类:</B></P>
