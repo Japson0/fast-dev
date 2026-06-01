@@ -1,5 +1,6 @@
 package com.nlecloud.spring.annotation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nlecloud.spring.annotation.enums.Sex;
 
 import java.io.Serializable;
@@ -236,10 +237,13 @@ public class UserInfo implements Serializable {
     }
 
 
+
+    @JsonIgnore
     public Long getOrgId(){
         return getManagerOrges().get(0);
     }
 
+    @JsonIgnore
     public List<Long> getManagerOrges(){
         if(getTenantId()==null){
             return Collections.EMPTY_LIST;
