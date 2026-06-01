@@ -1,6 +1,7 @@
 package com.nlecloud.spring.scaffold.debug;
 
 import com.nlecloud.spring.annotation.UserInfoImpl;
+import com.nlecloud.spring.scaffold.NewLandSpringProperty;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
 import net.github.fastdev.boot.handle.CustomInterceptor;
@@ -19,9 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 public class UserInjectInterceptor  implements CustomInterceptor {
 
 
-    private final UserInfoImpl userInfo;
+    private final NewLandSpringProperty.DebugUserInfo userInfo;
 
-    public UserInjectInterceptor(UserInfoImpl userInfo) {
+    public UserInjectInterceptor(NewLandSpringProperty.DebugUserInfo userInfo) {
         this.userInfo = userInfo;
     }
 

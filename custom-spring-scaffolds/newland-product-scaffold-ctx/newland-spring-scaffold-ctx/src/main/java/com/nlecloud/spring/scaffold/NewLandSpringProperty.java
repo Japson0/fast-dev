@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.Collection;
+
 /**
  * <P><B>Description:</B></P>
  * RevisionTrail:(Date/Author/Description)
@@ -14,6 +16,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @version1.0
  */
 @ConfigurationProperties(prefix = "nlecloud.product")
+@Getter
+@Setter
 public class NewLandSpringProperty {
 
 
@@ -28,29 +32,6 @@ public class NewLandSpringProperty {
 
     private TableConfigProperty tableConfig;
 
-    public DebugProperty getDebug() {
-        return debug;
-    }
-
-    public void setDebug(DebugProperty debug) {
-        this.debug = debug;
-    }
-
-    public boolean isApiPermissionEnabled() {
-        return apiPermissionEnabled;
-    }
-
-    public void setApiPermissionEnabled(boolean apiPermissionEnabled) {
-        this.apiPermissionEnabled = apiPermissionEnabled;
-    }
-
-    public TableConfigProperty getTableConfig() {
-        return tableConfig;
-    }
-
-    public void setTableConfig(TableConfigProperty tableConfig) {
-        this.tableConfig = tableConfig;
-    }
 
     @Getter
     @Setter
@@ -108,40 +89,37 @@ public class NewLandSpringProperty {
          */
         private boolean injectUser = false;
 
-        private UserInfoImpl userInfo;
+        private DebugUserInfo userInfo;
 
-        public boolean isLogger() {
-            return logger;
-        }
-
-        public void setLogger(boolean logger) {
-            this.logger = logger;
-        }
-
-        public boolean isInjectUser() {
-            return injectUser;
-        }
-
-        public void setInjectUser(boolean injectUser) {
-            this.injectUser = injectUser;
-        }
-
-        public UserInfoImpl getUserInfo() {
-            return userInfo;
-        }
-
-        public void setUserInfo(UserInfoImpl userInfo) {
-            this.userInfo = userInfo;
-        }
-
-        public boolean isEnable() {
-            return enable;
-        }
-
-        public void setEnable(boolean enable) {
-            this.enable = enable;
-        }
 
     }
 
+
+    @Getter
+    @Setter
+    public static class DebugUserInfo {
+        /**
+         * 用户ID
+         */
+        private Long userId;
+        /**
+         * 账号信息
+         */
+        private String username;
+
+        /**
+         * 学校ID
+         */
+        private Long schoolId;
+
+        /**
+         * tenantId
+         */
+        private Long tenantId;
+
+        /**
+         * 角色编码列表
+         */
+        private Collection<String> roles;
+    }
 }
