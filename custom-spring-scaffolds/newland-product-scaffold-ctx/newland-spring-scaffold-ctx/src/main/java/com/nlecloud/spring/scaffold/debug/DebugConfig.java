@@ -19,7 +19,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class DebugConfig{
 
 
-    private final   NewLandSpringProperty newLandSpringProperty;
+    private final  NewLandSpringProperty newLandSpringProperty;
 
     public DebugConfig(NewLandSpringProperty newLandSpringProperty) {
         this.newLandSpringProperty = newLandSpringProperty;
