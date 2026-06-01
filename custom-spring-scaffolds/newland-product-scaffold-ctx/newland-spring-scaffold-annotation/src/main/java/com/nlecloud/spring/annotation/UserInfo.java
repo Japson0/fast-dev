@@ -50,6 +50,4 @@ public interface UserInfo extends Serializable {
     Long getOrgId();
 
     List<Long> getManagerOrges();
-
-    Map<Long,List<Long>> getTenantOrg();
 }

@@ -90,7 +90,7 @@ public class UserContext {
     */
     public static boolean isOrgAdmin(){
 
-        return !getUserInfo().getManagerOrges().isEmpty();
+        return getUserInfo().getManagerOrges().isEmpty();
     }
 
 

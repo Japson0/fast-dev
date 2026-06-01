@@ -1,11 +1,13 @@
 package com.nlecloud.spring.scaffold.common;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.Sex;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <P><B>Description:</B></P>
@@ -177,16 +179,22 @@ public class UserWrapper implements UserInfo {
         return getUserInfo().getAdminTenant();
     }
 
-    @Override
-    public Map<Long, List<Long>> getTenantOrg() {
-        return getUserInfo().getTenantOrg();
-    }
+
     @Override
     public String getNickName() {
         return getUserInfo().getNickName();
     }
 
 
+    @Override
+    public List<Long> getManagerOrges() {
+        return getUserInfo().getManagerOrges();
+    }
+
+    @Override
+    public Long getOrgId() {
+        return getUserInfo().getOrgId();
+    }
 
     private UserInfo getUserInfo() {
         if(userInfo == null){
@@ -194,25 +202,6 @@ public class UserWrapper implements UserInfo {
         }
         return userInfo;
     }
-
-
-    @Override
-    @JsonIgnore
-    public Long getOrgId() {
-        List<Long> managerOrges = getManagerOrges();
-        return managerOrges.isEmpty()?null:managerOrges.get(0);
-    }
-
-    @Override
-    @JsonIgnore
-    public List<Long> getManagerOrges(){
-        if(this.tenantId==null||getUserInfo().getTenantOrg().isEmpty()){
-            return Collections.EMPTY_LIST;
-        }
-        List<Long> orges = getUserInfo().getTenantOrg().get(this.tenantId);
-        return orges==null?Collections.EMPTY_LIST:orges;
-    }
-
 
 
     private UserProxy checkUserProxy(){
