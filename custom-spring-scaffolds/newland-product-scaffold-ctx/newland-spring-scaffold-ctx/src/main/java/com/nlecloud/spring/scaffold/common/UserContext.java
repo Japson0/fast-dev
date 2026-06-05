@@ -32,6 +32,10 @@ public class UserContext {
     private UserContext() {
     }
 
+    public static boolean isLogin(){
+        return USER_INFO_LOCAL.get()==null;
+    }
+
     public static void clean() {
         USER_INFO_LOCAL.remove();
     }
