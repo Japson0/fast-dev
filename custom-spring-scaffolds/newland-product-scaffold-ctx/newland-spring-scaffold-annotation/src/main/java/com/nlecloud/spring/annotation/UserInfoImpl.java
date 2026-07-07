@@ -97,6 +97,11 @@ public class UserInfoImpl implements UserInfo {
      */
     private String phone;
 
+    /**
+     * 手机号是否验证
+     */
+    @JsonProperty("realNameVerified")
+    private boolean phoneVerify;
 
     /**
      * 租户管理员的租户ID列表
