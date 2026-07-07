@@ -45,6 +45,8 @@ public interface UserInfo extends Serializable {
 
     String getPhone();
 
+    boolean isPhoneVerify();
+
     Set<Long> getAdminTenant();
 
     Long getOrgId();

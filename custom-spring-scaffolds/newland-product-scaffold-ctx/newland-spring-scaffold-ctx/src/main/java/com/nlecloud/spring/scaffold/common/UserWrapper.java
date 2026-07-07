@@ -173,6 +173,11 @@ public class UserWrapper implements UserInfo {
     }
 
     @Override
+    public boolean isPhoneVerify() {
+        return getUserInfo().isPhoneVerify();
+    }
+
+    @Override
     public Set<Long> getAdminTenant() {
         return getUserInfo().getAdminTenant();
     }

@@ -98,6 +98,18 @@ public class UserContext {
     }
 
 
+    /**
+     *手机号验证
+     *RevisionTrail:(Date/Author/Description)
+     * 2026年07月07日
+     *@author Japson Huang
+     *
+    */
+    public static boolean isPhoneVerify(){
+
+        return getUserInfo().isPhoneVerify();
+    }
+
 
     public static void setUserInfo(UserInfo userInfo){
         USER_INFO_LOCAL.set(userInfo);
