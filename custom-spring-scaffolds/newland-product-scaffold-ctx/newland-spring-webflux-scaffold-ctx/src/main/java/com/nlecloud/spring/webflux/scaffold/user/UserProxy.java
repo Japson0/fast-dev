@@ -6,6 +6,7 @@ import cn.hutool.jwt.RegisteredPayload;
 import com.alibaba.nacos.common.utils.JacksonUtils;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.UserInfoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
@@ -30,7 +31,7 @@ public class UserProxy {
     private final ReactiveRedisTemplate<String, Object> redisTemplate;
 
 
-    public UserProxy(UserInfoService userinfoService, ReactiveRedisTemplate<String, Object> redisTemplate) {
+    public UserProxy(UserInfoService userinfoService,ReactiveRedisTemplate<String, Object> redisTemplate) {
         this.userinfoService = userinfoService;
         this.redisTemplate = redisTemplate;
     }
@@ -38,6 +39,9 @@ public class UserProxy {
 
 
     public Mono<UserInfoImpl> getUserInfo(Long userId, String jwtToken) {
+        if (redisTemplate == null) {
+            return getRemoteUserInfo(userId);
+        }
         String cacheKey = String.format(USER_KEY, userId);
         JWT jwt = JWTUtil.parseToken(jwtToken);
         long iat =((Number) jwt.getPayload(RegisteredPayload.ISSUED_AT)).longValue();
@@ -53,6 +57,9 @@ public class UserProxy {
     }
 
     public Mono<UserInfoImpl> getUserInfo(Long userId) {
+        if (redisTemplate == null) {
+            return getRemoteUserInfo(userId);
+        }
         String cacheKey = String.format(USER_KEY, userId);
         return redisTemplate.opsForValue().get(cacheKey)
                 .cast(String.class)
@@ -64,6 +71,9 @@ public class UserProxy {
     private Mono<UserInfoImpl> cacheUser(String cacheKey, Long userId, Long iat, Long exp) {
         return getRemoteUserInfo(userId)
                 .flatMap(userInfo -> {
+                    if (redisTemplate == null) {
+                        return Mono.just(userInfo);
+                    }
                     CacheUser cacheUser = iat == null || exp == null ? new CacheUser(userInfo) : new CacheUser(userInfo, iat, exp);
                     Duration timeout = iat == null || exp == null ? Duration.ofDays(1) : Duration.of(exp - iat, ChronoUnit.SECONDS);
                     return redisTemplate.opsForValue()

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -47,8 +48,8 @@ public class NewLandWebFluxConfig {
     }
 
     @Bean
-    public UserProxy userProxy(UserInfoService userInfoService, ReactiveRedisTemplate<String, Object> redisTemplate){
-        return new UserProxy(userInfoService, redisTemplate);
+    public UserProxy userProxy(UserInfoService userInfoService, ObjectProvider<ReactiveRedisTemplate<String, Object>> redisTemplate){
+        return new UserProxy(userInfoService, redisTemplate.getIfAvailable());
     }
 
     /**
