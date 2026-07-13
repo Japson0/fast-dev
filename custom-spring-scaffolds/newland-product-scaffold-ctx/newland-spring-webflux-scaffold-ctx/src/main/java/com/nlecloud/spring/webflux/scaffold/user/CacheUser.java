@@ -1,7 +1,5 @@
 package com.nlecloud.spring.webflux.scaffold.user;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.UserInfoImpl;
 import lombok.Getter;
 import lombok.Setter;
