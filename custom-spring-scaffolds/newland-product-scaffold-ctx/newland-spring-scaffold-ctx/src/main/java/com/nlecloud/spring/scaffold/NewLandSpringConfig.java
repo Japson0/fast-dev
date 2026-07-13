@@ -16,6 +16,7 @@ import net.github.fastdev.boot.CustomSpringBootConfig;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
 import org.bouncycastle.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -25,7 +26,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -57,7 +60,16 @@ public class NewLandSpringConfig {
         return new AutoMetaObjectHandle();
     }
 
-
+    @Bean("userCacheRedisTemplate")
+    public RedisTemplate<String, byte[]> userCacheRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, byte[]> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(RedisSerializer.string());
+        template.setValueSerializer(RedisSerializer.byteArray());
+        template.setHashKeySerializer(RedisSerializer.string());
+        template.setHashValueSerializer(RedisSerializer.byteArray());
+        return template;
+    }
     /**
      *用户代理
      *RevisionTrail:(Date/Author/Description)
@@ -66,7 +78,9 @@ public class NewLandSpringConfig {
      *
      */
     @Bean
-    public UserProxy userProxy(@Lazy IUPMSUserApi iupmsUserApi, @Autowired(required = false)UserInfoService userInfoService, RedisTemplate<String,String> redisTemplate){
+    public UserProxy userProxy(@Lazy IUPMSUserApi iupmsUserApi,
+                               @Autowired(required = false) UserInfoService userInfoService,
+                               @Qualifier("userCacheRedisTemplate") RedisTemplate<String, byte[]> redisTemplate) {
         UserInfoService finalService = userInfoService != null
                 ? userInfoService
                 : (id) -> iupmsUserApi.getUserDetailById(id);

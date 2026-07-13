@@ -4,16 +4,20 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.RegisteredPayload;
 import com.nlecloud.spring.annotation.UserInfo;
+import com.nlecloud.spring.annotation.UserInfoImpl;
 import com.nlecloud.spring.annotation.api.UserInfoService;
-import net.github.fastdev.boot.utils.JacksonUtils;
+import io.protostuff.LinkedBuffer;
+import io.protostuff.ProtostuffIOUtil;
+import io.protostuff.Schema;
+import io.protostuff.runtime.RuntimeSchema;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.StringUtils;
+import org.springframework.util.Assert;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+import java.time.Instant;
 
 /**
- * <P><B>Description:</B></P>
+ * <P><B>用户代理服务:</B></P>
  * RevisionTrail:(Date/Author/Description)
  * 2025年04月09日 CREATE
  *
@@ -26,50 +30,85 @@ public class UserProxy {
 
     private static final String USER_KEY = "USER_INFO_KEY:%d";
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private static final Schema<CacheUser> CACHE_USER_SCHEMA = RuntimeSchema.getSchema(CacheUser.class);
 
+    private final RedisTemplate<String, byte[]> redisTemplate;
 
-    public UserProxy(UserInfoService userinfoService, RedisTemplate redisTemplate) {
+    public UserProxy(UserInfoService userinfoService, RedisTemplate<String, byte[]> redisTemplate) {
         this.userinfoService = userinfoService;
         this.redisTemplate = redisTemplate;
     }
 
     public UserInfo getUserInfo(Long userId, String jwtToken) {
         String cacheKey = String.format(USER_KEY, userId);
-        String userJson = redisTemplate.opsForValue().get(cacheKey);
         JWT jwt = JWTUtil.parseToken(jwtToken);
-        long iat =((Number) jwt.getPayload(RegisteredPayload.ISSUED_AT)).longValue();
-        long exp =((Number) jwt.getPayload(RegisteredPayload.EXPIRES_AT)).longValue();
-        if (StringUtils.hasText(userJson)) {
-            CacheUser cacheUser = JacksonUtils.toBean(userJson, CacheUser.class);
-            return iat>cacheUser.getIat()? cacheUser(cacheKey, userId, iat, exp) : cacheUser.getUserInfo();
-        } else {
-            return cacheUser(cacheKey, userId, iat, exp);
+        long iat = ((Number) jwt.getPayload(RegisteredPayload.ISSUED_AT)).longValue();
+        long exp = ((Number) jwt.getPayload(RegisteredPayload.EXPIRES_AT)).longValue();
+        CacheUser cacheUser = getCachedUser(cacheKey);
+        if (cacheUser != null) {
+            return iat > cacheUser.getIat()
+                    ? cacheUser(cacheKey, userId, iat, exp)
+                    : cacheUser.getUserInfo();
         }
+        return cacheUser(cacheKey, userId, iat, exp);
     }
 
     public UserInfo getUserInfo(Long userId) {
         String cacheKey = String.format(USER_KEY, userId);
-        String userJson = redisTemplate.opsForValue().get(cacheKey);
-        if (userJson != null) {
-            return JacksonUtils.toBean(userJson, CacheUser.class).getUserInfo();
-        } else {
-            UserInfo remoteUserInfo = getRemoteUserInfo(userId);
-            redisTemplate.opsForValue().set(cacheKey, JacksonUtils.toJson(new CacheUser(remoteUserInfo)), Duration.ofDays(1));
-            return remoteUserInfo;
-        }
+        CacheUser cacheUser = getCachedUser(cacheKey);
+        return cacheUser != null
+                ? cacheUser.getUserInfo()
+                : cacheUser(cacheKey, userId, null, null);
     }
 
     private UserInfo cacheUser(String cacheKey, Long userId, Long iat, Long exp) {
-        UserInfo userInfo = getRemoteUserInfo(userId);
-        CacheUser cacheUser=new CacheUser(userInfo,iat,exp);
-        redisTemplate.opsForValue().set(cacheKey, JacksonUtils.toJson(cacheUser), Duration.of(exp - iat, ChronoUnit.SECONDS));
+        UserInfoImpl userInfo = getRemoteUserInfo(userId);
+        CacheUser cacheUser = iat == null || exp == null
+                ? new CacheUser(userInfo)
+                : new CacheUser(userInfo, iat, exp);
+        Duration timeout = iat == null || exp == null
+                ? Duration.ofDays(1)
+                : Duration.ofSeconds(exp - Instant.now().getEpochSecond());
+        if (!timeout.isNegative() && !timeout.isZero()) {
+            redisTemplate.opsForValue().set(cacheKey, serialize(cacheUser), timeout);
+        }
         return cacheUser.getUserInfo();
     }
 
-
-    private UserInfo getRemoteUserInfo(Long userId) {
-        return userinfoService.getUserDetailById(userId.toString());
+    private CacheUser getCachedUser(String cacheKey) {
+        byte[] bytes = redisTemplate.opsForValue().get(cacheKey);
+        if (bytes == null || bytes.length == 0) {
+            return null;
+        }
+        try {
+            CacheUser cacheUser = CACHE_USER_SCHEMA.newMessage();
+            ProtostuffIOUtil.mergeFrom(bytes, cacheUser, CACHE_USER_SCHEMA);
+            if (cacheUser.getUserInfo() != null) {
+                return cacheUser;
+            }
+        } catch (RuntimeException exception) {
+            // Values written by the previous JSON serializer are discarded on first read.
+        }
+        redisTemplate.delete(cacheKey);
+        return null;
     }
 
+    private byte[] serialize(CacheUser cacheUser) {
+        LinkedBuffer buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
+        try {
+            return ProtostuffIOUtil.toByteArray(cacheUser, CACHE_USER_SCHEMA, buffer);
+        } finally {
+            buffer.clear();
+        }
+    }
+
+    private UserInfoImpl getRemoteUserInfo(Long userId) {
+        UserInfo userInfo = userinfoService.getUserDetailById(userId.toString());
+        Assert.notNull(userInfo,"用户信息不存在");
+        if (!(userInfo instanceof UserInfoImpl)) {
+            String type = userInfo == null ? "null" : userInfo.getClass().getName();
+            throw new IllegalStateException("Unsupported UserInfo implementation: " + type);
+        }
+        return (UserInfoImpl) userInfo;
+    }
 }

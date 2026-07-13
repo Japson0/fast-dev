@@ -1,7 +1,5 @@
 package com.nlecloud.spring.scaffold.common;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.UserInfoImpl;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +18,7 @@ import java.io.Serializable;
 @Setter
 public class CacheUser implements Serializable {
 
-    @JsonDeserialize(as = UserInfoImpl.class)
-    private UserInfo userInfo;
+    private UserInfoImpl userInfo;
 
     public CacheUser() {
     }
@@ -30,11 +27,11 @@ public class CacheUser implements Serializable {
 
     private long iat;
 
-    public CacheUser(UserInfo userInfo) {
+    public CacheUser(UserInfoImpl userInfo) {
         this.userInfo = userInfo;
     }
 
-    public CacheUser(UserInfo userInfo, long iat, long exp ) {
+    public CacheUser(UserInfoImpl userInfo, long iat, long exp ) {
         this.userInfo = userInfo;
         this.exp = exp;
         this.iat = iat;
