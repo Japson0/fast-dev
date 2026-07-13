@@ -14,10 +14,23 @@
     <properties>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <protostuff.version>1.7.4</protostuff.version>
     </properties>
 
 
     <dependencies>
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-runtime</artifactId>
+            <version>${protostuff.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-core</artifactId>
+            <version>${protostuff.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>

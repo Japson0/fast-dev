@@ -3,16 +3,14 @@ package com.nlecloud.spring.webflux.scaffold;
 import com.nlecloud.spring.webflux.scaffold.filter.UserFilter;
 import com.nlecloud.spring.webflux.scaffold.user.UserInfoService;
 import com.nlecloud.spring.webflux.scaffold.user.UserProxy;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.i18n.LocaleContextResolver;
@@ -26,9 +24,8 @@ import org.springframework.web.server.i18n.LocaleContextResolver;
  * @version1.0
  */
 
-@Configuration
 @ComponentScan(basePackages = {"cn.hutool.extra.spring"})
-@AutoConfigureBefore(WebFluxAutoConfiguration.class)
+@AutoConfiguration(before = WebFluxAutoConfiguration.class)
 public class NewLandWebFluxConfig {
 
     @Bean
@@ -48,9 +45,12 @@ public class NewLandWebFluxConfig {
     }
 
     @Bean
-    public UserProxy userProxy(UserInfoService userInfoService, ObjectProvider<ReactiveRedisTemplate<String, Object>> redisTemplate){
-        return new UserProxy(userInfoService, redisTemplate.getIfAvailable());
+    public UserProxy userProxy(
+            UserInfoService userInfoService,
+            ObjectProvider<ReactiveRedisTemplate<String, byte[]>> redisTemplateProvider) {
+        return new UserProxy(userInfoService, redisTemplateProvider.getIfAvailable());
     }
+
 
     /**
      * i18n配置
@@ -61,9 +61,4 @@ public class NewLandWebFluxConfig {
     }
 
 
-    @Bean
-    @ConditionalOnBean(ReactiveRedisConnectionFactory.class)
-    public RedisConfig redisConfig(){
-        return new RedisConfig();
-    }
 }

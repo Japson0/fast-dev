@@ -173,6 +173,10 @@ public class UserWrapper  {
 
     }
 
+    public Mono<UserInfo> getUserInfo(){
+        return getUserInfoImpl().cast(UserInfo.class);
+    }
+
     private Mono<UserInfoImpl> getUserInfoImpl() {
         if(userInfo == null){
               this.userInfo = StringUtils.startsWithIgnoreCase(token, "Bearer ")

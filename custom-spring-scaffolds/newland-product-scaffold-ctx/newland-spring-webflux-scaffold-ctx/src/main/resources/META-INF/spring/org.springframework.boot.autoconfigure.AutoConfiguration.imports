@@ -1,1 +1,2 @@
 com.nlecloud.spring.webflux.scaffold.NewLandWebFluxConfig
+com.nlecloud.spring.webflux.scaffold.RedisConfig
