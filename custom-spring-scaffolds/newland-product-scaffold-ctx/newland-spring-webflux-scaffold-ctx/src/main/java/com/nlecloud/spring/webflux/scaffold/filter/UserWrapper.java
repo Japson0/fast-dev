@@ -161,6 +161,7 @@ public class UserWrapper  {
         return getManagerOrges().map(orges->orges.isEmpty()?null: orges.get(0));
     }
 
+
     public Mono<List<Long>> getManagerOrges(){
         return getUserInfoImpl().map(user->{
             if(this.tenantId==null||user.getTenantOrg().isEmpty()){
@@ -170,6 +171,10 @@ public class UserWrapper  {
             return orges==null?Collections.EMPTY_LIST:orges;
         });
 
+    }
+
+    public Mono<UserInfo> getUserInfo(){
+        return getUserInfoImpl().cast(UserInfo.class);
     }
 
     private Mono<UserInfoImpl> getUserInfoImpl() {

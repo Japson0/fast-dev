@@ -3,6 +3,7 @@ package com.nlecloud.spring.webflux.scaffold;
 import com.nlecloud.spring.webflux.scaffold.filter.UserFilter;
 import com.nlecloud.spring.webflux.scaffold.user.UserInfoService;
 import com.nlecloud.spring.webflux.scaffold.user.UserProxy;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -26,10 +27,8 @@ import org.springframework.web.server.i18n.LocaleContextResolver;
  * @version1.0
  */
 
-@Configuration
 @ComponentScan(basePackages = {"cn.hutool.extra.spring"})
-@Import(RedisConfig.class)
-@AutoConfigureBefore(WebFluxAutoConfiguration.class)
+@AutoConfiguration(before = WebFluxAutoConfiguration.class)
 public class NewLandWebFluxConfig {
 
     @Bean
@@ -51,7 +50,7 @@ public class NewLandWebFluxConfig {
     @Bean
     public UserProxy userProxy(
             UserInfoService userInfoService,
-            @Qualifier("userCacheReactiveRedisTemplate") ReactiveRedisTemplate<String, byte[]> redisTemplate) {
+            ReactiveRedisTemplate<String, byte[]> redisTemplate) {
         return new UserProxy(userInfoService, redisTemplate);
     }
 
@@ -61,11 +60,5 @@ public class NewLandWebFluxConfig {
     @Bean
     public LocaleContextResolver localeContextResolver() {
         return new CustomAcceptHeaderLocaleResolver();
-    }
-
-    @Bean
-    @ConditionalOnBean(ReactiveRedisConnectionFactory.class)
-    public RedisConfig redisConfig(){
-        return new RedisConfig();
     }
 }

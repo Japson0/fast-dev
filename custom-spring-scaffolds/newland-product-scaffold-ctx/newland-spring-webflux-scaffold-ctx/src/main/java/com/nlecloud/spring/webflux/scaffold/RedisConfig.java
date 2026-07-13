@@ -1,5 +1,9 @@
 package com.nlecloud.spring.webflux.scaffold;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
@@ -8,10 +12,14 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
-@Configuration
+@AutoConfiguration(
+        after = RedisAutoConfiguration.class,
+        before = RedisReactiveAutoConfiguration.class
+)
 public class RedisConfig {
 
     @Bean
+    @ConditionalOnBean(ReactiveRedisConnectionFactory.class)
     public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(
             ReactiveRedisConnectionFactory connectionFactory) {
         RedisSerializer<Object> jsonSerializer = new GenericJackson2JsonRedisSerializer();
@@ -27,6 +35,7 @@ public class RedisConfig {
     }
 
     @Bean("userCacheReactiveRedisTemplate")
+    @ConditionalOnBean(ReactiveRedisConnectionFactory.class)
     public ReactiveRedisTemplate<String, byte[]> userCacheReactiveRedisTemplate(
             ReactiveRedisConnectionFactory connectionFactory) {
         RedisSerializationContext<String, byte[]> context =
