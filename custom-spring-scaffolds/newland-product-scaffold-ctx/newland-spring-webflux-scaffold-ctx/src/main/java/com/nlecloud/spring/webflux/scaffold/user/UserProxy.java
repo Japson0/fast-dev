@@ -26,7 +26,7 @@ public class UserProxy {
 
     private final UserInfoService userinfoService;
 
-    private static final String USER_KEY = "USER_INFO_KEY:%d";
+    private static final String USER_KEY = "USER_INFO_KEY:v1:%d";
 
     private static final Schema<CacheUser> CACHE_USER_SCHEMA = RuntimeSchema.getSchema(CacheUser.class);
 
