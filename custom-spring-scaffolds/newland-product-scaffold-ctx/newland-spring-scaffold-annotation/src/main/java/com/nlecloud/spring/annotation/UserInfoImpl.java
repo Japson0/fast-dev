@@ -55,9 +55,13 @@ public class UserInfoImpl implements UserInfo {
     /**
      * 角色编码列表
      */
+    @Deprecated
     private Collection<String> roles;
 
-
+    /**
+     * 角色列表
+     */
+    private Map<String, Collection<String>> tenantRoleCodeMap;
     /**
      * 班级ID
      */
@@ -131,5 +135,14 @@ public class UserInfoImpl implements UserInfo {
         }
         List<Long> orges = getTenantOrg().get(getTenantId());
         return orges==null?Collections.EMPTY_LIST:orges;
+    }
+
+    @Override
+    public Collection<String> getRoles() {
+        if(tenantRoleCodeMap==null){
+            //兼容旧版本
+            return roles;
+        }
+        return tenantRoleCodeMap.get(getTenantId());
     }
 }
