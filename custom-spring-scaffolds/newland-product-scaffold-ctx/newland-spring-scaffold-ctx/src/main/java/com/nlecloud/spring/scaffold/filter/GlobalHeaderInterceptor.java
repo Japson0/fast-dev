@@ -28,9 +28,6 @@ public class GlobalHeaderInterceptor implements ClientHttpRequestInterceptor {
         if (userInfo != null) {
             HttpHeaders headers = request.getHeaders();
             headers.set(AuthConstants.USER_ID_HEADER, userInfo.getUserId().toString());
-            if(CollectionUtil.isEmpty(userInfo.getRoles())){
-                headers.set(AuthConstants.ROLE_HEADER, String.join(",", userInfo.getRoles()));
-            }
             headers.set(AuthConstants.USER_HEADER, userInfo.getUsername());
             if (userInfo.getSchoolId() != null) {
                 headers.set(AuthConstants.SCHOOL_ID_HEADER, userInfo.getSchoolId().toString());

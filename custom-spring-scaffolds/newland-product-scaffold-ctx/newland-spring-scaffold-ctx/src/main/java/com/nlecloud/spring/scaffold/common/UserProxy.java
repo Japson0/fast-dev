@@ -4,12 +4,14 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.RegisteredPayload;
 import com.nlecloud.spring.annotation.UserInfo;
-import com.nlecloud.spring.annotation.UserInfoImpl;
+import com.nlecloud.spring.annotation.api.UserInfoDetail;
 import com.nlecloud.spring.annotation.api.UserInfoService;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
 
@@ -26,9 +28,10 @@ import java.time.Instant;
  */
 public class UserProxy {
 
+    private static final Logger log = LoggerFactory.getLogger(UserProxy.class);
     private final UserInfoService userinfoService;
 
-    private static final String USER_KEY = "USER_INFO_KEY:v1:%d";
+    private static final String USER_KEY = "USER_INFO_KEY:v2:%d";
 
     private static final Schema<CacheUser> CACHE_USER_SCHEMA = RuntimeSchema.getSchema(CacheUser.class);
 
@@ -39,7 +42,7 @@ public class UserProxy {
         this.redisTemplate = redisTemplate;
     }
 
-    public UserInfo getUserInfo(Long userId, String jwtToken) {
+    public UserInfoDetail getUserInfo(Long userId, String jwtToken) {
         String cacheKey = String.format(USER_KEY, userId);
         JWT jwt = JWTUtil.parseToken(jwtToken);
         long iat = ((Number) jwt.getPayload(RegisteredPayload.ISSUED_AT)).longValue();
@@ -53,7 +56,7 @@ public class UserProxy {
         return cacheUser(cacheKey, userId, iat, exp);
     }
 
-    public UserInfo getUserInfo(Long userId) {
+    public UserInfoDetail getUserInfo(Long userId) {
         String cacheKey = String.format(USER_KEY, userId);
         CacheUser cacheUser = getCachedUser(cacheKey);
         return cacheUser != null
@@ -61,8 +64,8 @@ public class UserProxy {
                 : cacheUser(cacheKey, userId, null, null);
     }
 
-    private UserInfo cacheUser(String cacheKey, Long userId, Long iat, Long exp) {
-        UserInfoImpl userInfo = getRemoteUserInfo(userId);
+    private UserInfoDetail cacheUser(String cacheKey, Long userId, Long iat, Long exp) {
+        UserInfoDetail userInfo = getRemoteUserInfo(userId);
         CacheUser cacheUser = iat == null || exp == null
                 ? new CacheUser(userInfo)
                 : new CacheUser(userInfo, iat, exp);
@@ -87,6 +90,7 @@ public class UserProxy {
                 return cacheUser;
             }
         } catch (RuntimeException exception) {
+            log.error("用户上下文序列化错误",exception);
             // Values written by the previous JSON serializer are discarded on first read.
         }
         redisTemplate.delete(cacheKey);
@@ -102,13 +106,9 @@ public class UserProxy {
         }
     }
 
-    private UserInfoImpl getRemoteUserInfo(Long userId) {
-        UserInfo userInfo = userinfoService.getUserDetailById(userId.toString());
+    private UserInfoDetail getRemoteUserInfo(Long userId) {
+        UserInfoDetail userInfo = userinfoService.getUserDetailById(userId.toString());
         Assert.notNull(userInfo,"用户信息不存在");
-        if (!(userInfo instanceof UserInfoImpl)) {
-            String type = userInfo == null ? "null" : userInfo.getClass().getName();
-            throw new IllegalStateException("Unsupported UserInfo implementation: " + type);
-        }
-        return (UserInfoImpl) userInfo;
+        return userInfo;
     }
 }

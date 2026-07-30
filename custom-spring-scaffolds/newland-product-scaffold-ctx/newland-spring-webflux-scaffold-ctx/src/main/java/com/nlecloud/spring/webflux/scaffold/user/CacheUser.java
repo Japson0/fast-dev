@@ -1,6 +1,6 @@
 package com.nlecloud.spring.webflux.scaffold.user;
 
-import com.nlecloud.spring.annotation.UserInfoImpl;
+import com.nlecloud.spring.annotation.api.UserInfoDetail;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Setter
 public class CacheUser implements Serializable {
 
-    private UserInfoImpl userInfo;
+    private UserInfoDetail userInfo;
 
     private long exp;
 
@@ -27,11 +27,11 @@ public class CacheUser implements Serializable {
     public CacheUser() {
     }
 
-    public CacheUser(UserInfoImpl userInfo) {
+    public CacheUser(UserInfoDetail userInfo) {
         this.userInfo = userInfo;
     }
 
-    public CacheUser(UserInfoImpl userInfo, long iat, long exp ) {
+    public CacheUser(UserInfoDetail userInfo, long iat, long exp ) {
         this.userInfo = userInfo;
         this.exp = exp;
         this.iat = iat;

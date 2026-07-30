@@ -1,7 +1,6 @@
 package com.nlecloud.spring.webflux.scaffold.user;
 
-import com.nlecloud.spring.annotation.UserInfo;
-import com.nlecloud.spring.annotation.UserInfoImpl;
+import com.nlecloud.spring.annotation.api.UserInfoDetail;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -23,10 +22,10 @@ public class UserInfoService {
         this.webClient = webClientBuilder.baseUrl(BASE_URL).build();
     }
 
-    public Mono<UserInfoImpl> getUserDetailById(Long id) {
+    public Mono<UserInfoDetail> getUserDetailById(Long id) {
         return webClient.get()
                 .uri("/api/user/detail/{id}", id)
                 .retrieve()
-                .bodyToMono(UserInfoImpl.class);
+                .bodyToMono(UserInfoDetail.class);
     }
 }

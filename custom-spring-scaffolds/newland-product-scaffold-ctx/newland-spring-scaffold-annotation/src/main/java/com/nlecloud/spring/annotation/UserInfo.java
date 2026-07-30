@@ -3,7 +3,9 @@ package com.nlecloud.spring.annotation;
 import com.nlecloud.spring.annotation.enums.Sex;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <P><B>Description:</B></P>
@@ -21,25 +23,15 @@ public interface UserInfo extends Serializable {
 
     String getNickName();
 
-    Long getSchoolId();
-
     Long getTenantId();
 
-    String getSchoolName();
+    Long getSchoolId();
 
-    Collection<String> getRoles();
+    Set<String> getRoles();
 
-    Long getClassId();
-
-    String getClassName();
-
-    String getStudentNo();
-
-    String getProfessionName();
 
     String getEmail();
 
-    String getAvatar();
 
     Sex getSex();
 
@@ -47,11 +39,11 @@ public interface UserInfo extends Serializable {
 
     boolean isPhoneVerify();
 
-    Set<Long> getAdminTenant();
+    boolean isTenantAdmin();
 
-    Long getOrgId();
+
+    OrgInfo getOrgInfo();
 
     List<Long> getManagerOrges();
 
-    Map<Long,List<Long>> getTenantOrg();
 }

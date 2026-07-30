@@ -1,9 +1,9 @@
 package com.nlecloud.spring.webflux.scaffold.filter;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.UserInfoImpl;
+import com.nlecloud.spring.annotation.api.UserInfoDetail;
 import com.nlecloud.spring.webflux.scaffold.user.UserProxy;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -11,9 +11,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * <P><B>Description:</B></P>
@@ -23,7 +21,7 @@ import java.util.List;
  * @author Japson Huang
  * @version1.0
  */
-public class UserWrapper  {
+public class UserWrapper {
 
     private Long userId;
 
@@ -36,10 +34,9 @@ public class UserWrapper  {
 
     private Collection<String> roles;
 
-
     private UserProxy userProxy;
 
-    private Mono<UserInfoImpl> userInfo;
+    private Mono<UserInfo> cachedUserInfo;
 
     private String token;
 
@@ -47,62 +44,31 @@ public class UserWrapper  {
     private static final String KEY_INFO = "USER_INFO_KEY";
 
     public ContextView getContextView() {
-        return Context.of(KEY_INFO,this);
+        return Context.of(KEY_INFO, this);
     }
 
 
     public static UserWrapper getUserWrapper(ContextView contextView) {
-        return contextView.getOrDefault(KEY_INFO,null);
+        return contextView.getOrDefault(KEY_INFO, null);
     }
 
 
-//    public UserWrapper(HttpHeaders headers){
-//        String userId = headers.getFirst("x-userid-header");
-//        String username = headers.getFirst("x-user-header");
-//        String roles = headers.getFirst("x-role-header");
-//        String tenantId = headers.getFirst("x-school-header");
-//
-//        if(userId!=null) {
-//            this.userId=Long.valueOf(userId);
-//            this.username=username;
-//            //TODO 租户这里有可能没有
-//            this.tenantId=tenantId.split(",");
-//            if (roles != null) {
-//                this.roles = Collections.EMPTY_SET;
-//            } else {
-//                String[] rolesSplit = roles.split(",");
-//                this.roles = new HashSet<>(rolesSplit.length);
-//                for (String role : rolesSplit) {
-//                    this.roles.add(role);
-//                }
-//            }
-//        }
-//    }
-
-    public UserWrapper(Long userId, String username,Long tenantId) {
-        this(userId,username,tenantId,tenantId, Collections.EMPTY_SET);
-    }
-
-    public UserWrapper(Long userId,String username,Long schoolId,Collection<String> roles) {
-        this(userId,username, schoolId,schoolId,roles);
-    }
-
-    public UserWrapper(Long userId,String username,Long tenantId,Long schoolId,Collection<String> roles) {
+    public UserWrapper(Long userId, String username, Long tenantId, Long schoolId) {
         this.userId = userId;
         this.username = username;
-        this.tenantId=tenantId;
-        this.schoolId=schoolId;
-        this.roles=roles;
+        this.tenantId = tenantId;
+        this.schoolId = schoolId;
+        this.roles = roles;
     }
 
 
-    public UserWrapper(Long userId,String username,Long tenantId,Long schoolId,Collection<String> roles,String token) {
+    public UserWrapper(Long userId, String username, Long tenantId, Long schoolId, String token) {
         this.userId = userId;
         this.username = username;
-        this.tenantId=tenantId;
-        this.schoolId=schoolId;
-        this.roles=roles;
-        this.token=token;
+        this.tenantId = tenantId;
+        this.schoolId = schoolId;
+        this.roles = roles;
+        this.token = token;
     }
 
 
@@ -120,74 +86,102 @@ public class UserWrapper  {
     }
 
 
-
     public Long getSchoolId() {
         return this.schoolId;
     }
 
 
-    public Collection<String> getRoles() {
-        return this.roles;
-    }
-
-
-    public  boolean isAdmin(){
-        return getRoles().contains("admin");
+    public Mono<Boolean> isAdmin() {
+        return getUserInfo().map(user -> user.getRoles().contains("admin"));
     }
 
     /**
-     *是否是租户管理员
-     *RevisionTrail:(Date/Author/Description)
+     * 是否是租户管理员
+     * RevisionTrail:(Date/Author/Description)
      * 2026年05月27日
-     *@author Japson Huang
      *
+     * @author Japson Huang
      */
-    public  Mono<Boolean> isTenantAdmin(){
-        return getUserInfoImpl().map(user -> !CollectionUtils.isEmpty(user.getAdminTenant())
-                && user.getAdminTenant().contains(getTenantId()));
+    public Mono<Boolean> isTenantAdmin() {
+        return getUserInfo().map(user -> user.isTenantAdmin());
     }
 
     /**
-     *是否机构管理员
-     *RevisionTrail:(Date/Author/Description)
+     * 是否机构管理员
+     * RevisionTrail:(Date/Author/Description)
      * 2026年05月29日
-     *@author Japson Huang
      *
+     * @author Japson Huang
      */
-    public  Mono<Boolean> isOrgAdmin(){
-        return getManagerOrges().map(orges->!orges.isEmpty());
+    public Mono<Boolean> isOrgAdmin() {
+        return getUserInfo().map(user -> {
+            if (user.getOrgInfo() == null) {
+                return null;
+            }
+            return user.getOrgInfo().isAdmin();
+        });
     }
 
     public Mono<Long> getOrgId() {
-        return getManagerOrges().map(orges->orges.isEmpty()?null: orges.get(0));
+        return getUserInfo().map(user -> {
+            if (user.getOrgInfo() == null) {
+                return null;
+            }
+            return user.getOrgInfo().getId();
+        });
     }
 
-    public Mono<List<Long>> getManagerOrges(){
-        return getUserInfoImpl().map(user->{
-            if(this.tenantId==null||user.getTenantOrg().isEmpty()){
+
+    public Mono<List<Long>> getManagerOrges() {
+        return getUserInfo().map(user -> {
+            if (CollectionUtils.isEmpty(user.getManagerOrges())) {
                 return Collections.EMPTY_LIST;
             }
-            List<Long> orges = user.getTenantOrg().get(this.tenantId);
-            return orges==null?Collections.EMPTY_LIST:orges;
+            return user.getManagerOrges();
         });
-
     }
 
-    public Mono<UserInfo> getUserInfo(){
-        return getUserInfoImpl().cast(UserInfo.class);
-    }
+    public Mono<UserInfo> getUserInfo() {
+        if (cachedUserInfo == null) {
+            this.cachedUserInfo = getUserInfoImpl().map(userInfoDetail -> UserInfoImpl.builder()
+                    .userId(this.userId)
+                    .username(this.username)
+                    .nickName(userInfoDetail.getNickName())
+                    .schoolId(this.schoolId)
+                    .tenantId(tenantId)
+                    .schoolName(userInfoDetail.getSchoolName())
+                    .roles(userInfoDetail.getTenantRoleCodeMap() != null && this.tenantId != null
+                            ? userInfoDetail.getTenantRoleCodeMap().get(this.tenantId)
+                            : (userInfoDetail.getRoles() != null ? new HashSet<>(userInfoDetail.getRoles()) : null))
+                    .classId(userInfoDetail.getClassId())
+                    .className(userInfoDetail.getClassName())
+                    .studentNo(userInfoDetail.getStudentNo())
+                    .professionName(userInfoDetail.getProfessionName())
+                    .email(userInfoDetail.getEmail())
+                    .avatar(userInfoDetail.getAvatar())
+                    .sex(userInfoDetail.getSex())
+                    .phone(userInfoDetail.getPhone())
+                    .phoneVerify(userInfoDetail.isPhoneVerify())
+                    .tenantAdmin(!CollectionUtils.isEmpty(userInfoDetail.getAdminTenant())
+                            && userInfoDetail.getAdminTenant().contains(this.tenantId))
+                    .orgInfo(userInfoDetail.getOrgInfos() != null && this.tenantId != null
+                            ? userInfoDetail.getOrgInfos().get(this.tenantId) : null)
+                    .managerOrges(userInfoDetail.getTenantOrg() != null && this.tenantId != null
+                            ? userInfoDetail.getTenantOrg().get(this.tenantId) : null)
+                    .build()).cast(UserInfo.class).cache();
 
-    private Mono<UserInfoImpl> getUserInfoImpl() {
-        if(userInfo == null){
-              this.userInfo = StringUtils.startsWithIgnoreCase(token, "Bearer ")
-                      ? checkUserProxy().getUserInfo(this.userId, token.substring("Bearer ".length())).cache()
-                      : checkUserProxy().getUserInfo(this.userId).cache(); //这里通过远程调用获取用户信息
         }
-        return userInfo;
+        return cachedUserInfo;
+    }
+
+    private Mono<UserInfoDetail> getUserInfoImpl() {
+        return StringUtils.startsWithIgnoreCase(token, "Bearer ")
+                ? checkUserProxy().getUserInfo(this.userId, token.substring("Bearer ".length()))
+                : checkUserProxy().getUserInfo(this.userId);
     }
 
 
-    private UserProxy checkUserProxy(){
+    private UserProxy checkUserProxy() {
         if (userProxy == null) {
             synchronized (this) {
                 if (userProxy == null) {

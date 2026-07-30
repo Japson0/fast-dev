@@ -1,7 +1,5 @@
 package com.nlecloud.spring.annotation.api;
 
-import com.nlecloud.spring.annotation.UserInfoImpl;
-
 /**
  * <P><B>Description:</B></P>
  * RevisionTrail:(Date/Author/Description)
@@ -12,5 +10,5 @@ import com.nlecloud.spring.annotation.UserInfoImpl;
  */
 public interface UserInfoService {
 
-    UserInfoImpl getUserDetailById(String id);
+    UserInfoDetail getUserDetailById(String id);
 }

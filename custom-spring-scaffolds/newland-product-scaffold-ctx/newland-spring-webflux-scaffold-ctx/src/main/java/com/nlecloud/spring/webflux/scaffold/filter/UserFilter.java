@@ -32,7 +32,6 @@ public class UserFilter implements WebFilter {
         if( StringUtils.isNotEmpty(userId)) {
             String username = headers.getFirst(AuthConstants.USER_HEADER);
             String currentId = headers.getFirst(AuthConstants.CURRENT_TENANT_ID_HEADER);
-            String roleStr = headers.getFirst(AuthConstants.ROLE_HEADER);
             String schoolId = headers.getFirst(AuthConstants.SCHOOL_ID_HEADER);
 
             String[] tenantIds = StringUtils.split(headers.getFirst(AuthConstants.TENANT_ID_HEADER), ",");
@@ -53,11 +52,10 @@ public class UserFilter implements WebFilter {
             }
             Long currentTenantId = StringUtils.isNotEmpty(veryCurrentTenantId) ? Long.valueOf(veryCurrentTenantId) : null;
             Long currentSchoolId = StringUtils.isNotEmpty(schoolId) ? Long.valueOf(schoolId) : null;
-            java.util.Collection<String> roles = StringUtils.isNotEmpty(roleStr) ? CollectionUtil.newHashSet(StringUtils.split(roleStr,",")) : Collections.EMPTY_SET;
             String token = headers.getFirst(HttpHeaders.AUTHORIZATION);
             Long currentUserId = Long.valueOf(userId);
             return chain.filter(exchange).contextWrite(
-                    new UserWrapper(currentUserId, username, currentTenantId, currentSchoolId, roles, token).getContextView()
+                    new UserWrapper(currentUserId, username, currentTenantId, currentSchoolId, token).getContextView()
             );
         }
         return chain.filter(exchange);
