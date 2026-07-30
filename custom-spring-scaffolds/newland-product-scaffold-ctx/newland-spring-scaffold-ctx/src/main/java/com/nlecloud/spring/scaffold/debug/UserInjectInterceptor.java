@@ -1,6 +1,5 @@
 package com.nlecloud.spring.scaffold.debug;
 
-import com.nlecloud.spring.annotation.UserInfoImpl;
 import com.nlecloud.spring.scaffold.NewLandSpringProperty;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
@@ -30,7 +29,7 @@ public class UserInjectInterceptor  implements CustomInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        UserContext.setUserInfo(new UserWrapper(userInfo.getUserId(),userInfo.getUsername(),userInfo.getTenantId(), userInfo.getSchoolId(),userInfo.getRoles()));
+        UserContext.setUserInfo(new UserWrapper(userInfo.getUserId(),userInfo.getUsername(),userInfo.getTenantId(), userInfo.getSchoolId()));
 
         return CustomInterceptor.super.preHandle(request, response, handler);
     }

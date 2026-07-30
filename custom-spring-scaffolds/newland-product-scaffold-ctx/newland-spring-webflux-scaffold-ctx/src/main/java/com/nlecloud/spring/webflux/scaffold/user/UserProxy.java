@@ -3,7 +3,7 @@ package com.nlecloud.spring.webflux.scaffold.user;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.RegisteredPayload;
-import com.nlecloud.spring.annotation.UserInfoImpl;
+import com.nlecloud.spring.annotation.api.UserInfoDetail;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
@@ -26,7 +26,7 @@ public class UserProxy {
 
     private final UserInfoService userinfoService;
 
-    private static final String USER_KEY = "USER_INFO_KEY:v1:%d";
+    private static final String USER_KEY = "USER_INFO_KEY:v2:%d";
 
     private static final Schema<CacheUser> CACHE_USER_SCHEMA = RuntimeSchema.getSchema(CacheUser.class);
 
@@ -37,7 +37,7 @@ public class UserProxy {
         this.redisTemplate = redisTemplate;
     }
 
-    public Mono<UserInfoImpl> getUserInfo(Long userId, String jwtToken) {
+    public Mono<UserInfoDetail> getUserInfo(Long userId, String jwtToken) {
         String cacheKey = String.format(USER_KEY, userId);
         JWT jwt = JWTUtil.parseToken(jwtToken);
         long iat = ((Number) jwt.getPayload(RegisteredPayload.ISSUED_AT)).longValue();
@@ -49,14 +49,14 @@ public class UserProxy {
                 .switchIfEmpty(Mono.defer(() -> cacheUser(cacheKey, userId, iat, exp)));
     }
 
-    public Mono<UserInfoImpl> getUserInfo(Long userId) {
+    public Mono<UserInfoDetail> getUserInfo(Long userId) {
         String cacheKey = String.format(USER_KEY, userId);
         return getCachedUser(cacheKey)
                 .map(CacheUser::getUserInfo)
                 .switchIfEmpty(Mono.defer(() -> cacheUser(cacheKey, userId, null, null)));
     }
 
-    private Mono<UserInfoImpl> cacheUser(String cacheKey, Long userId, Long iat, Long exp) {
+    private Mono<UserInfoDetail> cacheUser(String cacheKey, Long userId, Long iat, Long exp) {
         return getRemoteUserInfo(userId)
                 .flatMap(userInfo -> {
                     CacheUser cacheUser = iat == null || exp == null
@@ -107,7 +107,7 @@ public class UserProxy {
         }
     }
 
-    private Mono<UserInfoImpl> getRemoteUserInfo(Long userId) {
+    private Mono<UserInfoDetail> getRemoteUserInfo(Long userId) {
         return userinfoService.getUserDetailById(userId);
     }
 }

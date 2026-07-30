@@ -2,7 +2,6 @@
 package com.nlecloud.spring.scaffold.filter;
 
 import com.nlecloud.spring.annotation.UserInfo;
-import com.nlecloud.spring.annotation.UserInfoImpl;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
@@ -75,7 +74,6 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
             invocation.setObjectAttachment(AuthConstants.USER_HEADER,UserContext.getUserName());
             invocation.setObjectAttachment(AuthConstants.TENANT_ID_HEADER, UserContext.getTenantId());
             invocation.setObjectAttachment(AuthConstants.SCHOOL_ID_HEADER, UserContext.getSchoolId());
-            invocation.setObjectAttachment(AuthConstants.ROLE_HEADER,UserContext.getRoles());
         }
     }
 
@@ -85,8 +83,7 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
             Long tenantId = (Long) invocation.getObjectAttachment(AuthConstants.TENANT_ID_HEADER);
             String username = (String) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
             Long schoolId = (Long) invocation.getObjectAttachment(AuthConstants.SCHOOL_ID_HEADER);
-            Collection<String> roles =(Collection<String>) invocation.getObjectAttachment(AuthConstants.ROLE_HEADER);
-            UserContext.setUserInfo(new UserWrapper((Long) userId, username, tenantId, schoolId, roles));
+            UserContext.setUserInfo(new UserWrapper((Long) userId, username, tenantId, schoolId));
         }
     }
 

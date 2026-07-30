@@ -1,6 +1,6 @@
 package com.nlecloud.spring.scaffold.common;
 
-import com.nlecloud.spring.annotation.UserInfoImpl;
+import com.nlecloud.spring.annotation.api.UserInfoDetail;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +18,13 @@ import java.io.Serializable;
 @Setter
 public class CacheUser implements Serializable {
 
-    private UserInfoImpl userInfo;
+    /**
+     * 序列化号
+     */
+    private static final long serialVersionUID = 0L;
+
+
+    private UserInfoDetail userInfo;
 
     public CacheUser() {
     }
@@ -27,11 +33,11 @@ public class CacheUser implements Serializable {
 
     private long iat;
 
-    public CacheUser(UserInfoImpl userInfo) {
+    public CacheUser(UserInfoDetail userInfo) {
         this.userInfo = userInfo;
     }
 
-    public CacheUser(UserInfoImpl userInfo, long iat, long exp ) {
+    public CacheUser(UserInfoDetail userInfo, long iat, long exp ) {
         this.userInfo = userInfo;
         this.exp = exp;
         this.iat = iat;

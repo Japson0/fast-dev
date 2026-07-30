@@ -2,6 +2,7 @@
 package com.nlecloud.spring.scaffold.common;
 
 
+import com.nlecloud.spring.annotation.OrgInfo;
 import com.nlecloud.spring.annotation.UserInfo;
 import org.springframework.util.CollectionUtils;
 
@@ -52,11 +53,6 @@ public class UserContext {
         return getUserInfo().getTenantId();
     }
 
-    @Deprecated
-    public static Long getSchoolId(){
-        return getUserInfo().getSchoolId();
-    }
-
 
     public static Collection<String> getRoles(){
         return getUserInfo().getRoles();
@@ -64,6 +60,11 @@ public class UserContext {
 
     public static UserInfo getUserInfo() {
         return USER_INFO_LOCAL.get();
+    }
+
+    public static Long getOrgId(){
+        OrgInfo orgInfo = getUserInfo().getOrgInfo();
+        return orgInfo==null?null:orgInfo.getId();
     }
 
 
@@ -79,10 +80,7 @@ public class UserContext {
      *
     */
     public static boolean isTenantAdmin(){
-        if(CollectionUtils.isEmpty(getUserInfo().getAdminTenant())){
-            return false;
-        }
-        return getUserInfo().getAdminTenant().contains(getTenantId());
+        return getUserInfo().isTenantAdmin();
     }
 
     /**
@@ -93,8 +91,8 @@ public class UserContext {
      *
     */
     public static boolean isOrgAdmin(){
-
-        return !getUserInfo().getManagerOrges().isEmpty();
+        OrgInfo orgInfo = getUserInfo().getOrgInfo();
+        return orgInfo==null?false:orgInfo.isAdmin();
     }
 
 
@@ -108,6 +106,18 @@ public class UserContext {
     public static boolean isPhoneVerify(){
 
         return getUserInfo().isPhoneVerify();
+    }
+
+    /**
+     *后续废弃schoolId,请取tenantId
+     *RevisionTrail:(Date/Author/Description)
+     * 2026年07月29日
+     *@author Japson Huang
+     *
+    */
+    @Deprecated
+    public static Long getSchoolId(){
+        return getUserInfo().getSchoolId();
     }
 
 

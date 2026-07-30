@@ -45,7 +45,6 @@ public class UserInterceptor implements CustomInterceptor {
                 String username = request.getHeader(AuthConstants.USER_HEADER);
                 String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
                 String currentId = request.getHeader(AuthConstants.CURRENT_TENANT_ID_HEADER);
-                String roleStr = request.getHeader(AuthConstants.ROLE_HEADER);
 
                 String[] tenantIds = StringUtils.split(request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
 
@@ -68,7 +67,6 @@ public class UserInterceptor implements CustomInterceptor {
                 UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
                         username, veryCurrentTenantId == null ? 0L : Long.valueOf(veryCurrentTenantId),
                         StringUtils.isNotEmpty(schoolId) ? Long.valueOf(schoolId) : null,
-                        StringUtils.isNotEmpty(roleStr) ? CollectionUtil.newHashSet(StringUtils.split(roleStr, ",")) : Collections.EMPTY_SET,
                         request.getHeader(HttpHeaders.AUTHORIZATION)
                 ));
             }
