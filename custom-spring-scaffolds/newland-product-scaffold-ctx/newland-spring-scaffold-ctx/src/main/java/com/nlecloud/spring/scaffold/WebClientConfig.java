@@ -20,7 +20,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Configuration
 public class WebClientConfig {
 
-    @LoadBalanced  // 关键注解，启用负载均衡
+//    @LoadBalanced  // 关键注解，启用负载均衡
     @Bean
     RestClient.Builder loadBalancedRestClientBuilder() {
         return RestClient.builder()
