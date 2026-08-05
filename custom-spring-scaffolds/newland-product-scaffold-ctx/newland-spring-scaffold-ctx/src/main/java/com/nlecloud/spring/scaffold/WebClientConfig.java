@@ -2,6 +2,7 @@ package com.nlecloud.spring.scaffold;
 
 import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
 import com.nlecloud.spring.scaffold.filter.GlobalHeaderInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +29,10 @@ public class WebClientConfig {
     }
 
     @Bean
-    public IUPMSUserApi upmsUserApi(RestClient.Builder restClientBuilder) {
+    public IUPMSUserApi upmsUserApi(RestClient.Builder restClientBuilder,
+                                    @Value("${upms-user-center.url:http://nlecloud-upms-user-center-server.upms:19192}") String baseUrl) {
         RestClient restClient = restClientBuilder
-                .baseUrl("http://nlecloud-upms-user-center")  // 这里写服务名
+                .baseUrl(baseUrl)  // 这里写服务名
                 .build();
 
         return HttpServiceProxyFactory.builder()
