@@ -3,7 +3,9 @@ package com.nlecloud.spring.scaffold.common;
 
 
 import com.nlecloud.spring.annotation.OrgInfo;
+import com.nlecloud.spring.annotation.TenantInfo;
 import com.nlecloud.spring.annotation.UserInfo;
+import com.nlecloud.spring.annotation.enums.TenantType;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -80,7 +82,20 @@ public class UserContext {
      *
      */
     public static boolean isTenantAdmin(){
-        return getUserInfo().isTenantAdmin();
+        TenantInfo tenantInfo = getUserInfo().getTenantInfo();
+        return tenantInfo==null?false:tenantInfo.isAdmin();
+    }
+
+    /**
+     *是否个人租户
+     *RevisionTrail:(Date/Author/Description)
+     * 2026年08月14日
+     *@author Japson Huang
+     *
+    */
+    public static boolean isPersonTenant(){
+        TenantInfo tenantInfo = getUserInfo().getTenantInfo();
+        return tenantInfo==null?false:tenantInfo.getType()== TenantType.PERSON;
     }
 
     /**
@@ -94,6 +109,7 @@ public class UserContext {
         OrgInfo orgInfo = getUserInfo().getOrgInfo();
         return orgInfo==null?false:orgInfo.isAdmin();
     }
+
 
 
     /**

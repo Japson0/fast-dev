@@ -2,6 +2,7 @@ package com.nlecloud.spring.scaffold.common;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.nlecloud.spring.annotation.OrgInfo;
+import com.nlecloud.spring.annotation.TenantInfo;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.api.UserInfoDetail;
 import com.nlecloud.spring.annotation.enums.Sex;
@@ -123,21 +124,22 @@ public class UserWrapper implements UserInfo {
     }
 
     @Override
+    public TenantInfo getTenantInfo() {
+        for (TenantInfo tenantInfo : getUserInfo().getTenantList()) {
+            if (tenantInfo.getId().equals(this.tenantId)) {
+                return tenantInfo;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<Long> getManagerOrges() {
         Map<Long, List<Long>> tenantOrg = getUserInfo().getTenantOrg();
         if(CollectionUtils.isEmpty(tenantOrg)){
             return Collections.EMPTY_LIST;
         }
         return tenantOrg.get(this.tenantId);
-    }
-
-    @Override
-    public boolean isTenantAdmin() {
-        Set<Long> adminTenant = getUserInfo().getAdminTenant();
-        if (this.tenantId == null || CollectionUtils.isEmpty(adminTenant)) {
-            return false;
-        }
-        return adminTenant.contains(this.tenantId);
     }
 
     @Override
