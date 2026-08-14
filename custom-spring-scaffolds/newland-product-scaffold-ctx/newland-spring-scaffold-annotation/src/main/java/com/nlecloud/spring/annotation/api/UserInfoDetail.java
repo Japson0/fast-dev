@@ -3,6 +3,7 @@ package com.nlecloud.spring.annotation.api;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nlecloud.spring.annotation.OrgInfo;
+import com.nlecloud.spring.annotation.TenantInfo;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.Sex;
 import lombok.Getter;
@@ -115,17 +116,17 @@ public class UserInfoDetail implements Serializable {
     @JsonProperty("realNameVerified")
     private boolean phoneVerify;
 
-    /**
-     * 租户管理员的租户ID列表
-     */
-    @JsonProperty("tenantAdminTenantIds")
-    private Set<Long> adminTenant;
 
     /**
      * 机构管理员的机构ID列表
      */
     @JsonProperty("orgAdminOrgIds")
     private Map<Long,List<Long>> tenantOrg;
+
+    /**
+     * 租户列表
+     */
+    private List<TenantInfo> tenantList;
 
     /**
      *租户机构信息

@@ -1,6 +1,7 @@
 package com.nlecloud.spring.webflux.scaffold.filter;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.nlecloud.spring.annotation.TenantInfo;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.UserInfoImpl;
 import com.nlecloud.spring.annotation.api.UserInfoDetail;
@@ -103,7 +104,8 @@ public class UserWrapper {
      * @author Japson Huang
      */
     public Mono<Boolean> isTenantAdmin() {
-        return getUserInfo().map(user -> user.isTenantAdmin());
+
+        return getUserInfo().map(user -> user.getTenantInfo()==null?false:user.getTenantInfo().isAdmin());
     }
 
     /**
@@ -143,36 +145,49 @@ public class UserWrapper {
 
     public Mono<UserInfo> getUserInfo() {
         if (cachedUserInfo == null) {
-            this.cachedUserInfo = getUserInfoImpl().map(userInfoDetail -> UserInfoImpl.builder()
-                    .userId(this.userId)
-                    .username(this.username)
-                    .nickName(userInfoDetail.getNickName())
-                    .schoolId(this.schoolId)
-                    .tenantId(tenantId)
-                    .schoolName(userInfoDetail.getSchoolName())
-                    .roles(userInfoDetail.getTenantRoleCodeMap() != null && this.tenantId != null
-                            ? userInfoDetail.getTenantRoleCodeMap().get(this.tenantId)
-                            : (userInfoDetail.getRoles() != null ? new HashSet<>(userInfoDetail.getRoles()) : null))
-                    .classId(userInfoDetail.getClassId())
-                    .className(userInfoDetail.getClassName())
-                    .studentNo(userInfoDetail.getStudentNo())
-                    .professionName(userInfoDetail.getProfessionName())
-                    .email(userInfoDetail.getEmail())
-                    .avatar(userInfoDetail.getAvatar())
-                    .sex(userInfoDetail.getSex())
-                    .phone(userInfoDetail.getPhone())
-                    .phoneVerify(userInfoDetail.isPhoneVerify())
-                    .tenantAdmin(!CollectionUtils.isEmpty(userInfoDetail.getAdminTenant())
-                            && userInfoDetail.getAdminTenant().contains(this.tenantId))
-                    .orgInfo(userInfoDetail.getOrgInfos() != null && this.tenantId != null
-                            ? userInfoDetail.getOrgInfos().get(this.tenantId) : null)
-                    .managerOrges(userInfoDetail.getTenantOrg() != null && this.tenantId != null
-                            ? userInfoDetail.getTenantOrg().get(this.tenantId) : null)
-                    .build()).cast(UserInfo.class).cache();
+            this.cachedUserInfo = getUserInfoImpl().map(userInfoDetail -> {
+                        List<TenantInfo> tenantList = userInfoDetail.getTenantList();
+                        TenantInfo currentTenant = null;
+                        if (CollectionUtils.isEmpty(tenantList)) {
+                            for (TenantInfo tenantInfo : tenantList) {
+                                if (tenantInfo.getId().equals(this.tenantId)) {
+                                    currentTenant = tenantInfo;
+                                    break;
+                                }
+                            }
+                        }
+                        return UserInfoImpl.builder()
+                                .userId(this.userId)
+                                .username(this.username)
+                                .nickName(userInfoDetail.getNickName())
+                                .schoolId(this.schoolId)
+                                .tenantId(tenantId)
+                                .schoolName(userInfoDetail.getSchoolName())
+                                .roles(userInfoDetail.getTenantRoleCodeMap() != null && this.tenantId != null
+                                        ? userInfoDetail.getTenantRoleCodeMap().get(this.tenantId)
+                                        : (userInfoDetail.getRoles() != null ? new HashSet<>(userInfoDetail.getRoles()) : null))
+                                .classId(userInfoDetail.getClassId())
+                                .className(userInfoDetail.getClassName())
+                                .studentNo(userInfoDetail.getStudentNo())
+                                .professionName(userInfoDetail.getProfessionName())
+                                .email(userInfoDetail.getEmail())
+                                .avatar(userInfoDetail.getAvatar())
+                                .sex(userInfoDetail.getSex())
+                                .phone(userInfoDetail.getPhone())
+                                .phoneVerify(userInfoDetail.isPhoneVerify())
+                                .tenantInfo(currentTenant)
+                                .orgInfo(userInfoDetail.getOrgInfos() != null && this.tenantId != null
+                                        ? userInfoDetail.getOrgInfos().get(this.tenantId) : null)
+                                .managerOrges(userInfoDetail.getTenantOrg() != null && this.tenantId != null
+                                        ? userInfoDetail.getTenantOrg().get(this.tenantId) : null)
+                                .build();
+                    }
+            ).cast(UserInfo.class).cache();
 
         }
         return cachedUserInfo;
     }
+
 
     private Mono<UserInfoDetail> getUserInfoImpl() {
         return StringUtils.startsWithIgnoreCase(token, "Bearer ")

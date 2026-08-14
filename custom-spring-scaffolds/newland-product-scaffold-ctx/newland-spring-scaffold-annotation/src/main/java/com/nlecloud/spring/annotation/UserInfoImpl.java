@@ -102,11 +102,8 @@ public class UserInfoImpl implements UserInfo {
      */
     private boolean phoneVerify;
 
-    /**
-     * 租户管理员的租户ID列表
-     */
-    private boolean tenantAdmin;
 
+    private TenantInfo tenantInfo;
     /**
      * 机构列表
      */
