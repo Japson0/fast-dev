@@ -22,6 +22,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.task.ThreadPoolTaskExecutorCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -181,6 +182,12 @@ public class NewLandSpringConfig {
     @Bean
     public CustomApiPermissionPlugin customAnnotationOperationPlugin(){
         return new CustomApiPermissionPlugin();
+    }
+
+
+    @Bean
+    public ThreadPoolTaskExecutorCustomizer taskDecoratorCustomizer() {
+        return executor -> executor.setTaskDecorator(new ThreadLocalTaskDecorator());
     }
 
 
