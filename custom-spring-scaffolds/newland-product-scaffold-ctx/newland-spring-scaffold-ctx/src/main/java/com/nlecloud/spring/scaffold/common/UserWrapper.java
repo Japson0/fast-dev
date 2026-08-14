@@ -1,10 +1,14 @@
 package com.nlecloud.spring.scaffold.common;
 
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.JWTPayload;
 import com.nlecloud.spring.annotation.OrgInfo;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.api.UserInfoDetail;
 import com.nlecloud.spring.annotation.enums.Sex;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -35,6 +39,35 @@ public class UserWrapper implements UserInfo {
 
     private String token;
 
+//    public static  UserWrapper buildUserWrapper(String token,Optional<Long> tenantIdOp){
+//        JSONObject claimsJson = JWT.of(token).getPayload().getClaimsJson();
+//
+//        String username= claimsJson.getStr("preferred_username");
+//        Long userId = claimsJson.getLong("upms_id");
+//        String[] tenantIds = claimsJson.getStr("tenant_id").split(",");
+//        String veryCurrentTenantId = null;
+//        if(tenantIdOp!=null&&tenantIdOp.isPresent()){
+//            Long currentId = tenantIdOp.get();
+//            if(!ArrayUtils.isEmpty(tenantIds)){
+//                if(tenantIds.length==1||currentId==null){
+//                    veryCurrentTenantId = tenantIds[0];
+//                }else {
+//                    for (String tenantId : tenantIds) {
+//                        if(tenantId.equals(currentId)){
+//                            veryCurrentTenantId=tenantId;
+//                            break;
+//                        }
+//                    }
+//                    veryCurrentTenantId=veryCurrentTenantId==null?tenantIds[0]:veryCurrentTenantId;
+//                }
+//            }
+//        }else{
+//            veryCurrentTenantId=tenantIds[0];
+//        }
+//        Long currentTenantId=Long.valueOf(veryCurrentTenantId);
+//        return new UserWrapper(userId,username,currentTenantId,currentTenantId,token);
+//
+//    }
 
     public UserWrapper(Long userId, String username, Long tenantId) {
         this(userId, username, tenantId, tenantId );
