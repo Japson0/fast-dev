@@ -39,10 +39,9 @@ public interface UserInfo extends Serializable {
 
     boolean isPhoneVerify();
 
-    boolean isTenantAdmin();
-
-
     OrgInfo getOrgInfo();
+
+    TenantInfo getTenantInfo();
 
     List<Long> getManagerOrges();
 
