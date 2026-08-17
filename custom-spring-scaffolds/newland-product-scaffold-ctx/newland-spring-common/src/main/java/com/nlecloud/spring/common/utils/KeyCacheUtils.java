@@ -1,4 +1,4 @@
-package net.github.fastdev.common.utils;
+package com.nlecloud.spring.common.utils;
 
 /**
  * <P><B>缓存key常量:</B></P>

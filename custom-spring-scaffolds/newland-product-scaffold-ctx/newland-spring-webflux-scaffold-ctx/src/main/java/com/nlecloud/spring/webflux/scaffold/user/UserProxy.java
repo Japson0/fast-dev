@@ -8,7 +8,7 @@ import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
-import net.github.fastdev.common.utils.KeyCacheUtils;
+import com.nlecloud.spring.common.utils.KeyCacheUtils;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import reactor.core.publisher.Mono;
 
