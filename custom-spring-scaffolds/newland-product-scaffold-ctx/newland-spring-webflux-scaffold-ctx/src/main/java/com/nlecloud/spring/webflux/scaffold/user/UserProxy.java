@@ -8,7 +8,7 @@ import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
-import net.github.fastdev.common.model.KeyCacheConstant;
+import net.github.fastdev.common.utils.KeyCacheUtils;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import reactor.core.publisher.Mono;
 
@@ -27,7 +27,6 @@ public class UserProxy {
 
     private final UserInfoService userinfoService;
 
-    private static final String USER_KEY = KeyCacheConstant.USER_KEY;
 
     private static final Schema<CacheUser> CACHE_USER_SCHEMA = RuntimeSchema.getSchema(CacheUser.class);
 
@@ -39,7 +38,7 @@ public class UserProxy {
     }
 
     public Mono<UserInfoDetail> getUserInfo(Long userId, String jwtToken) {
-        String cacheKey = String.format(USER_KEY, userId);
+        String cacheKey = KeyCacheUtils.userKey(userId);
         JWT jwt = JWTUtil.parseToken(jwtToken);
         long iat = ((Number) jwt.getPayload(RegisteredPayload.ISSUED_AT)).longValue();
         long exp = ((Number) jwt.getPayload(RegisteredPayload.EXPIRES_AT)).longValue();
@@ -51,7 +50,7 @@ public class UserProxy {
     }
 
     public Mono<UserInfoDetail> getUserInfo(Long userId) {
-        String cacheKey = String.format(USER_KEY, userId);
+        String cacheKey = KeyCacheUtils.userKey(userId);
         return getCachedUser(cacheKey)
                 .map(CacheUser::getUserInfo)
                 .switchIfEmpty(Mono.defer(() -> cacheUser(cacheKey, userId, null, null)));
