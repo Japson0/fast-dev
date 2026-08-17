@@ -8,6 +8,7 @@ import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
+import net.github.fastdev.common.model.KeyCacheConstant;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import reactor.core.publisher.Mono;
 
@@ -26,7 +27,7 @@ public class UserProxy {
 
     private final UserInfoService userinfoService;
 
-    private static final String USER_KEY = "USER_INFO_KEY:v2:%d";
+    private static final String USER_KEY = KeyCacheConstant.USER_KEY;
 
     private static final Schema<CacheUser> CACHE_USER_SCHEMA = RuntimeSchema.getSchema(CacheUser.class);
 
