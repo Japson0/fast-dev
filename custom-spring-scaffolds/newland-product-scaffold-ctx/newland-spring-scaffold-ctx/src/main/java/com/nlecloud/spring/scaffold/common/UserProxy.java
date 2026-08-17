@@ -10,6 +10,7 @@ import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
+import net.github.fastdev.common.model.KeyCacheConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,7 +32,7 @@ public class UserProxy {
     private static final Logger log = LoggerFactory.getLogger(UserProxy.class);
     private final UserInfoService userinfoService;
 
-    private static final String USER_KEY = "USER_INFO_KEY:v2:%d";
+    private static final String USER_KEY = KeyCacheConstant.USER_KEY;
 
     private static final Schema<CacheUser> CACHE_USER_SCHEMA = RuntimeSchema.getSchema(CacheUser.class);
 
