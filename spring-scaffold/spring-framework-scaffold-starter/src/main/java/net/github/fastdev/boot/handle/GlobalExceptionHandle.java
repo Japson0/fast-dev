@@ -7,7 +7,6 @@ import net.github.fastdev.common.model.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,9 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.List;
-import java.util.Set;
-
 /**
  * <P><B>Description: </B> 定义全局性异常处理类  </P>
  * Revision Trail: (Date/Author/Description)
@@ -46,68 +42,87 @@ public class GlobalExceptionHandle {
         this.traceService = traceService;
     }
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(CommonException.class)
     @ResponseBody
-    public Object customerExceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        //系统级异常，错误码固定为-1，提示语固定为系统繁忙，请稍后再试
-        RestResponse result;
-        if (e instanceof CommonException) {
-            String code = ((CommonException) e).getCode();
-            if (code != null) {
-                result = RestResponse.renderError(code, e.getMessage());
-            } else {
-                result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), e.getMessage());
-            }
-            if (e.getCause() == null) {
-                LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage());
-            } else {
-                LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
-            }
-        }else if(e instanceof IllegalArgumentException||e instanceof ConstraintViolationException){
-            //这里是为了配合Spring的Assert
-            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), e.getMessage());
+    public RestResponse<?> handleCommonException(HttpServletRequest request, CommonException e,
+                                                  HttpServletResponse response) {
+        if (e.getCause() == null) {
+            LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage());
+        } else {
             LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
         }
-        else if (e.getClass() == MethodArgumentNotValidException.class) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(),
-                    printValidError((MethodArgumentNotValidException) e));
-        } else if (e.getClass() == ConstraintViolationException.class) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(),
-                    printValidateError((ConstraintViolationException) e));
-        } else if (e instanceof RuntimeException) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), e.getMessage());
-            LOGGER.warn("系统运行时异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
-        } else {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            result = RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), "system error");
-            LOGGER.error("系统异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
-        }
-        if (traceService != null) {
-            response.addHeader("X-Trace-ID", traceService.getTraceId());
-        }
-        return result;
+        addTraceId(response);
+        String code = e.getCode() == null ? CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode() : e.getCode();
+        return RestResponse.renderError(code, e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public RestResponse<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e,
+                                                                  HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        addTraceId(response);
+        return RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), printValidError(e));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    public RestResponse<?> handleConstraintViolationException(ConstraintViolationException e,
+                                                               HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        addTraceId(response);
+        return RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), printValidateError(e));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public RestResponse<?> handleIllegalArgumentException(HttpServletRequest request, IllegalArgumentException e,
+                                                          HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        addTraceId(response);
+        LOGGER.warn("系统业务处理异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage());
+        return RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public RestResponse<?> handleException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        addTraceId(response);
+        LOGGER.error("系统异常：请求：{} ,异常信息:{}", request.getRequestURI(), e.getMessage(), e);
+        return RestResponse.renderError(CommonError.SYSTEM_RESOURCE_EXCEPTION);
     }
 
     private String printValidateError(ConstraintViolationException e) {
-        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
         StringBuilder message = new StringBuilder(100);
-        for (ConstraintViolation<?> m : constraintViolations) {
-            message.append(m.getPropertyPath()).append(":").append(m.getMessage()).append(";");
+        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+            appendMessage(message, violation.getPropertyPath() + ":" + violation.getMessage());
         }
         return message.toString();
     }
 
     private String printValidError(MethodArgumentNotValidException e) {
         StringBuilder message = new StringBuilder(100);
-        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            message.append(fieldError.getField()).append(":").append(fieldError.getDefaultMessage()).append(";");
+        for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
+            appendMessage(message, fieldError.getField() + ":" + fieldError.getDefaultMessage());
         }
         return message.toString();
     }
 
+    private void appendMessage(StringBuilder message, String item) {
+        if (message.length() > 0) {
+            message.append(';');
+        }
+        message.append(item);
+    }
 
+    private void addTraceId(HttpServletResponse response) {
+        if (traceService == null) {
+            return;
+        }
+        String traceId = traceService.getTraceId();
+        if (traceId != null && !traceId.isEmpty()) {
+            response.addHeader("X-Trace-ID", traceId);
+        }
+    }
 }

@@ -9,6 +9,7 @@ import com.nlecloud.spring.annotation.enums.TenantType;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * <P><B>用户工具类:</B></P>
@@ -36,7 +37,7 @@ public class UserContext {
     }
 
     public static boolean isLogin(){
-        return USER_INFO_LOCAL.get()==null;
+        return hasUser();
     }
 
     public static void clean() {
@@ -59,6 +60,7 @@ public class UserContext {
     public static Collection<String> getRoles(){
         return getUserInfo().getRoles();
     }
+
 
     public static UserInfo getUserInfo() {
         return USER_INFO_LOCAL.get();
