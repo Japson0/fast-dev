@@ -3,14 +3,13 @@ package com.nlecloud.spring.scaffold.common;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.RegisteredPayload;
-import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.api.UserInfoDetail;
 import com.nlecloud.spring.annotation.api.UserInfoService;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
-import net.github.fastdev.common.model.KeyCacheConstant;
+import net.github.fastdev.common.utils.KeyCacheUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -32,7 +31,6 @@ public class UserProxy {
     private static final Logger log = LoggerFactory.getLogger(UserProxy.class);
     private final UserInfoService userinfoService;
 
-    private static final String USER_KEY = KeyCacheConstant.USER_KEY;
 
     private static final Schema<CacheUser> CACHE_USER_SCHEMA = RuntimeSchema.getSchema(CacheUser.class);
 
@@ -44,7 +42,7 @@ public class UserProxy {
     }
 
     public UserInfoDetail getUserInfo(Long userId, String jwtToken) {
-        String cacheKey = String.format(USER_KEY, userId);
+        String cacheKey = KeyCacheUtils.userKey(userId);
         JWT jwt = JWTUtil.parseToken(jwtToken);
         long iat = ((Number) jwt.getPayload(RegisteredPayload.ISSUED_AT)).longValue();
         long exp = ((Number) jwt.getPayload(RegisteredPayload.EXPIRES_AT)).longValue();
@@ -58,7 +56,7 @@ public class UserProxy {
     }
 
     public UserInfoDetail getUserInfo(Long userId) {
-        String cacheKey = String.format(USER_KEY, userId);
+        String cacheKey = KeyCacheUtils.userKey(userId);
         CacheUser cacheUser = getCachedUser(cacheKey);
         return cacheUser != null
                 ? cacheUser.getUserInfo()
