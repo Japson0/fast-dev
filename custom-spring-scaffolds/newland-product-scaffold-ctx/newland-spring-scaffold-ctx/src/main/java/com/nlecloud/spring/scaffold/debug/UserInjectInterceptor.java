@@ -1,6 +1,6 @@
 package com.nlecloud.spring.scaffold.debug;
 
-import com.nlecloud.spring.scaffold.NewLandSpringProperty;
+import com.nlecloud.spring.scaffold.property.NewLandSpringProperty;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
 import jakarta.servlet.http.HttpServletRequest;

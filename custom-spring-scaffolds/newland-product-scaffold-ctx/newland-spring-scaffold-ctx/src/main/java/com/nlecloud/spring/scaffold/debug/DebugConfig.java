@@ -1,6 +1,6 @@
 package com.nlecloud.spring.scaffold.debug;
 
-import com.nlecloud.spring.scaffold.NewLandSpringProperty;
+import com.nlecloud.spring.scaffold.property.NewLandSpringProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.*;
 import org.springframework.core.type.AnnotatedTypeMetadata;

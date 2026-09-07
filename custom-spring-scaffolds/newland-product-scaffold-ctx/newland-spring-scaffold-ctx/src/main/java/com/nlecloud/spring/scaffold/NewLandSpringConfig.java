@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.nlecloud.spring.annotation.api.UserInfoService;
+import com.nlecloud.spring.scaffold.aop.InjectRobotAspect;
 import com.nlecloud.spring.scaffold.api.user.IUPMSUserApi;
 import com.nlecloud.spring.scaffold.common.UserProxy;
 import com.nlecloud.spring.scaffold.debug.DebugConfig;
 import com.nlecloud.spring.scaffold.filter.PermissionInterceptor;
 import com.nlecloud.spring.scaffold.filter.UserInterceptor;
 import com.nlecloud.spring.scaffold.handle.*;
+import com.nlecloud.spring.scaffold.property.NewLandSpringProperty;
 import com.nlecloud.spring.scaffold.service.DictServiceProxy;
 import net.github.fastdev.boot.CustomSpringBootConfig;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
@@ -31,8 +33,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -128,8 +128,8 @@ public class NewLandSpringConfig {
 
 
     @Bean
-    public InjectRobotAspectHandle injectRobotAspectHandle(){
-        return new InjectRobotAspectHandle();
+    public InjectRobotAspect injectRobotAspectHandle(){
+        return new InjectRobotAspect();
     }
     /**
      *追溯ID
