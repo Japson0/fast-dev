@@ -1,6 +1,5 @@
-package com.nlecloud.spring.scaffold;
+package com.nlecloud.spring.scaffold.property;
 
-import com.nlecloud.spring.annotation.UserInfoImpl;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

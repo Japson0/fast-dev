@@ -1,4 +1,4 @@
-package com.nlecloud.spring.scaffold.handle;
+package com.nlecloud.spring.scaffold.aop;
 
 import com.nlecloud.spring.scaffold.annotation.InjectRobot;
 import com.nlecloud.spring.scaffold.common.UserContext;
@@ -9,7 +9,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
-public class InjectRobotAspectHandle {
+public class InjectRobotAspect {
 
     @Pointcut("@annotation(com.nlecloud.spring.scaffold.annotation.InjectRobot)")
     public void myCustomAnnotationCut() {}

@@ -65,7 +65,7 @@ public class UserInfoDetail implements Serializable {
      * 角色编码列表
      */
     @Deprecated
-    private Collection<String> roles;
+    private transient Collection<String> roles;
 
     /**
      * 角色列表

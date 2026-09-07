@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.nlecloud.spring.scaffold.NewLandSpringConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.nlecloud.spring.scaffold.NewLandSpringConfig,\
+com.nlecloud.spring.scaffold.AuditLogConfig
