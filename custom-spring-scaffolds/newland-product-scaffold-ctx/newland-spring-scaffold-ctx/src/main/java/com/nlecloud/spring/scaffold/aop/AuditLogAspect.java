@@ -8,14 +8,12 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,9 +28,6 @@ public class AuditLogAspect {
     private static final DefaultParameterNameDiscoverer PARAMETER_NAME_DISCOVERER =
             new DefaultParameterNameDiscoverer();
 
-    @Value("${spring.application.name}")
-    private String applicationName;
-
     private final RocketMQClientTemplate rocketMQClientTemplate;
     private final AuditLogProperty auditLogProperty;
     private final Map<String, Expression> expressionCache = new ConcurrentHashMap<>();
@@ -45,7 +40,7 @@ public class AuditLogAspect {
 
     @AfterReturning("@within(auditLog) || @annotation(auditLog)")
     public void afterReturning(JoinPoint joinPoint, com.nlecloud.spring.annotation.AuditLog auditLog) {
-        if(UserContext.isLogin()){
+        if(!UserContext.isLogin()){
             return;
         }
 
@@ -72,13 +67,13 @@ public class AuditLogAspect {
             com.nlecloud.spring.annotation.AuditLog auditLog, JoinPoint joinPoint) {
         com.nlecloud.spring.scaffold.common.AuditLog audit =
                 new com.nlecloud.spring.scaffold.common.AuditLog();
-        audit.setTimestamp(LocalDateTime.now());
 
         MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
         audit.setClassName(methodSignature.getDeclaringTypeName());
         audit.setMethodName(methodSignature.getName());
 
         audit.setUserId(UserContext.getUserId());
+        audit.setTenantId(UserContext.getTenantId());
         audit.setUserName(UserContext.getUserName());
 
         String operation = auditLog.operation();

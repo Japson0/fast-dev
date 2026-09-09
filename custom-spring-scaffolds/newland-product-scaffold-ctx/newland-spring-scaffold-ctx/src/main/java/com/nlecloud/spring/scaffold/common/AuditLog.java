@@ -14,10 +14,6 @@ import java.time.LocalDateTime;
 @Getter
 public class AuditLog {
 
-    /**
-     * 操作时间
-     */
-    private LocalDateTime timestamp;
 
 
     /**
