@@ -15,5 +15,10 @@ public @interface AuditLog {
     /**
      * 操作信息
      */
-    String operation();
+    String value() default "";
+
+    /**
+     * 类型
+     */
+    String businessCode() default "0000";
 }

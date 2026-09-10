@@ -3,6 +3,8 @@ package com.nlecloud.spring.scaffold;
 import com.nlecloud.spring.scaffold.aop.AuditLogAspect;
 import com.nlecloud.spring.scaffold.property.AuditLogProperty;
 import org.apache.rocketmq.client.core.RocketMQClientTemplate;
+import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -25,10 +27,17 @@ import org.springframework.context.annotation.Configuration;
 public class AuditLogConfig {
 
     @Bean
+    @ConditionalOnMissingBean
+    public Javers javers() {
+        return JaversBuilder.javers().build();
+    }
+
+    @Bean
     @ConditionalOnBean(RocketMQClientTemplate.class)
     @ConditionalOnMissingBean
     public AuditLogAspect auditLogAspect(RocketMQClientTemplate rocketMQClientTemplate,
-                                         AuditLogProperty auditLogProperty) {
-        return new AuditLogAspect(rocketMQClientTemplate, auditLogProperty);
+                                         AuditLogProperty auditLogProperty,
+                                         Javers javers) {
+        return new AuditLogAspect(rocketMQClientTemplate, auditLogProperty, javers);
     }
 }
