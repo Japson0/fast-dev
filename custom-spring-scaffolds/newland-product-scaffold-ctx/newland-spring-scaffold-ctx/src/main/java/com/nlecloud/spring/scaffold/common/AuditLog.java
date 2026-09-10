@@ -1,9 +1,8 @@
 package com.nlecloud.spring.scaffold.common;
 
+import com.nlecloud.spring.annotation.enums.OperatorType;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 /**
  * 审计日志封装对象
@@ -13,18 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class AuditLog {
-
-
-    /**
-     * 类名
-     */
-    private String className;
-
-    /**
-     * 方法名
-     */
-    private String methodName;
-
     /**
      * 用户id
      */
@@ -43,4 +30,24 @@ public class AuditLog {
      * 操作信息
      */
     private String operation;
+
+    /**
+     * 操作类型
+     */
+    private OperatorType operatorType;
+
+    /**
+     * 业务编码
+     */
+    private String businessCode;
+
+    /**
+     * 字段变更信息
+     */
+    private String changes;
+
+    /**
+     * 目标租户ID
+     */
+    private Long targetTenantId;
 }
