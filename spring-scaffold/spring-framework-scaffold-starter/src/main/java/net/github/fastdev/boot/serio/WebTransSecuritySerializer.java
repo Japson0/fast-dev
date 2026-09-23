@@ -64,6 +64,7 @@ public class WebTransSecuritySerializer extends JsonSerializer<String> implement
     public void serialize(String s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         if ("".equals(s)) {
             jsonGenerator.writeString("");
+            return;
         }
         if (isDis && WebSecuritySerializeContext.isFuzzy()) {
             jsonGenerator.writeString(this.fuzzy(s));

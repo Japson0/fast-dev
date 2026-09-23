@@ -4,6 +4,7 @@ import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.webflux.scaffold.filter.UserWrapper;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.Scope;
+import net.github.fastdev.common.exception.CommonException;
 import org.apache.dubbo.rpc.RpcContext;
 import org.apache.dubbo.rpc.RpcServiceContext;
 import reactor.core.publisher.Mono;
@@ -50,6 +51,8 @@ public class DubboServiceProxy<T> {
                         try (Scope scope = otelContext.makeCurrent()) {
                             // 执行 Dubbo 调用
                             return supplier.apply(api);
+                        }catch (CommonException e){
+                            throw e;
                         } catch (Throwable t) {
                             throw new RuntimeException("Dubbo service invoke failed", t);
                         }
