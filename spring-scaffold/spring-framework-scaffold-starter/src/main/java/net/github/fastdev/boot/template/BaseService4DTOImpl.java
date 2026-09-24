@@ -88,7 +88,7 @@ public class BaseService4DTOImpl<ID extends Serializable, R extends BaseObjEntit
     @Override
     @Transactional
     public int deleteById(List<ID> ids) {
-        return baseMapper.deleteBatchIds(ids);
+        return baseMapper.deleteByIds(ids);
     }
 
     @Override

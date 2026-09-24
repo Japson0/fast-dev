@@ -5,9 +5,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.*;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 import net.github.fastdev.boot.serio.StringDeserializer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -60,15 +61,16 @@ public class JacksonUtils {
         try {
             objectMapper = SpringUtil.getBean(ObjectMapper.class);
         } catch (Exception e) {
-            objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
             SimpleModule module = new SimpleModule();
             module.addDeserializer(String.class, new StringDeserializer());
-            objectMapper.registerModule(module);
-            objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-            objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+            objectMapper = JsonMapper.builder()
+                    .changeDefaultPropertyInclusion(inclusion -> inclusion.withValueInclusion(JsonInclude.Include.NON_NULL))
+                    .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                    .enable(MapperFeature.DEFAULT_VIEW_INCLUSION)
+                    .addModule(module)
+                    .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+                    .defaultTimeZone(TimeZone.getTimeZone("GMT+8"))
+                    .build();
         }
     }
 

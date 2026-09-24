@@ -2,7 +2,7 @@ package net.github.fastdev.common.model;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonDeserialize;
 import net.github.fastdev.common.serio.EnumDeserializer;
 import net.github.fastdev.swagger.annotation.SwaggerDisplayEnum;
 

@@ -1,7 +1,6 @@
 package net.github.fastdev.mybatis.annotation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
@@ -29,8 +28,6 @@ public class PageResponse<DTO> extends PageRequest {
      * 总数
      */
     @Schema(description = "总数")
-    @JsonSerialize(using = LongSerializer.class)
-
     private long total;
 
 

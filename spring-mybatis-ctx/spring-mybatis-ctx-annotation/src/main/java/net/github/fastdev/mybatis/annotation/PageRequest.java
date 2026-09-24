@@ -3,7 +3,6 @@ package net.github.fastdev.mybatis.annotation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
@@ -33,7 +32,6 @@ public class PageRequest<P> implements Serializable {
      * 开始页从0开始
      */
     @Schema(description = "当前页")
-    @JsonSerialize(using = LongSerializer.class)
     private long page;
 
     /**
@@ -41,7 +39,6 @@ public class PageRequest<P> implements Serializable {
      */
     @Schema(description = "每页数量", example = "20")
     @JsonProperty("size")
-    @JsonSerialize(using = LongSerializer.class)
     private long size;
     /**
      * 实体类参数对象

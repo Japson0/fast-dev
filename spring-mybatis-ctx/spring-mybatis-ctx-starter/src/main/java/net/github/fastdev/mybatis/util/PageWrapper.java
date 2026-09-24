@@ -37,14 +37,14 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
      * 空wrapper，无条件即是查询所有
      */
     @JsonIgnore
-    private  final static QueryWrapper NULL_WRAPPER = new QueryWrapper();
+    private static final QueryWrapper<?> NULL_WRAPPER = new QueryWrapper<>();
 
 
     /**
      * 条件构造器
      */
     @JsonIgnore
-    private transient QueryWrapper queryWrapper;
+    private transient QueryWrapper<?> queryWrapper;
 
 
     private final PageRequest<P> pageRequest;
@@ -71,7 +71,7 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
      *
      * @author Japson Huang
      */
-    public QueryWrapper buildQueryWrapper(boolean ignoreAlias) {
+    public QueryWrapper<?> buildQueryWrapper(boolean ignoreAlias) {
         if (queryWrapper != null) {
             return queryWrapper;
         }
@@ -80,11 +80,7 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
             if (pageRequest.isEncrypt()) {
                 EncryptUtil.encryptObject(condition);
             }
-            if (condition instanceof BaseQuery) {
-                this.queryWrapper = ((BaseQuery) condition).buildQueryWrapper(condition, ignoreAlias);
-            } else {
-                this.queryWrapper = BaseQuery.buildQueryWrapper(condition, ignoreAlias);
-            }
+            this.queryWrapper = BaseQuery.buildQueryWrapper(condition, ignoreAlias);
             if (!ArrayUtils.isEmpty(pageRequest.getColumnNames())) {
                 queryWrapper.select(pageRequest.getColumnNames());
             } else if (!ArrayUtils.isEmpty(pageRequest.getExcludeColumnNames())) {
@@ -96,7 +92,7 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
     }
 
 
-    public QueryWrapper buildQueryWrapper() {
+    public QueryWrapper<?> buildQueryWrapper() {
         return buildQueryWrapper(false);
     }
 

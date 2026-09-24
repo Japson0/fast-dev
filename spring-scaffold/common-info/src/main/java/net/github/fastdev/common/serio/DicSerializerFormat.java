@@ -2,8 +2,8 @@
 
 package net.github.fastdev.common.serio;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.ValueSerializer;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import java.io.IOException;
  * @author Japson Huang
  * @version 1.0
  */
-public abstract class DicSerializerFormat<T> extends JsonSerializer<T> {
+public abstract class DicSerializerFormat<T> extends ValueSerializer<T> {
 
     /**
      * 显示值
@@ -32,10 +32,10 @@ public abstract class DicSerializerFormat<T> extends JsonSerializer<T> {
 
     public static final String VALUE = "value";
 
-    protected void write(JsonGenerator jsonGenerator, String display, Object value) throws IOException {
+    protected void write(JsonGenerator jsonGenerator, String display, Object value) {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeStringField(DISPLAY, display);
-        jsonGenerator.writeObjectField(VALUE, value);
+        jsonGenerator.writeStringProperty(DISPLAY, display);
+        jsonGenerator.writePOJOProperty(VALUE, value);
         jsonGenerator.writeEndObject();
     }
 

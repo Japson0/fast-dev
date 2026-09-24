@@ -1,7 +1,7 @@
 package net.github.fastdev.boot.serio;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
 import net.github.fastdev.boot.handle.ComEnumDisplayHandle;
 import net.github.fastdev.common.model.ComEnum;
 import net.github.fastdev.common.serio.DicSerializerFormat;
@@ -26,7 +26,7 @@ public class DefaultEnumSerializer extends DicSerializerFormat<ComEnum> {
     }
 
     @Override
-    public void serialize(ComEnum s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(ComEnum s, JsonGenerator jsonGenerator, SerializationContext serializerProvider) {
         write(jsonGenerator, comEnumDisplayHandle.getDisplay(s), s.getValue());
     }
 }

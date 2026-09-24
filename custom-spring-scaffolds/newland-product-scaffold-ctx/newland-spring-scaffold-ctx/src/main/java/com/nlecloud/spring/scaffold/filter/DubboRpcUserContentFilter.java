@@ -53,7 +53,7 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
 
-        if (RpcContext.getContext().isConsumerSide()) {
+        if (RpcContext.getServiceContext().isConsumerSide()) {
             pushUser(invocation);
             return invoker.invoke(invocation);
         } else {
@@ -73,7 +73,7 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
             invocation.setObjectAttachment(AuthConstants.USER_ID_HEADER, userInfo.getUserId());
             invocation.setObjectAttachment(AuthConstants.USER_HEADER,UserContext.getUserName());
             invocation.setObjectAttachment(AuthConstants.TENANT_ID_HEADER, UserContext.getTenantId());
-            invocation.setObjectAttachment(AuthConstants.SCHOOL_ID_HEADER, UserContext.getSchoolId());
+            invocation.setObjectAttachment(AuthConstants.SCHOOL_ID_HEADER, UserContext.getTenantId());
         }
     }
 
@@ -91,7 +91,7 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
     public void onResponse(Result appResponse, Invoker<?> invoker, Invocation invocation) {
         if(appResponse.hasException()){
             Throwable e = appResponse.getException();
-            Context parentContext = W3CTraceContextPropagator.getInstance().extract(Context.current(), RpcContext.getContext().getObjectAttachments(), GETTER);
+            Context parentContext = W3CTraceContextPropagator.getInstance().extract(Context.current(), invocation.getObjectAttachments(), GETTER);
             // 3. 验证父上下文是否有效
             Span parentSpan = Span.fromContext(parentContext);
             if (!parentSpan.getSpanContext().isValid()) {

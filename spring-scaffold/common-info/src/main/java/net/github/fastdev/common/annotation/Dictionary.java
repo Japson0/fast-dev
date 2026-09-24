@@ -3,7 +3,7 @@
 package net.github.fastdev.common.annotation;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonDeserialize;
 import net.github.fastdev.common.serio.DictionaryDeserializer;
 
 import java.lang.annotation.ElementType;

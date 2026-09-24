@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Japson Huang
  * @version 1.0
  */
-@ConfigurationProperties(prefix = "custom.rest-template")
+//@ConfigurationProperties(prefix = "custom.rest-template")
 public class RestTemplateProperties {
 
     /**

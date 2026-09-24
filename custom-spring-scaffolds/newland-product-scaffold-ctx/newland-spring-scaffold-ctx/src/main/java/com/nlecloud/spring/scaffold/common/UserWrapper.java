@@ -137,7 +137,7 @@ public class UserWrapper implements UserInfo {
     public List<Long> getManagerOrges() {
         Map<Long, List<Long>> tenantOrg = getUserInfo().getTenantOrg();
         if(CollectionUtils.isEmpty(tenantOrg)){
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return tenantOrg.get(this.tenantId);
     }

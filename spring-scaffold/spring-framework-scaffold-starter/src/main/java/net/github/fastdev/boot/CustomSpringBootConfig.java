@@ -1,6 +1,7 @@
 package net.github.fastdev.boot;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import net.github.fastdev.boot.controller.CacheController;
 import net.github.fastdev.boot.controller.EnumController;
 import net.github.fastdev.boot.handle.*;
@@ -11,14 +12,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonProperties;
+import org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -37,7 +37,7 @@ import java.util.List;
 @Configuration
 @EnableConfigurationProperties(CustomSpringBootProperies.class)
 @ComponentScan(basePackages = {"cn.hutool.extra.spring"})
-@AutoConfigureBefore({WebMvcAutoConfiguration.EnableWebMvcConfiguration.class, MessageSourceAutoConfiguration.class})
+@AutoConfigureBefore({WebMvcAutoConfiguration.class, MessageSourceAutoConfiguration.class})
 public class CustomSpringBootConfig {
 
     /**
@@ -50,8 +50,8 @@ public class CustomSpringBootConfig {
      */
     @Bean
     @Primary
-    @ConditionalOnMissingBean(Jackson2ObjectMapperBuilder.class)
-    public ObjectMapper jacksonObjectMapper(ComEnumDisplayHandle comEnumDisplayHandle,Jackson2ObjectMapperBuilder builder, JacksonProperties jacksonProperties) {
+    @ConditionalOnMissingBean(JsonMapper.class)
+    public JsonMapper jacksonObjectMapper(ComEnumDisplayHandle comEnumDisplayHandle, JsonMapper.Builder builder, JacksonProperties jacksonProperties) {
         return new ObjectMapperBuilder(comEnumDisplayHandle,builder,jacksonProperties).builder();
     }
 

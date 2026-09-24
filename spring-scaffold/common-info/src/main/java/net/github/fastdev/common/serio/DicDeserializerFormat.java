@@ -2,9 +2,9 @@
 
 package net.github.fastdev.common.serio;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.databind.ValueDeserializer;
 
 import java.io.IOException;
 
@@ -16,18 +16,18 @@ import java.io.IOException;
  * @author Japson Huang
  * @version 1.0
  */
-public abstract class DicDeserializerFormat<T> extends JsonDeserializer<T> {
+public abstract class DicDeserializerFormat<T> extends ValueDeserializer<T> {
 
-    protected Object getValue(JsonParser parser) throws IOException {
-        JsonToken currentToken = parser.getCurrentToken();
+    protected Object getValue(JsonParser parser) {
+        JsonToken currentToken = parser.currentToken();
         if (currentToken == JsonToken.VALUE_NUMBER_INT || currentToken == JsonToken.VALUE_STRING) {
             return parser.getText();
         } else {
             while (!parser.isClosed()) {
-                if (DicSerializerFormat.VALUE.equals(parser.nextFieldName())) {
+                if (DicSerializerFormat.VALUE.equals(parser.nextName())) {
                     parser.nextValue();
                     Object value = parser.getText();
-                    while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
+                    while (parser.currentToken() != JsonToken.END_OBJECT) {
                         //这里是为了让当前token到达这个子Json的末端”}“
                         parser.nextToken();
                     }

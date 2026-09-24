@@ -106,7 +106,7 @@ public class ProtostuffUtils {
                 ProtostuffIOUtil.mergeFrom(data, wrapper, WRAPPER_SCHEMA);
                 return wrapper.getData();
             } else {
-                T message = clazz.newInstance();
+                T message = clazz.getDeclaredConstructor().newInstance();
                 Schema<T> schema = getSchema(clazz);
                 ProtostuffIOUtil.mergeFrom(data, message, schema);
                 return message;

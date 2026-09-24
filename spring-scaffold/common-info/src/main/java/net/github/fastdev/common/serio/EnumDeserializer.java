@@ -2,9 +2,9 @@
 
 package net.github.fastdev.common.serio;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.*;
+import tools.jackson.databind.cfg.EnumFeature;
 import net.github.fastdev.common.model.ComEnum;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.Map;
  * @author Japson Huang
  * @version 1.0
  */
-public class EnumDeserializer extends DicDeserializerFormat<ComEnum> implements ContextualDeserializer {
+public class EnumDeserializer extends DicDeserializerFormat<ComEnum> {
 
     private static final Map<Class, EnumDeserializer> CACHE_MAP = new HashMap<>();
     private Class<ComEnum> targetEnum;
@@ -33,7 +33,7 @@ public class EnumDeserializer extends DicDeserializerFormat<ComEnum> implements 
 
 
     @Override
-    public ComEnum deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public ComEnum deserialize(JsonParser p, DeserializationContext ctxt) {
 
         Object value = getValue(p);
         if (value == null) return null;
@@ -45,7 +45,7 @@ public class EnumDeserializer extends DicDeserializerFormat<ComEnum> implements 
                 return c;
             }
         }
-        if (!ctxt.isEnabled(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {
+        if (!ctxt.isEnabled(EnumFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)) {
             return ctxt.reportInputMismatch(targetEnum,
                     "not one of the values accepted for Enum class: %s,it expects values [%s]", targetEnum.getSimpleName(), values()
             );
@@ -68,7 +68,7 @@ public class EnumDeserializer extends DicDeserializerFormat<ComEnum> implements 
 
 
     @Override
-    public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException {
+    public ValueDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) {
         if (property != null) {
             Class<?> rawClass = ctxt.getContextualType().getRawClass();
             if (CACHE_MAP.get(rawClass) == null) {

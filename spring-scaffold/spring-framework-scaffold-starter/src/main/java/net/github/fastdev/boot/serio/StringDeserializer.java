@@ -1,10 +1,10 @@
 
 package net.github.fastdev.boot.serio;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.deser.std.StdDeserializer;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class StringDeserializer extends StdDeserializer<String> {
 
-    private static final JsonDeserializer<String> des = com.fasterxml.jackson.databind.deser.std.StringDeserializer.instance;
+    private static final ValueDeserializer<String> des = tools.jackson.databind.deser.jdk.StringDeserializer.instance;
 
     /**
      * 构造
@@ -29,7 +29,7 @@ public class StringDeserializer extends StdDeserializer<String> {
      * @author Japson Huang
      */
     public StringDeserializer() {
-        this(null);
+        this(String.class);
     }
 
     /**
@@ -52,7 +52,7 @@ public class StringDeserializer extends StdDeserializer<String> {
      */
     @Override
     public String deserialize(JsonParser jp, DeserializationContext ctxt)
-            throws IOException {
+    {
         String result = des.deserialize(jp, ctxt);
         if (StringUtils.isEmpty(result)) {
             return null;

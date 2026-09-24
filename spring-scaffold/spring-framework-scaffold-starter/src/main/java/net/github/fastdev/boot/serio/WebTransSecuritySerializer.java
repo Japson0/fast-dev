@@ -4,12 +4,10 @@ import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.SM4;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.BeanProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.ContextualSerializer;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.BeanProperty;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.SerializationContext;
 import net.github.fastdev.boot.utils.WebSecuritySerializeContext;
 import net.github.fastdev.common.annotation.WebSecuritySerialize;
 import net.github.fastdev.common.model.CryptoType;
@@ -27,7 +25,7 @@ import java.util.Map;
  * @author Japson Huang
  * @version 1.0
  */
-public class WebTransSecuritySerializer extends JsonSerializer<String> implements ContextualSerializer {
+public class WebTransSecuritySerializer extends ValueSerializer<String> {
 
     private static final Map<String, WebTransSecuritySerializer> CACHE = new HashMap<>();
     /**
@@ -61,7 +59,7 @@ public class WebTransSecuritySerializer extends JsonSerializer<String> implement
     }
 
     @Override
-    public void serialize(String s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(String s, JsonGenerator jsonGenerator, SerializationContext serializerProvider) {
         if ("".equals(s)) {
             jsonGenerator.writeString("");
             return;
@@ -114,7 +112,7 @@ public class WebTransSecuritySerializer extends JsonSerializer<String> implement
 
 
     @Override
-    public JsonSerializer<?> createContextual(SerializerProvider serializerProvider, BeanProperty beanProperty) throws JsonMappingException {
+    public ValueSerializer<?> createContextual(SerializationContext serializerProvider, BeanProperty beanProperty) {
         if (beanProperty != null) {
             WebSecuritySerialize webSecuritySerialize = beanProperty.getAnnotation(WebSecuritySerialize.class);
             String annotationStr = webSecuritySerialize.toString();

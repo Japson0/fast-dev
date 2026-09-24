@@ -19,6 +19,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>net.github.fast</groupId>
             <artifactId>common-info</artifactId>
         </dependency>

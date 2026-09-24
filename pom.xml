@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>4.1.1</version>
     </parent>
 
     <groupId>net.github.fast</groupId>
@@ -21,20 +21,25 @@
         <module>spring-scaffold</module>
         <module>spring-swagger-ctx</module>
         <module>archetype/spring-cloud-archetype</module>
-        <module>custom-component</module>
         <module>custom-spring-scaffolds</module>
         <module>spring-distributed-lock-ctx</module>
+        <module>custom-component</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <fast-dev.version>3.0-jdk17-SNAPSHOT</fast-dev.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <java.version>25</java.version>
+
+        <maven.compiler.target>25</maven.compiler.target>
+        <fast-dev.version>3.0-jdk25-SNAPSHOT</fast-dev.version>
         <revision>${fast-dev.version}</revision>
-        <spring.version>3.4.5</spring.version>
+        <spring.version>4.1.1</spring.version>
+        <!-- Spring Boot 4.0.0 manages Jackson 3.0.2; use the Jackson 3.1 LTS line. -->
+        <springdoc.version>3.1.1</springdoc.version>
+        <knife4j.version>4.6.0</knife4j.version>
         <hutool.version>5.8.38</hutool.version>
-        <spring-cloud-dependencies.version>2024.0.1</spring-cloud-dependencies.version>
-        <spring-cloud-alibaba-dependencies.version>2025.0.0.0</spring-cloud-alibaba-dependencies.version>
+        <spring-cloud-dependencies.version>2025.1.0</spring-cloud-dependencies.version>
+        <spring-cloud-alibaba-dependencies.version>2025.1.0.0</spring-cloud-alibaba-dependencies.version>
     </properties>
 
     <dependencies>
@@ -42,6 +47,8 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
@@ -131,21 +138,6 @@
             </dependency>
 
 
-<!--            自定义组件-->
-
-            <dependency>
-                <groupId>net.github.fast</groupId>
-                <artifactId>spring-xxl-job-ctx</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.github.fast</groupId>
-                <artifactId>spring-minio-client-ctx</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-
-
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -179,12 +171,30 @@
                 <version>2.0.65</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>1.80</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>

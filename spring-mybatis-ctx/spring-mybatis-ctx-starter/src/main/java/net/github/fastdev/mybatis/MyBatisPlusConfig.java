@@ -82,8 +82,8 @@ public class MyBatisPlusConfig {
     public ISqlInjector sqlInjector() {
         return new DefaultSqlInjector() {
             @Override
-            public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {
-                List<AbstractMethod> methodList = super.getMethodList(mapperClass, tableInfo);
+            public List<AbstractMethod> getMethodList(org.apache.ibatis.session.Configuration configuration,Class<?> mapperClass, TableInfo tableInfo) {
+                List<AbstractMethod> methodList = super.getMethodList(configuration,mapperClass, tableInfo);
                 methodList.add(new UpdateAllColumnById());
 //                methodList.add(new InsertBatch());
                 methodList.add(new SelectRepetitionCount());

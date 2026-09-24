@@ -13,7 +13,7 @@
     <artifactId>spring-mybatis-ctx-starter</artifactId>
 
     <properties>
-        <bcprov.version>1.78.1</bcprov.version>
+        <bcprov.version>1.80</bcprov.version>
     </properties>
 
     <dependencies>
@@ -36,7 +36,7 @@
 
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
         </dependency>
 
 
@@ -59,4 +59,6 @@
         </dependency>
 
     </dependencies>
+
+
 </project>

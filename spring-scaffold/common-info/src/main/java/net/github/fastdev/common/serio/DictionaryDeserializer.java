@@ -1,10 +1,8 @@
 package net.github.fastdev.common.serio;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.databind.DeserializationContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,9 +19,9 @@ import java.util.List;
 public class DictionaryDeserializer extends DicDeserializerFormat<Object> {
 
     @Override
-    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Object deserialize(JsonParser p, DeserializationContext ctxt) {
 
-        if (p.getCurrentToken() == JsonToken.START_ARRAY) {
+        if (p.currentToken() == JsonToken.START_ARRAY) {
             List<Object> values = new ArrayList<>();
             while (p.nextToken() != JsonToken.END_ARRAY) {
                 Object value = getValue(p);
@@ -35,8 +33,4 @@ public class DictionaryDeserializer extends DicDeserializerFormat<Object> {
         }
     }
 
-    @Override
-    public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException {
-        return super.deserializeWithType(p, ctxt, typeDeserializer);
-    }
 }

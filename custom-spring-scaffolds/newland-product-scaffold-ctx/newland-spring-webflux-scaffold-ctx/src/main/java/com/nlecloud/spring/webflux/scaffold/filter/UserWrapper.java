@@ -137,7 +137,7 @@ public class UserWrapper {
     public Mono<List<Long>> getManagerOrges() {
         return getUserInfo().map(user -> {
             if (CollectionUtils.isEmpty(user.getManagerOrges())) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
             return user.getManagerOrges();
         });
@@ -165,7 +165,7 @@ public class UserWrapper {
                                 .schoolName(userInfoDetail.getSchoolName())
                                 .roles(userInfoDetail.getTenantRoleCodeMap() != null && this.tenantId != null
                                         ? userInfoDetail.getTenantRoleCodeMap().get(this.tenantId)
-                                        : (userInfoDetail.getRoles() != null ? new HashSet<>(userInfoDetail.getRoles()) : null))
+                                        : null)
                                 .classId(userInfoDetail.getClassId())
                                 .className(userInfoDetail.getClassName())
                                 .studentNo(userInfoDetail.getStudentNo())

@@ -3,12 +3,10 @@
 package net.github.fastdev.boot.serio;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.BeanProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.ContextualSerializer;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.BeanProperty;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.SerializationContext;
 import net.github.fastdev.boot.handle.DictionaryService;
 import net.github.fastdev.common.annotation.Dictionary;
 import net.github.fastdev.common.serio.DicSerializerFormat;
@@ -27,7 +25,7 @@ import java.util.Map;
  * @author Japson Huang
  * @version 1.0
  */
-public class DictionarySerializer extends DicSerializerFormat<Object> implements ContextualSerializer {
+public class DictionarySerializer extends DicSerializerFormat<Object> {
     /**
      * 缓存
      */
@@ -42,7 +40,7 @@ public class DictionarySerializer extends DicSerializerFormat<Object> implements
      */
     private final static DictionarySerializer NULL_SERVICE_SERIALIZE = new DictionarySerializer() {
         @Override
-        public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        public void serialize(Object value, JsonGenerator gen, SerializationContext serializers) {
             if (value != null) {
                 write(gen, value.toString(), value.toString());
             }
@@ -52,7 +50,7 @@ public class DictionarySerializer extends DicSerializerFormat<Object> implements
     static {
         try {
             dictionaryService = SpringUtil.getBean(DictionaryService.class);
-        } catch (BeansException ignore) {
+        } catch (RuntimeException ignore) {
             dictionaryService = null;
         }
     }
@@ -63,7 +61,7 @@ public class DictionarySerializer extends DicSerializerFormat<Object> implements
     private String typeCode;
 
     @Override
-    public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(Object value, JsonGenerator gen, SerializationContext serializers) {
 
         if (value.getClass() == String.class) {
             String dicStr = dictionaryService.getDicStr(typeCode, value.toString());
@@ -91,7 +89,7 @@ public class DictionarySerializer extends DicSerializerFormat<Object> implements
 
 
     @Override
-    public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) throws JsonMappingException {
+    public ValueSerializer<?> createContextual(SerializationContext prov, BeanProperty property) {
         if (property != null && dictionaryService != null && canDiction(property)) {
             Dictionary dictionary = property.getAnnotation(Dictionary.class);
             if (dictionary != null) {

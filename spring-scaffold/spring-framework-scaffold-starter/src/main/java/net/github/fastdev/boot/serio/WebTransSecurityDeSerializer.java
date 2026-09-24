@@ -5,13 +5,10 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.SM4;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.BeanProperty;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.BeanProperty;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 import net.github.fastdev.boot.utils.WebSecuritySerializeContext;
 import net.github.fastdev.common.annotation.WebSecuritySerialize;
 import net.github.fastdev.common.model.CryptoType;
@@ -29,7 +26,7 @@ import java.util.Map;
  * @author Japson Huang
  * @version 1.0
  */
-public class WebTransSecurityDeSerializer extends JsonDeserializer<String> implements ContextualDeserializer {
+public class WebTransSecurityDeSerializer extends ValueDeserializer<String> {
 
     private static StringDeserializer stringDeserializer = new StringDeserializer();
 
@@ -45,7 +42,7 @@ public class WebTransSecurityDeSerializer extends JsonDeserializer<String> imple
     }
 
     @Override
-    public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public String deserialize(JsonParser p, DeserializationContext ctxt) {
         String value = p.getValueAsString();
         if (StringUtils.isNotEmpty(value)) {
             byte[] cryptKey = WebSecuritySerializeContext.getCryptKey();
@@ -68,7 +65,7 @@ public class WebTransSecurityDeSerializer extends JsonDeserializer<String> imple
     }
 
     @Override
-    public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException {
+    public ValueDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) {
         if (property != null) {
             WebSecuritySerialize webSecuritySerialize = property.getAnnotation(WebSecuritySerialize.class);
             if (webSecuritySerialize.crypto() != CryptoType.NONE) {

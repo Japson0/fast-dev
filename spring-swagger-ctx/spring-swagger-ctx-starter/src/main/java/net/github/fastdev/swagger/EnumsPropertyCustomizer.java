@@ -74,7 +74,7 @@ public class EnumsPropertyCustomizer implements ModelConverter {
     private String getTypeForClass(Class<?> clazz) {
         if (Number.class.isAssignableFrom(clazz) || clazz.isPrimitive() ||
                 clazz.equals(Integer.class) || clazz.equals(Long.class) || clazz.equals(Double.class)) {
-            return "number";
+            return clazz.equals(Long.class)?"BigInt":"number";
         } else {
             return "string";
         }

@@ -1,18 +1,19 @@
 package net.github.fastdev.boot.handle;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.introspect.Annotated;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import tools.jackson.databind.*;
+import tools.jackson.databind.introspect.Annotated;
+import tools.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ser.std.ToStringSerializer;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.cfg.DateTimeFeature;
 import net.github.fastdev.boot.serio.*;
 import net.github.fastdev.common.annotation.Dictionary;
 import net.github.fastdev.common.annotation.WebSecuritySerialize;
 import net.github.fastdev.common.model.ComEnum;
 import net.github.fastdev.common.serio.DictionaryDeserializer;
-import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.boot.jackson.autoconfigure.JacksonProperties;
 
 import java.lang.annotation.Annotation;
 import java.util.AbstractMap;
@@ -33,32 +34,33 @@ public class ObjectMapperBuilder {
     private final ComEnumDisplayHandle comEnumDisplayHandle;
 
 
-    private final Jackson2ObjectMapperBuilder builder;
+    private final JsonMapper.Builder builder;
 
     private final JacksonProperties jacksonProperties;
 
-    public ObjectMapperBuilder(ComEnumDisplayHandle comEnumDisplayHandle, Jackson2ObjectMapperBuilder builder, JacksonProperties jacksonProperties) {
+    public ObjectMapperBuilder(ComEnumDisplayHandle comEnumDisplayHandle, JsonMapper.Builder builder, JacksonProperties jacksonProperties) {
         this.comEnumDisplayHandle = comEnumDisplayHandle;
         this.builder = builder;
         this.jacksonProperties = jacksonProperties;
     }
 
-    public  ObjectMapper builder() {
+    public JsonMapper builder() {
 
         builder.annotationIntrospector(new CustomJacksonAnnotationIntrospector());
-        builder.serializationInclusion(Optional.ofNullable(jacksonProperties.getDefaultPropertyInclusion()).orElse(JsonInclude.Include.NON_NULL));
+        builder.changeDefaultPropertyInclusion(inclusion -> inclusion.withValueInclusion(
+                Optional.ofNullable(jacksonProperties.getDefaultPropertyInclusion()).orElse(JsonInclude.Include.NON_NULL)));
         Map<DeserializationFeature, Boolean> deserialization = jacksonProperties.getDeserialization();
         SimpleModule module = new SimpleModule();
         module.addSerializer(ComEnum.class,new DefaultEnumSerializer(comEnumDisplayHandle));
         module.addSerializer(Long.class, ToStringSerializer.instance);
-        builder.modules(module);
+        builder.addModule(module);
 
         if (deserialization.get(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) == null) {
-            builder.failOnUnknownProperties(false);
+            builder.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         }
-        builder.defaultViewInclusion(true);
-        builder.featuresToEnable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        return builder.createXmlMapper(false).build();
+        builder.enable(MapperFeature.DEFAULT_VIEW_INCLUSION);
+        builder.enable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return builder.build();
     }
 
     public static class CustomJacksonAnnotationIntrospector extends JacksonAnnotationIntrospector {
@@ -66,7 +68,7 @@ public class ObjectMapperBuilder {
         /**
          * 注解序列反序列缓存
          */
-        private final static Map<Class<? extends Annotation>, Map.Entry<JsonSerializer<?>, JsonDeserializer<?>>> ANNOTATED_INTROSPECTOR;
+        private final static Map<Class<? extends Annotation>, Map.Entry<ValueSerializer<?>, ValueDeserializer<?>>> ANNOTATED_INTROSPECTOR;
 
         /**
          * 注解信息
@@ -84,7 +86,7 @@ public class ObjectMapperBuilder {
 
 
         @Override
-        public Object findSerializer(Annotated a) {
+        public Object findSerializer(tools.jackson.databind.cfg.MapperConfig<?> config, Annotated a) {
             // 如果是字典注解
             Annotation annotation = null;
             for (Class<? extends Annotation> at : ANNOTATIONS) {
@@ -96,7 +98,7 @@ public class ObjectMapperBuilder {
             if (annotation != null) {
                 return ANNOTATED_INTROSPECTOR.get(annotation.annotationType()).getKey();
             }
-            return super.findSerializer(a);
+            return super.findSerializer(config, a);
         }
 
     }

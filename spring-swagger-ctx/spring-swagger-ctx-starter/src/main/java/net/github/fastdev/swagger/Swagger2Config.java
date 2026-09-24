@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 /**
- * swagger2配置，访问地址  http://localhost:8080/doc.html
+ * swagger2配置，访问地址
  *
  * @author Dante Zheng
  * @version 1.0

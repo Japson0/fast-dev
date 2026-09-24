@@ -1,6 +1,6 @@
 package net.github.fastdev.cache.redis;
 
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.boot.cache.autoconfigure.CacheProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.CacheManager;
@@ -49,7 +49,7 @@ public class RedisCacheConfig extends CacheProperties {
         if (timeToLive == null) {
             timeToLive = Duration.ofHours(12);
         }
-        if (this.getRedis().isUseKeyPrefix() && !StringUtils.isEmpty(getRedis().getKeyPrefix())) {
+        if (this.getRedis().isUseKeyPrefix() && StringUtils.hasLength(getRedis().getKeyPrefix())) {
             cacheConfig = cacheConfig.computePrefixWith(name ->
                     getRedis().getKeyPrefix() + SPLIT + name + SPLIT
             );

@@ -63,7 +63,7 @@ public class EnumConverterFactory implements ConverterFactory<String, ComEnum> {
 
         @Override
         public T convert(String s) {
-            if (StringUtils.isEmpty(s)) {
+            if (!StringUtils.hasLength(s)) {
                 return null;
             }
             for (T t : enumType.getEnumConstants()) {
