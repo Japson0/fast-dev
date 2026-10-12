@@ -14,17 +14,19 @@ public class ThreadLocalTaskDecorator implements TaskDecorator {
         UserInfo userInfo = UserContext.getUserInfo();
         Map<String, String> contextMap = MDC.getCopyOfContextMap();
         return () -> {
-            try {
-                UserContext.setUserInfo(userInfo);
+            Runnable task = () -> {
                 if (contextMap != null) {
                     MDC.setContextMap(contextMap);
                 }
-
-                // 将上下文设置到子线程
                 runnable.run();
+            };
+            try {
+                if (userInfo == null) {
+                    task.run();
+                } else {
+                    UserContext.runWith(userInfo, task);
+                }
             } finally {
-                // 清理避免内存泄漏
-                UserContext.clean();
                 MDC.clear();
             }
         };

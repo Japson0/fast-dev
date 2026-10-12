@@ -37,12 +37,12 @@ public class UserWrapper {
 
     private UserProxy userProxy;
 
-    private Mono<UserInfo> cachedUserInfo;
+    private volatile Mono<UserInfo> cachedUserInfo;
 
     private String token;
 
 
-    private static final String KEY_INFO = "USER_INFO_KEY";
+    private static final Class<UserWrapper> KEY_INFO = UserWrapper.class;
 
     public ContextView getContextView() {
         return Context.of(KEY_INFO, this);
@@ -59,7 +59,6 @@ public class UserWrapper {
         this.username = username;
         this.tenantId = tenantId;
         this.schoolId = schoolId;
-        this.roles = roles;
     }
 
 
@@ -68,7 +67,6 @@ public class UserWrapper {
         this.username = username;
         this.tenantId = tenantId;
         this.schoolId = schoolId;
-        this.roles = roles;
         this.token = token;
     }
 
@@ -93,7 +91,8 @@ public class UserWrapper {
 
 
     public Mono<Boolean> isAdmin() {
-        return getUserInfo().map(user -> user.getRoles().contains("admin"));
+        return getUserInfo().map(user -> user.getRoles() != null
+                && user.getRoles().contains("admin"));
     }
 
     /**
@@ -118,19 +117,16 @@ public class UserWrapper {
     public Mono<Boolean> isOrgAdmin() {
         return getUserInfo().map(user -> {
             if (user.getOrgInfo() == null) {
-                return null;
+                return false;
             }
             return user.getOrgInfo().isAdmin();
         });
     }
 
     public Mono<Long> getOrgId() {
-        return getUserInfo().map(user -> {
-            if (user.getOrgInfo() == null) {
-                return null;
-            }
-            return user.getOrgInfo().getId();
-        });
+        return getUserInfo().flatMap(user -> user.getOrgInfo() == null
+                ? Mono.empty()
+                : Mono.justOrEmpty(user.getOrgInfo().getId()));
     }
 
 
@@ -144,11 +140,15 @@ public class UserWrapper {
     }
 
     public Mono<UserInfo> getUserInfo() {
-        if (cachedUserInfo == null) {
-            this.cachedUserInfo = getUserInfoImpl().map(userInfoDetail -> {
+        Mono<UserInfo> result = cachedUserInfo;
+        if (result == null) {
+            synchronized (this) {
+                result = cachedUserInfo;
+                if (result == null) {
+                    result = getUserInfoImpl().map(userInfoDetail -> {
                         List<TenantInfo> tenantList = userInfoDetail.getTenantList();
                         TenantInfo currentTenant = null;
-                        if (CollectionUtils.isEmpty(tenantList)) {
+                        if (!CollectionUtils.isEmpty(tenantList)) {
                             for (TenantInfo tenantInfo : tenantList) {
                                 if (tenantInfo.getId().equals(this.tenantId)) {
                                     currentTenant = tenantInfo;
@@ -180,12 +180,13 @@ public class UserWrapper {
                                         ? userInfoDetail.getOrgInfos().get(this.tenantId) : null)
                                 .managerOrges(userInfoDetail.getTenantOrg() != null && this.tenantId != null
                                         ? userInfoDetail.getTenantOrg().get(this.tenantId) : null)
-                                .build();
-                    }
-            ).cast(UserInfo.class).cache();
-
+                                 .build();
+                    }).cast(UserInfo.class).cache();
+                    cachedUserInfo = result;
+                }
+            }
         }
-        return cachedUserInfo;
+        return result;
     }
 
 

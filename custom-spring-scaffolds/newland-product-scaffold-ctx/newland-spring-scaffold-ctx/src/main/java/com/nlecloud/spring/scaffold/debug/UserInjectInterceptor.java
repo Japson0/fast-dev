@@ -1,12 +1,15 @@
 package com.nlecloud.spring.scaffold.debug;
 
 import com.nlecloud.spring.scaffold.property.NewLandSpringProperty;
-import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import net.github.fastdev.boot.handle.CustomInterceptor;
-import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
 
 
 /**
@@ -17,7 +20,8 @@ import org.springframework.core.Ordered;
  * @author Japson Huang
  * @version1.0
  */
-public class UserInjectInterceptor  implements CustomInterceptor {
+@Order(-100)
+public class UserInjectInterceptor extends OncePerRequestFilter {
 
 
     private final NewLandSpringProperty.DebugUserInfo userInfo;
@@ -28,15 +32,14 @@ public class UserInjectInterceptor  implements CustomInterceptor {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        UserContext.setUserInfo(new UserWrapper(userInfo.getUserId(),userInfo.getUsername(),userInfo.getTenantId(), userInfo.getSchoolId()));
-
-        return CustomInterceptor.super.preHandle(request, response, handler);
-    }
-
-    @Override
-    public int order() {
-        return Ordered.HIGHEST_PRECEDENCE-1;
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+        request.setAttribute(
+                com.nlecloud.spring.scaffold.filter.UserInterceptor.DEBUG_USER_ATTRIBUTE,
+                new UserWrapper(userInfo.getUserId(), userInfo.getUsername(),
+                        userInfo.getTenantId(), userInfo.getSchoolId()));
+        filterChain.doFilter(request, response);
     }
 }

@@ -57,11 +57,17 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
             pushUser(invocation);
             return invoker.invoke(invocation);
         } else {
-            try {
-                popUser(invocation);
+            UserInfo userInfo = popUser(invocation);
+            if (userInfo == null) {
                 return invoker.invoke(invocation);
-            }finally {
-                UserContext.clean();
+            }
+            try {
+                return UserContext.callWith(userInfo, () -> invoker.invoke(invocation));
+            } catch (Throwable throwable) {
+                if (throwable instanceof RpcException rpcException) {
+                    throw rpcException;
+                }
+                throw new RpcException(throwable);
             }
         }
     }
@@ -77,14 +83,15 @@ public class DubboRpcUserContentFilter implements Filter ,BaseFilter.Listener{
         }
     }
 
-    private void popUser(Invocation invocation) {
+    private UserInfo popUser(Invocation invocation) {
         Object userId = invocation.getObjectAttachment(AuthConstants.USER_ID_HEADER);
-        if(userId!=null){
-            Long tenantId = (Long) invocation.getObjectAttachment(AuthConstants.TENANT_ID_HEADER);
-            String username = (String) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
-            Long schoolId = (Long) invocation.getObjectAttachment(AuthConstants.SCHOOL_ID_HEADER);
-            UserContext.setUserInfo(new UserWrapper((Long) userId, username, tenantId, schoolId));
+        if (userId == null) {
+            return null;
         }
+        Long tenantId = (Long) invocation.getObjectAttachment(AuthConstants.TENANT_ID_HEADER);
+        String username = (String) invocation.getObjectAttachment(AuthConstants.USER_HEADER);
+        Long schoolId = (Long) invocation.getObjectAttachment(AuthConstants.SCHOOL_ID_HEADER);
+        return new UserWrapper((Long) userId, username, tenantId, schoolId);
     }
 
     @Override

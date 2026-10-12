@@ -1,78 +1,104 @@
-
 package com.nlecloud.spring.scaffold.filter;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.URLUtil;
+import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.common.AuthConstants;
 import com.nlecloud.spring.scaffold.common.UserContext;
 import com.nlecloud.spring.scaffold.common.UserWrapper;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import net.github.fastdev.boot.handle.CustomInterceptor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.util.*;
+import java.io.IOException;
 
 /**
- * <P><B>用户拦截器:</B></P>
- * RevisionTrail:(Date/Author/Description)
- * 2021年11月04日 CREATE
+ * Request user context filter.
  *
- * @author Japson Huang
- * @version 1.0
+ * ScopedValue must surround the complete servlet chain so that structured
+ * child tasks created while handling the request inherit the user context.
  */
-public class UserInterceptor implements CustomInterceptor {
+@Order(-90)
+public class UserInterceptor extends OncePerRequestFilter {
 
+    public static final String DEBUG_USER_ATTRIBUTE =
+            UserInterceptor.class.getName() + ".DEBUG_USER";
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if(handler instanceof HandlerMethod) {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+        UserInfo userInfo = (UserInfo) request.getAttribute(DEBUG_USER_ATTRIBUTE);
+        if (userInfo == null) {
+            userInfo = resolveUser(request);
+        }
 
-            String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
+        if (userInfo == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            if (StringUtils.isNotEmpty(userId)) {
-                String username = request.getHeader(AuthConstants.USER_HEADER);
-                String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
-                String currentId = request.getHeader(AuthConstants.CURRENT_TENANT_ID_HEADER);
-
-                String[] tenantIds = StringUtils.split(request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
-
-                String veryCurrentTenantId = null;
-                if(!ArrayUtils.isEmpty(tenantIds)){
-                    if(tenantIds.length==1||currentId==null){
-                        veryCurrentTenantId = tenantIds[0];
-                    }else {
-                        for (String tenantId : tenantIds) {
-                            if(tenantId.equals(currentId)){
-                                veryCurrentTenantId=tenantId;
-                                break;
-                            }
-                        }
-                        veryCurrentTenantId=veryCurrentTenantId==null?tenantIds[0]:veryCurrentTenantId;
-
-                    }
+        try {
+            UserContext.runWith(userInfo, () -> {
+                try {
+                    filterChain.doFilter(request, response);
+                } catch (IOException | ServletException e) {
+                    throw new UserContextFilterException(e);
                 }
-                UserContext.setUserInfo(new UserWrapper(Long.valueOf(userId),
-                        username, veryCurrentTenantId == null ? 0L : Long.valueOf(veryCurrentTenantId),
-                        StringUtils.isNotEmpty(schoolId) ? Long.valueOf(schoolId) : null,
-                        request.getHeader(HttpHeaders.AUTHORIZATION)
-                ));
+            });
+        } catch (UserContextFilterException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException ioException) {
+                throw ioException;
+            }
+            if (cause instanceof ServletException servletException) {
+                throw servletException;
+            }
+            throw e;
+        }
+    }
+
+    private UserInfo resolveUser(HttpServletRequest request) {
+        String userId = request.getHeader(AuthConstants.USER_ID_HEADER);
+        if (StringUtils.isEmpty(userId)) {
+            return null;
+        }
+
+        String currentId = request.getHeader(AuthConstants.CURRENT_TENANT_ID_HEADER);
+        String[] tenantIds = StringUtils.split(
+                request.getHeader(AuthConstants.TENANT_ID_HEADER), ",");
+        String tenantId = selectTenant(tenantIds, currentId);
+        String schoolId = request.getHeader(AuthConstants.SCHOOL_ID_HEADER);
+
+        return new UserWrapper(
+                Long.valueOf(userId),
+                request.getHeader(AuthConstants.USER_HEADER),
+                tenantId == null ? 0L : Long.valueOf(tenantId),
+                StringUtils.isNotEmpty(schoolId) ? Long.valueOf(schoolId) : null,
+                request.getHeader(HttpHeaders.AUTHORIZATION));
+    }
+
+    private String selectTenant(String[] tenantIds, String currentId) {
+        if (ArrayUtils.isEmpty(tenantIds) || tenantIds.length == 1
+                || currentId == null) {
+            return ArrayUtils.isEmpty(tenantIds) ? null : tenantIds[0];
+        }
+        for (String tenantId : tenantIds) {
+            if (tenantId.equals(currentId)) {
+                return tenantId;
             }
         }
-        return true;
+        return tenantIds[0];
     }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        UserContext.clean();
-    }
-
-    @Override
-    public int order() {
-        return Ordered.LOWEST_PRECEDENCE-2;
+    private static final class UserContextFilterException extends RuntimeException {
+        private UserContextFilterException(Throwable cause) {
+            super(cause);
+        }
     }
 }

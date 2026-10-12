@@ -1,7 +1,6 @@
 
 package com.nlecloud.spring.webflux.scaffold.filter;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.nlecloud.spring.common.AuthConstants;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,8 +9,6 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
-
-import java.util.Collections;
 
 /**
  * <P><B>用户过滤器:</B></P>
@@ -27,37 +24,47 @@ public class UserFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         HttpHeaders headers = exchange.getRequest().getHeaders();
 
-        String userId = headers.getFirst(AuthConstants.USER_ID_HEADER);
-
-        if( StringUtils.isNotEmpty(userId)) {
-            String username = headers.getFirst(AuthConstants.USER_HEADER);
-            String currentId = headers.getFirst(AuthConstants.CURRENT_TENANT_ID_HEADER);
-            String schoolId = headers.getFirst(AuthConstants.SCHOOL_ID_HEADER);
-
-            String[] tenantIds = StringUtils.split(headers.getFirst(AuthConstants.TENANT_ID_HEADER), ",");
-
-            String veryCurrentTenantId = null;
-            if(!ArrayUtils.isEmpty(tenantIds)){
-                if(tenantIds.length==1||currentId==null){
-                    veryCurrentTenantId = tenantIds[0];
-                }else {
-                    for (String tenantId : tenantIds) {
-                        if(tenantId.equals(currentId)){
-                            veryCurrentTenantId=tenantId;
-                            break;
-                        }
-                    }
-                    veryCurrentTenantId=veryCurrentTenantId==null?tenantIds[0]:veryCurrentTenantId;
-                }
-            }
-            Long currentTenantId = StringUtils.isNotEmpty(veryCurrentTenantId) ? Long.valueOf(veryCurrentTenantId) : null;
-            Long currentSchoolId = StringUtils.isNotEmpty(schoolId) ? Long.valueOf(schoolId) : null;
-            String token = headers.getFirst(HttpHeaders.AUTHORIZATION);
-            Long currentUserId = Long.valueOf(userId);
-            return chain.filter(exchange).contextWrite(
-                    new UserWrapper(currentUserId, username, currentTenantId, currentSchoolId, token).getContextView()
-            );
+        UserWrapper userWrapper = resolveUser(headers);
+        if (userWrapper != null) {
+            return chain.filter(exchange).contextWrite(userWrapper.getContextView());
         }
         return chain.filter(exchange);
+    }
+
+    private UserWrapper resolveUser(HttpHeaders headers) {
+        String userId = headers.getFirst(AuthConstants.USER_ID_HEADER);
+        if (StringUtils.isEmpty(userId)) {
+            return null;
+        }
+
+        String[] tenantIds = StringUtils.split(
+                headers.getFirst(AuthConstants.TENANT_ID_HEADER), ",");
+        String tenantId = selectTenant(
+                tenantIds,
+                headers.getFirst(AuthConstants.CURRENT_TENANT_ID_HEADER));
+
+        Long currentTenantId = StringUtils.isNotEmpty(tenantId)
+                ? Long.valueOf(tenantId) : null;
+        String schoolId = headers.getFirst(AuthConstants.SCHOOL_ID_HEADER);
+
+        return new UserWrapper(
+                Long.valueOf(userId),
+                headers.getFirst(AuthConstants.USER_HEADER),
+                currentTenantId,
+                StringUtils.isNotEmpty(schoolId) ? Long.valueOf(schoolId) : null,
+                headers.getFirst(HttpHeaders.AUTHORIZATION));
+    }
+
+    private String selectTenant(String[] tenantIds, String currentId) {
+        if (ArrayUtils.isEmpty(tenantIds) || tenantIds.length == 1
+                || currentId == null) {
+            return ArrayUtils.isEmpty(tenantIds) ? null : tenantIds[0];
+        }
+        for (String tenantId : tenantIds) {
+            if (tenantId.equals(currentId)) {
+                return tenantId;
+            }
+        }
+        return tenantIds[0];
     }
 }

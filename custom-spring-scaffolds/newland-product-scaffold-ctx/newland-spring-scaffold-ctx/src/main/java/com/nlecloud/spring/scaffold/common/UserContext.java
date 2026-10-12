@@ -6,8 +6,6 @@ import com.nlecloud.spring.annotation.OrgInfo;
 import com.nlecloud.spring.annotation.TenantInfo;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.TenantType;
-import org.springframework.util.CollectionUtils;
-
 import java.util.Collection;
 
 /**
@@ -24,7 +22,7 @@ public class UserContext {
     /**
      * 用户信息
      */
-    private final static ThreadLocal<UserInfo> USER_INFO_LOCAL=new ThreadLocal<>();
+    private static final ScopedValue<UserInfo> USER_INFO = ScopedValue.newInstance();
 
     private static final UserWrapper robotUser=new UserWrapper(0L,"system",0L);
 
@@ -37,10 +35,6 @@ public class UserContext {
 
     public static boolean isLogin(){
         return hasUser();
-    }
-
-    public static void clean() {
-        USER_INFO_LOCAL.remove();
     }
 
     public static Long getUserId() {
@@ -61,7 +55,7 @@ public class UserContext {
     }
 
     public static UserInfo getUserInfo() {
-        return USER_INFO_LOCAL.get();
+        return USER_INFO.isBound() ? USER_INFO.get() : null;
     }
 
     public static Long getOrgId(){
@@ -137,16 +131,40 @@ public class UserContext {
     }
 
 
-    public static void setUserInfo(UserInfo userInfo){
-        USER_INFO_LOCAL.set(userInfo);
-    }
-
-
     public static boolean hasUser(){
-        return USER_INFO_LOCAL.get()!=null;
+        return USER_INFO.isBound() && USER_INFO.get() != null;
     }
 
     public static boolean isRobot(){
         return getUserInfo()== robotUser;
+    }
+
+    public static void runWith(UserInfo userInfo, Runnable action) {
+        ScopedValue.where(USER_INFO, userInfo).run(action);
+    }
+
+    public static <T> T callWith(UserInfo userInfo, ThrowingCallable<T> action) throws Throwable {
+        Result<T> result = new Result<>();
+        ScopedValue.where(USER_INFO, userInfo).run(() -> {
+            try {
+                result.value = action.call();
+            } catch (Throwable throwable) {
+                result.error = throwable;
+            }
+        });
+        if (result.error != null) {
+            throw result.error;
+        }
+        return result.value;
+    }
+
+    private static final class Result<T> {
+        private T value;
+        private Throwable error;
+    }
+
+    @FunctionalInterface
+    public interface ThrowingCallable<T> {
+        T call() throws Throwable;
     }
 }
