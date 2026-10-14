@@ -6,6 +6,8 @@ import com.nlecloud.spring.annotation.OrgInfo;
 import com.nlecloud.spring.annotation.TenantInfo;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.TenantType;
+import com.nlecloud.spring.scaffold.handle.UserMDCHandle;
+import org.slf4j.MDC;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -41,6 +43,7 @@ public class UserContext {
 
     public static void clean() {
         USER_INFO_LOCAL.remove();
+        UserMDCHandle.remove();
     }
 
     public static Long getUserId() {
@@ -139,6 +142,7 @@ public class UserContext {
 
     public static void setUserInfo(UserInfo userInfo){
         USER_INFO_LOCAL.set(userInfo);
+        UserMDCHandle.initUserMDC(userInfo);
     }
 
 
