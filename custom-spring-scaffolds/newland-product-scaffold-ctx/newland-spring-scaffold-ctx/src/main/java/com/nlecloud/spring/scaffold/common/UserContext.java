@@ -6,6 +6,9 @@ import com.nlecloud.spring.annotation.OrgInfo;
 import com.nlecloud.spring.annotation.TenantInfo;
 import com.nlecloud.spring.annotation.UserInfo;
 import com.nlecloud.spring.annotation.enums.TenantType;
+import com.nlecloud.spring.scaffold.handle.UserMDCHandle;
+import org.slf4j.MDC;
+
 import java.util.Collection;
 
 /**
@@ -140,16 +143,26 @@ public class UserContext {
     }
 
     public static void runWith(UserInfo userInfo, Runnable action) {
-        ScopedValue.where(USER_INFO, userInfo).run(action);
+        ScopedValue.where(USER_INFO, userInfo).run(() -> {
+            UserMDCHandle.initUserMDC(userInfo);   // 先设
+            try {
+                action.run();
+            } finally {
+                UserMDCHandle.remove();            // 后清
+            }
+        });
     }
 
     public static <T> T callWith(UserInfo userInfo, ThrowingCallable<T> action) throws Throwable {
         Result<T> result = new Result<>();
         ScopedValue.where(USER_INFO, userInfo).run(() -> {
             try {
+                UserMDCHandle.initUserMDC(userInfo);
                 result.value = action.call();
             } catch (Throwable throwable) {
                 result.error = throwable;
+            }finally {
+                UserMDCHandle.remove();
             }
         });
         if (result.error != null) {
