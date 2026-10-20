@@ -101,7 +101,7 @@ public class AsyncTaskTableInitializer {
     private void executeScript(Connection connection, String script) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             for (String sql : script.split(";\\s*\n")) {
-                String executable = Arrays.stream(sql.split("\\R"))
+                String executable = sql.lines()
                         .filter(l -> !l.trim().startsWith("--"))
                         .collect(Collectors.joining("\n")).trim();
                 if (executable.isEmpty()) {
