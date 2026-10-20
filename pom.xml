@@ -24,6 +24,7 @@
         <module>custom-component</module>
         <module>custom-spring-scaffolds</module>
         <module>spring-distributed-lock-ctx</module>
+        <module>spring-async-task-ctx</module>
     </modules>
 
     <properties>
