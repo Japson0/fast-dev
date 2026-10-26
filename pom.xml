@@ -24,6 +24,7 @@
         <module>custom-spring-scaffolds</module>
         <module>spring-distributed-lock-ctx</module>
         <module>custom-component</module>
+        <module>spring-async-task-ctx</module>
     </modules>
 
     <properties>
@@ -135,6 +136,12 @@
                 <groupId>net.github.fast</groupId>
                 <artifactId>spring-distributed-lock-zookeeper</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.github.fast</groupId>
+                <artifactId>spring-async-task-ctx</artifactId>
+                <version>${fast-dev.version}</version>
             </dependency>
 
 
