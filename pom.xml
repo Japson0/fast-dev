@@ -137,7 +137,7 @@
             <dependency>
                 <groupId>net.github.fast</groupId>
                 <artifactId>spring-xxl-job-ctx</artifactId>
-                <version>${project.version}</version>
+                <version>${fast-dev.version.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.github.fast</groupId>
@@ -145,6 +145,11 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>net.github.fast</groupId>
+                <artifactId>spring-async-task-ctx</artifactId>
+                <version>${fast-dev.version}</version>
+            </dependency>
 
 
             <dependency>

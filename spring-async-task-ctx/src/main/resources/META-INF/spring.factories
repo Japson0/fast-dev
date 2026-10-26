@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  net.github.fastdev.asynctask.redis.AsyncTaskRedisConfig,\
-  net.github.fastdev.asynctask.jdbc.AsyncTaskJdbcConfig
