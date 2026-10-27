@@ -55,12 +55,12 @@ public class AsyncTaskProperties {
     }
 
     /**
-     * 消费线程数
+     * 固定工作线程数，同时限制本实例最大在途任务数（拉取中及执行中）
      */
     private int workers = 4;
 
     /**
-     * 轮询间隔（毫秒），jdbc实现轮询间隔/redis实现BRPOP超时
+     * 轮询完成到下一轮开始的间隔（毫秒），JDBC和Redis均使用非阻塞拉取
      */
     private long pollIntervalMillis = 3000;
 
@@ -70,7 +70,7 @@ public class AsyncTaskProperties {
     private long leaseMillis = 600000;
 
     /**
-     * 轮询线程池大小（工作线程+回收扫描）
+     * 轮询调度并发数，与任务执行并发独立；不包含单独的回收扫描线程
      */
     private int pollers = 2;
 
