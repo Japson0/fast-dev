@@ -16,14 +16,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <P><B>抽象任务引擎:</B></P>
- * 通用调度逻辑，与存储无关：Worker池、重试、超时回收、businessCode路由。
+ * 通用调度逻辑，与存储无关：虚拟线程执行、并发限制、重试、超时回收、businessCode路由。
  * RevisionTrail:(Date/Author/Description)
  * 2026年10月19日 CREATE
  *
@@ -34,6 +36,8 @@ public abstract class AbstractTaskEngine implements TaskEngine, SmartInitializin
 
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractTaskEngine.class);
+
+    private static final int POLL_BATCH_SIZE = 32;
 
     protected final TaskStore store;
 
@@ -54,12 +58,14 @@ public abstract class AbstractTaskEngine implements TaskEngine, SmartInitializin
     private final Map<String, CountDownLatch> awaitLatchs = new ConcurrentHashMap<>();
 
     /**
-     * 工作线程池
+     * 每任务一个虚拟线程，由executionPermits限制在途任务数
      */
     private ExecutorService workerPool;
 
+    private Semaphore executionPermits;
+
     /**
-     * 轮询线程（每worker一个poll调度）
+     * 轮询线程（每poller一个poll调度）
      */
     private ScheduledExecutorService pollPool;
 
@@ -163,9 +169,12 @@ public abstract class AbstractTaskEngine implements TaskEngine, SmartInitializin
     protected void start() {
         running = true;
         int workers = Math.max(1, properties.getWorkers());
-        workerPool = Executors.newFixedThreadPool(workers, namedThreadFactory("async-task-worker"));
-        pollPool = Executors.newScheduledThreadPool(workers, namedThreadFactory("async-task-poll"));
-        for (int i = 0; i < workers; i++) {
+        int pollers = Math.max(1, properties.getPollers());
+        executionPermits = new Semaphore(workers);
+        workerPool = Executors.newThreadPerTaskExecutor(
+                Thread.ofVirtual().name("async-task-worker-", 0).factory());
+        pollPool = Executors.newScheduledThreadPool(pollers, namedThreadFactory("async-task-poll"));
+        for (int i = 0; i < pollers; i++) {
             pollPool.scheduleWithFixedDelay(this::pollAndExecute, properties.getPollIntervalMillis(),
                     properties.getPollIntervalMillis(), TimeUnit.MILLISECONDS);
         }
@@ -176,23 +185,48 @@ public abstract class AbstractTaskEngine implements TaskEngine, SmartInitializin
 
     protected void stop() {
         running = false;
-        shutdownPool(workerPool);
         shutdownPool(pollPool);
+        shutdownPool(workerPool);
         shutdownPool(recyclePool);
     }
 
     private void pollAndExecute() {
-        if (!running) {
-            return;
-        }
-        try {
-            TaskRecord record = store.poll(lockOwner());
-            if (record == null) {
+        for (int i = 0; i < POLL_BATCH_SIZE && running; i++) {
+            if (!executionPermits.tryAcquire()) {
                 return;
             }
-            workerPool.submit(() -> execute(record));
-        } catch (Exception e) {
-            logger.error("拉取任务异常", e);
+            boolean submitted = false;
+            TaskRecord record = null;
+            try {
+                if (!running) {
+                    return;
+                }
+                record = store.poll(lockOwner());
+                if (record == null) {
+                    return;
+                }
+                TaskRecord claimed = record;
+                workerPool.execute(() -> {
+                    try {
+                        execute(claimed);
+                    } finally {
+                        executionPermits.release();
+                    }
+                });
+                submitted = true;
+            } catch (RejectedExecutionException e) {
+                // 不无条件归还任务，避免覆盖其他执行批次；由现有租约回收恢复。
+                logger.error("任务提交被拒绝，等待租约回收, taskId:{}",
+                        record == null ? null : record.getTaskId(), e);
+                return;
+            } catch (Exception e) {
+                logger.error("拉取任务异常", e);
+                return;
+            } finally {
+                if (!submitted) {
+                    executionPermits.release();
+                }
+            }
         }
     }
 
