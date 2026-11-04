@@ -56,14 +56,12 @@ public class AsyncTaskJdbcConfig {
     }
 
     @Bean
-    @ConditionalOnMissingBean(TaskStore.class)
     public TaskStore jdbcTaskStore(NamedParameterJdbcTemplate jdbcTemplate, ObjectMapper objectMapper,
                                    AsyncTaskProperties properties) {
         return new JdbcTaskStore(jdbcTemplate, objectMapper, properties);
     }
 
     @Bean
-    @ConditionalOnMissingBean(TaskEngine.class)
     public TaskEngine jdbcTaskEngine(TaskStore taskStore, ApplicationContext applicationContext,
                                      AsyncTaskProperties properties, ObjectMapper objectMapper) {
         return new JdbcTaskEngine(taskStore, applicationContext, properties, objectMapper);

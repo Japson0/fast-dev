@@ -72,7 +72,7 @@ public class AsyncTaskProperties {
     /**
      * 轮询调度并发数，与任务执行并发独立；不包含单独的回收扫描线程
      */
-    private int pollers = 2;
+    private int pollers = 1;
 
     /**
      * 重试配置

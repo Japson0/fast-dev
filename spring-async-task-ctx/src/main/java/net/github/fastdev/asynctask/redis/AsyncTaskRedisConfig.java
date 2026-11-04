@@ -41,7 +41,6 @@ public class AsyncTaskRedisConfig {
     private String applicationName;
 
     @Bean
-    @ConditionalOnMissingBean(TaskStore.class)
     public TaskStore redisTaskStore(StringRedisTemplate stringRedisTemplate, ObjectMapper objectMapper,
                                      AsyncTaskProperties properties) {
         resolveNamespace(properties);
@@ -49,7 +48,6 @@ public class AsyncTaskRedisConfig {
     }
 
     @Bean
-    @ConditionalOnMissingBean(TaskEngine.class)
     public TaskEngine redisTaskEngine(TaskStore taskStore, ApplicationContext applicationContext,
                                       AsyncTaskProperties properties, ObjectMapper objectMapper) {
         return new RedisTaskEngine(taskStore, applicationContext, properties, objectMapper);
