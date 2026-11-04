@@ -93,14 +93,6 @@ public abstract class AbstractTaskEngine implements TaskEngine, SmartInitializin
         if (businessCode == null || businessCode.trim().isEmpty()) {
             throw new IllegalArgumentException("handler的businessCode不能为空");
         }
-        TaskHandler existed = handlerRegistry.get(businessCode);
-        if (existed != null && existed != handler) {
-            throw new IllegalArgumentException("businessCode冲突，已存在同编码Handler:" + businessCode);
-        }
-        if (applicationContext.getBeanNamesForType(handler.getClass()).length == 0) {
-            throw new IllegalArgumentException("handler必须是Spring容器中的bean，"
-                    + "lambda/匿名实例无法在重启后恢复:" + handler.getClass().getName());
-        }
         String payloadJson = serializePayload(payload);
         TaskRecord record = new TaskRecord();
         record.setBusinessCode(businessCode);
