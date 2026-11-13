@@ -21,6 +21,7 @@
         <module>spring-hadoop-client-ctx</module>
         <module>spring-minio-client-ctx</module>
         <module>spring-xxl-job-ctx</module>
+        <module>spring-agentscope-ctx</module>
     </modules>
 
     <dependencyManagement>

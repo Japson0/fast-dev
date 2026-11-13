@@ -25,6 +25,7 @@
         <module>custom-spring-scaffolds</module>
         <module>spring-distributed-lock-ctx</module>
         <module>spring-async-task-ctx</module>
+        <module>custom-component/spring-agentscope-ctx</module>
     </modules>
 
     <properties>
@@ -131,6 +132,12 @@
                 <version>${project.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>net.github.fast</groupId>
+                <artifactId>spring-agentscope-ctx</artifactId>
+                <version>${fast-dev.version.version}</version>
+            </dependency>
 
 <!--            自定义组件-->
 
