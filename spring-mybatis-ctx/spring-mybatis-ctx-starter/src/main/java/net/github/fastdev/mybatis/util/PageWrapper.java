@@ -86,7 +86,7 @@ public class PageWrapper<P,DTO>  extends Page<DTO> {
                 this.queryWrapper = BaseQuery.buildQueryWrapper(condition, ignoreAlias);
             }
             if (!ArrayUtils.isEmpty(pageRequest.getColumnNames())) {
-                queryWrapper.select((String[])pageRequest.getColumnNames());
+                queryWrapper.select(pageRequest.getColumnNames());
             } else if (!ArrayUtils.isEmpty(pageRequest.getExcludeColumnNames())) {
                 Set<String> set = new HashSet<>(Arrays.asList(pageRequest.getExcludeColumnNames()));
                 queryWrapper.select((Predicate<TableFieldInfo>) tableFieldInfo -> set.contains(tableFieldInfo.getProperty()));

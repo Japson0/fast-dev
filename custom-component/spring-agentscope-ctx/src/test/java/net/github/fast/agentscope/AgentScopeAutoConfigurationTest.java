@@ -18,6 +18,7 @@ class AgentScopeAutoConfigurationTest {
         runner.run(context -> {
             assertThat(context).hasNotFailed();
             assertThat(context).hasSingleBean(AgentSessionController.class);
+            assertThat(context).hasSingleBean(AguiMvcController.class);
             assertThat(context).hasSingleBean(ConversationService.class);
             assertThat(context).hasSingleBean(AgentRegistry.class);
         });
@@ -26,6 +27,32 @@ class AgentScopeAutoConfigurationTest {
         runner.withPropertyValues("fast.agentscope.controller-enabled=false").run(context -> {
             assertThat(context).hasNotFailed();
             assertThat(context).doesNotHaveBean(AgentSessionController.class);
+            assertThat(context).hasSingleBean(AguiMvcController.class);
+        });
+    }
+    @Test void registersRelayModelFactoryWhenConfigured() {
+        runner.withPropertyValues("agi-chat.url=http://localhost:8080/openai")
+                .run(context -> {
+                    assertThat(context).hasNotFailed();
+                    assertThat(context).hasBean("agentScopeRegisterRelayModel");
+        });
+    }
+    @Test void readsRelayUrlFromEnvironmentVariableByDefault() {
+        runner.withPropertyValues("AGI_CHAT_URL=http://localhost:8080/openai")
+                .run(context -> {
+                    assertThat(context).hasNotFailed();
+                    assertThat(context).hasBean("agentScopeRegisterRelayModel");
+                });
+    }
+    @Test void registryFactoryResolvesAndWrapsOnlyAgiModels() {
+        runner.withPropertyValues("agi-chat.url=http://localhost:8080/openai").run(context -> {
+            assertThat(context).hasNotFailed();
+            io.agentscope.core.model.Model agi = io.agentscope.core.model.ModelRegistry.resolve("agi:chat-model");
+            assertThat(agi).isInstanceOf(AgiRelayModel.class);
+            assertThat(agi.getModelName()).isEqualTo("agi:chat-model");
+            io.agentscope.core.model.Model custom = mock(io.agentscope.core.model.Model.class);
+            org.mockito.Mockito.when(custom.getModelName()).thenReturn("custom-model");
+            assertThat(AgiRelayModel.wrap(custom, new AgentScopeProperties())).isSameAs(custom);
         });
     }
 }

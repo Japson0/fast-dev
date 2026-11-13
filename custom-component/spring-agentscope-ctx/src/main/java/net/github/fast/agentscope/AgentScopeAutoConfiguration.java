@@ -20,9 +20,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @AutoConfiguration(after = DataSourceAutoConfiguration.class)
+@EnableConfigurationProperties(AgentScopeProperties.class)
 @ConditionalOnProperty(prefix = "fast.agentscope", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class AgentScopeAutoConfiguration {
     @Bean(destroyMethod = "close") @Lazy @ConditionalOnMissingBean
@@ -46,8 +48,30 @@ public class AgentScopeAutoConfiguration {
 
     @Bean(destroyMethod = "close") @ConditionalOnMissingBean
     public AgentRegistry agentRegistry(List<HarnessAgentDefinition> definitions, SessionLogStore logStore,
-            @Value("${fast.agentscope.workspace:./data/agentscope}") String workspace) {
-        return new AgentRegistry(definitions, Path.of(workspace), logStore);
+            @Value("${fast.agentscope.workspace:./data/agentscope}") String workspace,
+            AgentScopeProperties properties) {
+        return new AgentRegistry(definitions, Path.of(workspace), logStore, properties);
+    }
+    @Bean
+    public org.springframework.beans.factory.InitializingBean agentScopeRegisterRelayModel(
+            AgentScopeProperties properties, Environment environment) {
+        return () -> {
+            String baseUrl = environment.getProperty("fast.agentscope.model-base-url",
+                    environment.getProperty("agi-chat.url", environment.getProperty("AGI_CHAT_URL")));
+            if (baseUrl == null || baseUrl.isBlank()) return;
+            properties.setModelBaseUrl(baseUrl);
+            io.agentscope.core.model.ModelRegistry.registerFactory("^agi:\\S+$", name -> {
+                if (!name.startsWith("agi:")) throw new IllegalArgumentException("Invalid AGI model name: " + name);
+                String upstreamModel = name.substring("agi:".length());
+                if (upstreamModel.isBlank()) throw new IllegalArgumentException("agi: model name must not be blank");
+                io.agentscope.core.model.Model resolved = io.agentscope.extensions.model.openai.OpenAIChatModel.builder()
+                        .baseUrl(baseUrl)
+                        .apiKey(properties.getModelApiKey() == null ? "" : properties.getModelApiKey())
+                        .modelName(upstreamModel).stream(true).build();
+                resolved = AgiRelayModel.createDelegate(resolved, name);
+                return AgiRelayModel.wrap(resolved, properties);
+            });
+        };
     }
     @Bean @ConditionalOnMissingBean
     public ConversationService conversationService(AgentRegistry registry, ConversationRepository repository) {

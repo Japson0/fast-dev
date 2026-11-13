@@ -123,19 +123,19 @@
             <dependency>
                 <groupId>net.github.fast</groupId>
                 <artifactId>spring-distributed-lock-redis</artifactId>
-                <version>${project.version}</version>
+                <version>${fast-dev.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.github.fast</groupId>
                 <artifactId>spring-distributed-lock-zookeeper</artifactId>
-                <version>${project.version}</version>
+                <version>${fast-dev.version}</version>
             </dependency>
 
 
             <dependency>
                 <groupId>net.github.fast</groupId>
                 <artifactId>spring-agentscope-ctx</artifactId>
-                <version>${fast-dev.version.version}</version>
+                <version>${fast-dev.version}</version>
             </dependency>
 
 <!--            自定义组件-->
@@ -143,12 +143,12 @@
             <dependency>
                 <groupId>net.github.fast</groupId>
                 <artifactId>spring-xxl-job-ctx</artifactId>
-                <version>${fast-dev.version.version}</version>
+                <version>${fast-dev.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.github.fast</groupId>
                 <artifactId>spring-minio-client-ctx</artifactId>
-                <version>${project.version}</version>
+                <version>${fast-dev.version}</version>
             </dependency>
 
             <dependency>

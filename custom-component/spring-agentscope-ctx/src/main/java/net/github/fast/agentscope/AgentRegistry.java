@@ -19,11 +19,14 @@ public class AgentRegistry implements AutoCloseable {
     private final ReentrantReadWriteLock lifecycle = new ReentrantReadWriteLock();
     private final Path workspace;
     private final SessionLogStore logStore;
+    private final AgentScopeProperties properties;
     private boolean closed;
 
-    public AgentRegistry(List<HarnessAgentDefinition> definitions, Path workspace, SessionLogStore logStore) {
+    public AgentRegistry(List<HarnessAgentDefinition> definitions, Path workspace, SessionLogStore logStore,
+                         AgentScopeProperties properties) {
         this.workspace = workspace.toAbsolutePath().normalize();
         this.logStore = logStore;
+        this.properties = properties;
         for (HarnessAgentDefinition definition : definitions) {
             if (definition.id() == null || !definition.id().matches("[a-zA-Z0-9_-]{1,64}")
                     || definition.name() == null || definition.name().isBlank()
@@ -48,7 +51,7 @@ public class AgentRegistry implements AutoCloseable {
             if (closed) throw new IllegalStateException("Agent registry is closed");
             descriptor(c.agentId());
             return agents.computeIfAbsent(c.sessionId(), id -> definitions.get(c.agentId()).build(context(c),
-                    builder -> builder.workspace(workspace.resolve(c.agentId())).sessionLogStore(logStore)));
+                    builder -> builder.workspace(workspace.resolve(c.agentId())).sessionLogStore(logStore), properties));
         } finally { lifecycle.readLock().unlock(); }
     }
     public io.agentscope.core.session.SessionLog log(Conversation c) {

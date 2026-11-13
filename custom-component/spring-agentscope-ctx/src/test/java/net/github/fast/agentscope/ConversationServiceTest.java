@@ -34,7 +34,7 @@ class ConversationServiceTest {
             public void configure(HarnessAgent.Builder builder) { }
         };
         service = new ConversationService(new AgentRegistry(List.of(definition), Path.of("target/test-workspace"),
-                mock(SessionLogStore.class)), repository);
+                mock(SessionLogStore.class), new AgentScopeProperties()), repository);
     }
     @Test void creationListingAndOwnership() {
         Conversation c = service.create("demo", "  hello  ", owner);

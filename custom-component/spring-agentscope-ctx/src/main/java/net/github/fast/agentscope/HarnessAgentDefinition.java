@@ -24,14 +24,22 @@ public abstract class HarnessAgentDefinition {
     public abstract void configure(HarnessAgent.Builder builder);
 
     public final HarnessAgent build(RuntimeContext context, Consumer<HarnessAgent.Builder> infrastructure) {
+        return build(context, infrastructure, null);
+    }
+
+    public final HarnessAgent build(RuntimeContext context, Consumer<HarnessAgent.Builder> infrastructure,
+                                    AgentScopeProperties properties) {
         HarnessAgent.Builder builder = HarnessAgent.builder();
         if (memoryEnabled()) builder.memory(MemoryConfig.defaults());
         configure(builder);
-        builder.model(Objects.requireNonNull(model())).agentId(id()).name(name()).description(description());
-        if (generateOptions() != null) builder.generateOptions(generateOptions());
+        Model selectedModel = Objects.requireNonNull(model());
+        selectedModel = AgiRelayModel.forSession(selectedModel, context);
+        builder.model(selectedModel).agentId(id()).name(name()).description(description())
+                .generateOptions(AgentCodeOptions.apply(id(), generateOptions()));
         builder.filesystem(new LocalFilesystemSpec().isolationScope(Objects.requireNonNull(isolationScope())));
         infrastructure.accept(builder);
         if (!memoryEnabled()) builder.disableMemoryTools().disableMemoryHooks();
         return builder.build();
     }
+
 }

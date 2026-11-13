@@ -38,10 +38,4 @@ public class AgentSessionController {
             @RequestParam(defaultValue = "0") long after, @RequestParam(defaultValue = "200") int limit) {
         return service.history(agentCode, id, user(), after, limit);
     }
-    @PostMapping("/agents/{agentCode}/sessions/{id}/archive") @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void archive(@PathVariable String agentCode, @PathVariable String id) { service.archive(agentCode, id, user()); }
-    @PostMapping("/agents/{agentCode}/sessions/{id}/messages")
-    public RunResponse run(@PathVariable String agentCode, @PathVariable String id, @RequestBody RunRequest request) {
-        return new RunResponse(service.run(agentCode, id, user(), request.message()));
-    }
 }
