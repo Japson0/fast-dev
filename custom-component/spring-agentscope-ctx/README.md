@@ -1,5 +1,23 @@
 # spring-agentscope-ctx
 
+## 数据源
+
+默认复用 Spring Boot 的业务 `DataSource`（通常由 `spring.datasource.*` 配置；多个数据源时使用 `@Primary`）。如需独立存储，配置：
+
+```yaml
+fast:
+  agentscope:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/agentscope
+      username: ${AGENT_DB_USERNAME}
+      password: ${AGENT_DB_PASSWORD}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: 10
+```
+
+配置 `fast.agentscope.datasource.url` 后，会话元数据和 Session Log 默认实现统一使用独立连接池。独立池不会替换业务 `DataSource`，随 Spring 容器关闭；数据库驱动由业务服务引入。会话建表脚本需在实际使用的数据库执行。自定义 `ConversationRepository` / `SessionLogStore` 则自行决定数据源。
+
 Java 17 / Spring Boot 3 的 AgentScope Harness 与会话 MVC 组件。业务服务需要提供 `UserContextProvider` Bean；身份必须来自业务侧已认证的上下文，组件不读取用户请求头。
 
 ```java

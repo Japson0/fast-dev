@@ -11,6 +11,10 @@ import java.nio.file.Path;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.env.Environment;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,15 +22,23 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@AutoConfiguration
+@AutoConfiguration(after = DataSourceAutoConfiguration.class)
 @ConditionalOnProperty(prefix = "fast.agentscope", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class AgentScopeAutoConfiguration {
+    @Bean(destroyMethod = "close") @Lazy @ConditionalOnMissingBean
+    public AgentScopeDataSource agentScopeDataSource(Environment environment, ObjectProvider<DataSource> defaults) {
+        return new AgentScopeDataSource(environment, defaults);
+    }
+
     @Bean @ConditionalOnMissingBean
-    public ConversationRepository agentConversationRepository(JdbcTemplate jdbc) { return new JdbcConversationRepository(jdbc); }
+    public ConversationRepository agentConversationRepository(AgentScopeDataSource source) {
+        return new JdbcConversationRepository(new JdbcTemplate(source.getDataSource()));
+    }
 
     @Bean @ConditionalOnMissingBean(SessionLogStore.class)
-    public SessionLogStore agentSessionLogStore(DataSource dataSource,
+    public SessionLogStore agentSessionLogStore(AgentScopeDataSource source,
             @Value("${fast.agentscope.session-log.auto-create-table:true}") boolean autoCreate) {
+        DataSource dataSource = source.getDataSource();
         var dialect = AbstractJdbcDialect.from(dataSource).autoCreateTable(autoCreate).build();
         JdbcStore store = JdbcStore.builder(dataSource).dialect(dialect).build();
         return new WorkspaceSessionLogStore(new RemoteFilesystem(store, List.of("agentscope", "session-log")));
