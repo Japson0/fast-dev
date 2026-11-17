@@ -23,19 +23,21 @@ public class AgentSessionController {
         if (owner == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "缺少用户身份");
         return owner;
     }
-    @GetMapping("/agents") public List<AgentRegistry.Descriptor> agents() { return registry.list(); }
-    @PostMapping("/agents/{agentCode}/sessions") @ResponseStatus(HttpStatus.CREATED)
-    public Conversation create(@PathVariable String agentCode, @RequestBody CreateSession request) {
-        return service.create(agentCode, request.title(), user());
+    @GetMapping("/agents") public RestResponse<List<AgentRegistry.Descriptor>> agents() {
+        return RestResponse.renderSuccess(registry.list());
     }
-    @GetMapping("/agents/{agentCode}/sessions")
-    public List<Conversation> list(@PathVariable String agentCode, @RequestParam(defaultValue = "0") int offset,
-                                   @RequestParam(defaultValue = "50") int limit) {
-        return service.list(agentCode, user(), offset, limit);
+    @PostMapping("/agents/{agentCode}/sessions") @ResponseStatus(HttpStatus.CREATED)
+    public RestResponse<Conversation> create(@PathVariable String agentCode, @RequestBody CreateSession request) {
+        return RestResponse.renderSuccess(service.create(agentCode, request.title(), user()));
+    }
+    @PostMapping("/agents/{agentCode}/sessions/list")
+    public RestResponse<PageRequest<Conversation>> list(@PathVariable String agentCode,
+            @RequestBody PageRequest<SessionQuery> request) {
+        return RestResponse.renderSuccess(service.page(agentCode, user(), request));
     }
     @GetMapping("/agents/{agentCode}/sessions/{id}")
-    public ConversationView.Snapshot history(@PathVariable String agentCode, @PathVariable String id,
+    public RestResponse<ConversationView.Snapshot> history(@PathVariable String agentCode, @PathVariable String id,
             @RequestParam(defaultValue = "0") long after, @RequestParam(defaultValue = "200") int limit) {
-        return service.history(agentCode, id, user(), after, limit);
+        return RestResponse.renderSuccess(service.history(agentCode, id, user(), after, limit));
     }
 }

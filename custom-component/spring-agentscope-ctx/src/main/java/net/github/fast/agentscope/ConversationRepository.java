@@ -7,6 +7,7 @@ import java.util.Optional;
 public interface ConversationRepository {
     Conversation create(Conversation conversation);
     Optional<Conversation> find(String agentId, String sessionId, UserContext owner);
-    List<Conversation> list(String agentId, UserContext owner, int offset, int limit);
+    long count(String agentId, UserContext owner, String title);
+    List<Conversation> list(String agentId, UserContext owner, int offset, int limit, String title);
     void archive(Conversation conversation);
 }

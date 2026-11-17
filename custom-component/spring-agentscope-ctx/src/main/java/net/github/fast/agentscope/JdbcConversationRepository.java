@@ -22,9 +22,28 @@ public class JdbcConversationRepository implements ConversationRepository {
         return jdbc.query("SELECT * FROM agent_conversation WHERE agent_id=? AND session_id=? AND user_id=? AND tenant_key=?",
                 mapper, agentId, sessionId, owner.userId(), owner.tenantKey()).stream().findFirst();
     }
-    @Override public List<Conversation> list(String agentId, UserContext owner, int offset, int limit) {
-        return jdbc.query("SELECT * FROM agent_conversation WHERE agent_id=? AND user_id=? AND tenant_key=? ORDER BY created_at DESC, session_id DESC LIMIT ? OFFSET ?",
-                mapper, agentId, owner.userId(), owner.tenantKey(), limit, offset);
+    @Override public long count(String agentId, UserContext owner, String title) {
+        var total = jdbc.queryForObject("SELECT COUNT(*) FROM agent_conversation WHERE agent_id=? AND user_id=? AND tenant_key=?"
+                + titleFilter(title), Long.class, ownerParameters(agentId, owner, title));
+        return total == null ? 0L : total;
+    }
+    @Override public List<Conversation> list(String agentId, UserContext owner, int offset, int limit, String title) {
+        return jdbc.query("SELECT * FROM agent_conversation WHERE agent_id=? AND user_id=? AND tenant_key=?"
+                        + titleFilter(title) + " ORDER BY created_at DESC, session_id DESC LIMIT ? OFFSET ?",
+                mapper, withPaging(ownerParameters(agentId, owner, title), limit, offset));
+    }
+    private String titleFilter(String title) { return title == null || title.isBlank() ? "" : " AND title LIKE ?"; }
+    private Object[] ownerParameters(String agentId, UserContext owner, String title) {
+        return title == null || title.isBlank()
+                ? new Object[]{agentId, owner.userId(), owner.tenantKey()}
+                : new Object[]{agentId, owner.userId(), owner.tenantKey(), "%" + title.strip() + "%"};
+    }
+    private Object[] withPaging(Object[] owner, int limit, int offset) {
+        var all = new Object[owner.length + 2];
+        System.arraycopy(owner, 0, all, 0, owner.length);
+        all[owner.length] = limit;
+        all[owner.length + 1] = offset;
+        return all;
     }
     @Override public void archive(Conversation c) {
         jdbc.update("UPDATE agent_conversation SET archived=TRUE WHERE session_id=? AND agent_id=? AND user_id=? AND tenant_key=?",

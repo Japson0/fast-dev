@@ -1,67 +1,99 @@
 package net.github.fast.agentscope;
 
-import io.agentscope.core.session.SessionEvent;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.agentscope.core.agui.converter.AguiMessageConverter;
+import io.agentscope.core.agui.model.AguiToolCall;
+import io.agentscope.core.message.*;
 import io.agentscope.core.session.SessionLog;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import io.agentscope.core.util.JsonUtils;
+import java.util.*;
 
-/** Public projection; never expose model requests, system prompts or checkpoint state. */
+/** Public AG-UI messages; never expose model requests, system prompts or checkpoint state. */
 public final class ConversationView {
+    private static final AguiMessageConverter CONVERTER = new AguiMessageConverter();
+    private static final Set<String> MESSAGE_EVENTS = Set.of(
+            "message/user", "message/assistant", "turn/output", "tool/result");
+
     private ConversationView() { }
-    public record Event(long cursor, String eventId, String type, String turnId, String runId, Map<String, Object> data) { }
-    public record Snapshot(long cursor, List<Event> events) { }
-    public static Snapshot snapshot(SessionLog log, long after, int limit) {
-        List<Event> events = log.readAfter(after, limit).stream().map(ConversationView::project).toList();
-        return new Snapshot(events.isEmpty() ? after : events.get(events.size() - 1).cursor(), events);
-    }
-    private static Event project(SessionEvent event) {
-        Map<String, Object> source = event.data();
-        Map<String, Object> result = new LinkedHashMap<>();
-        String type = event.type();
-        switch (type) {
-            case "message/user", "message/assistant", "turn/output", "tool/result" -> copyMessage(source.get("message"), result);
-            case "model/chunk" -> {
-                if (source.get("chunk") instanceof Map<?, ?> chunk) {
-                    result.put("messageId", chunk.get("id"));
-                    result.put("content", publicContent(chunk.get("content")));
-                }
-                result.put("modelCallId", source.get("modelCallId"));
-            }
-            case "tool/requested", "interaction/requested" -> {
-                for (String field : List.of("requestId", "kind", "messageId", "toolCallId", "call"))
-                    if (source.containsKey(field)) result.put(field, field.equals("call") ? publicBlock(source.get(field)) : source.get(field));
-            }
-            case "interaction/resolved" -> {
-                for (String field : List.of("requestId", "kind")) if (source.containsKey(field)) result.put(field, source.get(field));
-            }
-            case "turn/completed", "turn/suspended", "turn/failed", "turn/interrupted", "turn/cancelled", "run/start", "run/end" -> {
-                if (source.containsKey("status")) result.put("status", source.get("status"));
-            }
-            default -> type = "cursor";
+
+    /** Explicit wire fields exclude SDK convenience getters and internal message metadata. */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record Message(String id, String role, Object content, List<AguiToolCall> toolCalls,
+                          String toolCallId) { }
+    public record Snapshot(String threadId, long cursor, boolean hasMore, List<Message> messages) { }
+
+    /** limit bounds scanned log events; clients upsert messages by id, including across pages. */
+    public static Snapshot snapshot(SessionLog log, String threadId, long after, int limit) {
+        long head = log.head().seq();
+        var events = log.readAfter(after, limit);
+        var messages = new LinkedHashMap<String, Message>();
+        long cursor = after;
+        for (var event : events) {
+            if (event.seq() > head) break;
+            cursor = event.seq();
+            if (!MESSAGE_EVENTS.contains(event.type())) continue;
+            Object value = event.data().get("message");
+            if (value == null) continue;
+            Msg message = JsonUtils.getJsonCodec().convertValue(value, Msg.class);
+            project(message, messages);
         }
-        return new Event(event.seq(), event.eventId(), type, event.turnId(), event.executionRunId(), result);
+        return new Snapshot(threadId, cursor, cursor < head, List.copyOf(messages.values()));
     }
-    private static void copyMessage(Object value, Map<String, Object> result) {
-        if (value instanceof Map<?, ?> message) {
-            result.put("messageId", message.get("id")); result.put("role", message.get("role"));
-            result.put("content", publicContent(message.get("content")));
+
+    private static void project(Msg message, Map<String, Message> messages) {
+        if (message.getRole() == MsgRole.SYSTEM) return;
+        var results = message.getContentBlocks(ToolResultBlock.class);
+        if (!results.isEmpty()) {
+            // AG-UI tool messages reference exactly one call, even for parallel SDK tool results.
+            for (var result : results) {
+                String id = results.size() == 1 ? message.getId() : message.getId() + ":" + result.getId();
+                var converted = CONVERTER.toAguiMessage(Msg.builder().id(id).role(MsgRole.TOOL)
+                        .content(result).build());
+                messages.put(id, new Message(id, "tool", Objects.requireNonNullElse(converted.getTextContent(), ""),
+                        null, result.getId()));
+            }
+            return;
         }
+        var converted = CONVERTER.toAguiMessage(message);
+        Object content = converted.getTextContent();
+        if (message.getRole() == MsgRole.USER && message.getContent().stream().anyMatch(block ->
+                block instanceof ImageBlock || block instanceof AudioBlock || block instanceof VideoBlock)) {
+            content = inputContent(message);
+        }
+        if (content == null && !converted.hasToolCalls()) return;
+        messages.put(message.getId(), new Message(message.getId(), converted.getRole(), content,
+                converted.hasToolCalls() ? converted.getToolCalls() : null, null));
     }
-    private static List<?> publicContent(Object value) {
-        if (!(value instanceof List<?> content)) return List.of();
-        return content.stream().filter(block -> block instanceof Map<?, ?> map && !"thinking".equals(map.get("type")))
-                .map(ConversationView::publicBlock).toList();
+
+    private static List<Map<String, Object>> inputContent(Msg message) {
+        var parts = new ArrayList<Map<String, Object>>();
+        for (var block : message.getContent()) {
+            if (block instanceof TextBlock text) {
+                parts.add(Map.of("type", "text", "text", text.getText()));
+            } else if (block instanceof ImageBlock image) {
+                parts.add(media("image", image.getSource()));
+            } else if (block instanceof AudioBlock audio) {
+                parts.add(media("audio", audio.getSource()));
+            } else if (block instanceof VideoBlock video) {
+                parts.add(media("video", video.getSource()));
+            }
+        }
+        return parts;
     }
-    private static Object publicBlock(Object value) {
-        if (!(value instanceof Map<?, ?> block)) return Map.of();
-        Map<String, Object> clean = new LinkedHashMap<>();
-        block.forEach((key, item) -> {
-            String name = String.valueOf(key);
-            if (!Set.of("metadata", "executionDetails").contains(name))
-                clean.put(name, name.equals("output") ? publicContent(item) : item);
-        });
-        return clean;
+
+    private static Map<String, Object> media(String type, Source source) {
+        var value = new LinkedHashMap<String, Object>();
+        if (source instanceof URLSource url) {
+            value.put("type", "url");
+            value.put("value", url.getUrl());
+            if (url.getMimeType() != null) value.put("mimeType", url.getMimeType());
+        } else if (source instanceof Base64Source data) {
+            value.put("type", "data");
+            value.put("value", data.getData());
+            value.put("mimeType", data.getMediaType());
+        } else {
+            throw new IllegalArgumentException("Unsupported AG-UI content source: " + source.getClass());
+        }
+        return Map.of("type", type, "source", value);
     }
 }

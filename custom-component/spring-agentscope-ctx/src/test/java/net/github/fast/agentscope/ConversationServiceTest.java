@@ -1,6 +1,7 @@
 package net.github.fast.agentscope;
 
 import io.agentscope.core.model.Model;
+import org.springframework.web.server.ResponseStatusException;
 import io.agentscope.core.session.SessionLogStore;
 import io.agentscope.harness.agent.HarnessAgent;
 import java.nio.file.Path;
@@ -12,7 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.web.server.ResponseStatusException;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -39,7 +39,15 @@ class ConversationServiceTest {
     @Test void creationListingAndOwnership() {
         Conversation c = service.create("demo", "  hello  ", owner);
         assertThat(c.title()).isEqualTo("hello");
-        assertThat(service.list("demo", owner, 0, 50)).containsExactly(c);
+        var page = service.page("demo", owner, new PageRequest<SessionQuery>());
+        assertThat(page.getRecords()).containsExactly(c);
+        assertThat(page.getTotal()).isEqualTo(1);
+        assertThat(page.getSize()).isEqualTo(20);
+        var filtered = new PageRequest<SessionQuery>();
+        filtered.setCondition(new SessionQuery("hel"));
+        assertThat(service.page("demo", owner, filtered).getTotal()).isEqualTo(1);
+        filtered.setCondition(new SessionQuery("nope"));
+        assertThat(service.page("demo", owner, filtered).getTotal()).isZero();
         assertThat(repository.find("demo", c.sessionId(), new UserContext(2L, 10L))).isEmpty();
         assertThat(repository.find("demo", c.sessionId(), new UserContext(1L, 11L))).isEmpty();
         assertThatThrownBy(() -> service.archive("demo", c.sessionId(), new UserContext(2L, 10L)))
@@ -53,6 +61,8 @@ class ConversationServiceTest {
                 .isInstanceOf(ResponseStatusException.class).hasMessageContaining("会话已归档");
     }
     @Test void invalidPagingRejected() {
-        assertThatThrownBy(() -> service.list("demo", owner, -1, 10)).isInstanceOf(ResponseStatusException.class);
+        var invalid = new PageRequest<SessionQuery>();
+        invalid.setPage(-1);
+        assertThatThrownBy(() -> service.page("demo", owner, invalid)).isInstanceOf(ResponseStatusException.class);
     }
 }

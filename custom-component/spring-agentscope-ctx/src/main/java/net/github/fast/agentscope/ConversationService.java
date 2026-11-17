@@ -28,10 +28,20 @@ public class ConversationService {
         return repository.create(new Conversation(UUID.randomUUID().toString(), agentId, owner.userId(),
                 owner.tenantKey(), title == null || title.isBlank() ? agent.name() : title.strip(), System.currentTimeMillis(), false));
     }
-    public List<Conversation> list(String agentId, UserContext owner, int offset, int limit) {
+    public PageRequest<Conversation> page(String agentId, UserContext owner, PageRequest<SessionQuery> request) {
         registry.descriptor(agentId);
-        if (offset < 0 || limit < 1 || limit > 200) throw badRequest("分页参数无效");
-        return repository.list(agentId, owner, offset, limit);
+        long page = request.getPage();
+        long size = request.getSize();
+        if (page < 0 || size < 1 || size > 200) throw badRequest("分页参数无效");
+        String title = request.getCondition() == null ? null : request.getCondition().title();
+        final long offset;
+        try {
+            offset = Math.multiplyExact(page, size);
+        } catch (ArithmeticException failure) {
+            throw badRequest("分页参数超出支持范围");
+        }
+        var records = repository.list(agentId, owner, (int) offset, (int) size, title);
+        return PageRequest.result(request.getPage(), size, repository.count(agentId, owner, title), records);
     }
     public Conversation require(String agentId, String id, UserContext owner) {
         registry.descriptor(agentId);
@@ -39,7 +49,7 @@ public class ConversationService {
     }
     public ConversationView.Snapshot history(String agentId, String id, UserContext owner, long after, int limit) {
         if (after < 0 || limit < 1 || limit > 1000) throw badRequest("历史查询参数无效");
-        return ConversationView.snapshot(registry.log(require(agentId, id, owner)), after, limit);
+        return ConversationView.snapshot(registry.log(require(agentId, id, owner)), id, after, limit);
     }
     public void archive(String agentId, String id, UserContext owner) {
         Conversation c = require(agentId, id, owner);

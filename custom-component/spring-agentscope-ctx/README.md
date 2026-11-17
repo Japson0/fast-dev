@@ -48,7 +48,7 @@ fast:
 
 环境变量 `AGI_CHAT_URL` 等价于属性 `agi-chat.url`，可以直接作为模型 URL 来源；`fast.agentscope.model-base-url` 有更高优先级。
 
-默认提供 `GET /api/agents`、会话创建和列表、会话历史、会话归档以及 `POST /api/agents/{agentCode}/sessions/{id}/messages` 同步执行接口。Controller 可通过 `controller-enabled=false` 关闭。历史返回经过投影，不返回完整日志内部状态。
+默认提供 `GET /api/agents`、会话创建和列表、会话历史。Controller 可通过 `controller-enabled=false` 关闭。历史返回 AG-UI 消息快照，不返回完整日志内部状态。
 
 AG-UI SSE 已包含在 MVC 适配中，使用 SDK 的 AG-UI 事件适配器和编码器，不引入面向 Boot 4 的 starter。
 
@@ -60,6 +60,36 @@ POST /api/agui/run/{agentId}       (路径中的 agentId)
 请求体为 SDK 的 `RunAgentInput` JSON，`threadId` 对应会话 ID，`runId` 必填。执行前按注入的 `UserContextProvider` 校验/创建该用户和租户的会话；已有会话不可被其他用户认领。resume 暂不支持。参数为 `fast.agentscope.agui-enabled`（默认启用）、`fast.agentscope.agui.path-prefix`（默认 `/api/agui`）、`fast.agentscope.agui.sse-timeout`。发生执行异常时返回通用 AG-UI `RUN_ERROR`，不向客户端泄露内部异常信息。
 
 **限制**：普通消息接口是同步 MVC 调用；AG-UI SSE 使用异步 MVC。执行互斥仅在单个进程内有效，不提供集群锁。默认 Session Log 使用新的 JDBC 命名空间，原服务历史日志需单独迁移或注入兼容的 `SessionLogStore`；不要假设旧历史自动可见。
+
+## AG-UI 会话历史与增量续聊
+
+`GET /api/agents/{agentCode}/sessions/{id}` 返回以下消息快照，替代原来的自定义 `events`：
+
+```json
+{
+  "threadId": "SESSION_ID",
+  "cursor": 12,
+  "hasMore": false,
+  "messages": [
+    {"id":"u1","role":"user","content":"你好"},
+    {"id":"a1","role":"assistant","content":"你好，有什么可以帮你？"}
+  ]
+}
+```
+
+首次查询使用 `after=0`；`limit` 默认 200、范围 1 到 1000，限制每页扫描的日志事件数。`hasMore=true` 时用返回的 `cursor` 作为下一次 `after`，直到 `hasMore=false`。内部日志会被过滤，某页 `messages` 可能为空；不能通过空消息列表判断分页结束。
+
+前端按 `messages[].id` 合并多页结果，同 ID 消息替换已有值，避免最终回复重复展示。文本 `content` 为字符串；用户图片、音频和视频保留 AG-UI content blocks。工具调用使用 `toolCalls`，工具结果使用 `role: "tool"` 和 `toolCallId`；并行调用结果拆成各自关联的工具消息。系统提示、检查点、原始模型请求、推理内容和内部元数据不返回。
+
+继续对话仍调用 AG-UI `/run/{agentId}`，复用 `threadId`，每轮使用新的 `runId` 和消息 ID，`messages` 只包含本轮新增消息。后端从 Session Log 恢复模型上下文，前端不回传历史消息。详情仅用于恢复展示，不重放 SSE，刷新页面不能重复提交原消息。
+
+Java 17 验证：
+
+```bash
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 mvn -B -ntp -pl custom-component/spring-agentscope-ctx -am test -DargLine=-Djava.net.preferIPv4Stack=true
+```
+
+本次 Java 17 验证共 15 个测试通过（14 个模块测试及单独重跑通过的 HTTP 场景）。HTTP 场景使用临时 H2、真实 MVC/AG-UI 入口和离线模型，覆盖历史分页、Agent 释放重建后从 JDBC 日志恢复上下文、仅提交新增消息续聊；未调用外部模型或数据库。
 
 ## `agi:` Relay 模型
 
