@@ -53,6 +53,19 @@ class ConversationServiceTest {
         assertThatThrownBy(() -> service.archive("demo", c.sessionId(), new UserContext(2L, 10L)))
                 .isInstanceOf(ResponseStatusException.class);
     }
+    @Test void listsOlderConversationFirstAfterNewActivity() {
+        var older = repository.create(new Conversation("older", "demo", owner.userId(), owner.tenantKey(),
+                "Older", 1L, 1L, false));
+        var newer = repository.create(new Conversation("newer", "demo", owner.userId(), owner.tenantKey(),
+                "Newer", 2L, 2L, false));
+        assertThat(service.page("demo", owner, new PageRequest<SessionQuery>()).getRecords())
+                .extracting(Conversation::sessionId).containsExactly(newer.sessionId(), older.sessionId());
+
+        repository.touch(older, 3L);
+
+        assertThat(service.page("demo", owner, new PageRequest<SessionQuery>()).getRecords())
+                .extracting(Conversation::sessionId).containsExactly(older.sessionId(), newer.sessionId());
+    }
     @Test void archivePreventsExecution() {
         Conversation c = service.create("demo", null, owner);
         service.archive("demo", c.sessionId(), owner);

@@ -35,7 +35,7 @@ class AgentScopeDataSourceTest {
                     assertThat(pool[0]).isNotSameAs(context.getBean(DataSource.class));
                     assertThat(pool[0].getMaximumPoolSize()).isEqualTo(2);
                     new ResourceDatabasePopulator(new ClassPathResource("agentscope/agent-conversation.sql")).execute(pool[0]);
-                    Conversation c = new Conversation("test", "demo", 1L, "none", "test", 1L, false);
+                    Conversation c = new Conversation("test", "demo", 1L, "none", "test", 1L, 1L, false);
                     context.getBean(ConversationRepository.class).create(c);
                     assertThat(new JdbcTemplate(pool[0]).queryForObject("SELECT COUNT(*) FROM agent_conversation", Integer.class)).isEqualTo(1);
                 });

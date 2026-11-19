@@ -81,6 +81,8 @@ POST /api/agui/run/{agentId}       (路径中的 agentId)
 
 前端按 `messages[].id` 合并多页结果，同 ID 消息替换已有值，避免最终回复重复展示。文本 `content` 为字符串；用户图片、音频和视频保留 AG-UI content blocks。工具调用使用 `toolCalls`，工具结果使用 `role: "tool"` 和 `toolCallId`；并行调用结果拆成各自关联的工具消息。系统提示、检查点、原始模型请求、推理内容和内部元数据不返回。
 
+会话列表返回毫秒时间戳 `createdAt` 和 `updatedAt`，按 `updatedAt` 降序、同时间按 `sessionId` 降序。新会话两者相同；会话接受新一轮对话时刷新 `updatedAt`，不等待模型回复，查询历史和归档不会刷新。已有数据库须在部署新版前由宿主迁移工具执行一次 `classpath:agentscope/agent-conversation-add-updated-at.sql`，以 `created_at` 回填 `updated_at`；新建数据库只执行 `agent-conversation.sql`。
+
 业务 Agent 如需让模型看到标记、但不在会话详情展示，应由服务端写入独立 `TextBlock`，并在消息元数据中用 `MessageMetadata.BUSINESS_MARKER_INDEX`（`agent.business-marker-index`）记录该块的零基索引。详情投影仅过滤该用户消息中对应的文本块，不修改持久化历史或模型上下文。不要使用客户端传入的索引或新增业务专属过滤规则。
 
 ### AG-UI 文档引用

@@ -9,13 +9,14 @@ public class JdbcConversationRepository implements ConversationRepository {
     private final JdbcTemplate jdbc;
     private final RowMapper<Conversation> mapper = (rs, n) -> new Conversation(
             rs.getString("session_id"), rs.getString("agent_id"), rs.getLong("user_id"),
-            rs.getString("tenant_key"), rs.getString("title"), rs.getLong("created_at"), rs.getBoolean("archived"));
+            rs.getString("tenant_key"), rs.getString("title"), rs.getLong("created_at"),
+            rs.getLong("updated_at"), rs.getBoolean("archived"));
 
     public JdbcConversationRepository(JdbcTemplate jdbc) { this.jdbc = jdbc; }
 
     @Override public Conversation create(Conversation c) {
-        jdbc.update("INSERT INTO agent_conversation (session_id, agent_id, user_id, tenant_key, title, created_at, archived) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                c.sessionId(), c.agentId(), c.userId(), c.tenantKey(), c.title(), c.createdAt(), c.archived());
+        jdbc.update("INSERT INTO agent_conversation (session_id, agent_id, user_id, tenant_key, title, created_at, updated_at, archived) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                c.sessionId(), c.agentId(), c.userId(), c.tenantKey(), c.title(), c.createdAt(), c.updatedAt(), c.archived());
         return c;
     }
     @Override public Optional<Conversation> find(String agentId, String sessionId, UserContext owner) {
@@ -29,7 +30,7 @@ public class JdbcConversationRepository implements ConversationRepository {
     }
     @Override public List<Conversation> list(String agentId, UserContext owner, int offset, int limit, String title) {
         return jdbc.query("SELECT * FROM agent_conversation WHERE agent_id=? AND user_id=? AND tenant_key=?"
-                        + titleFilter(title) + " ORDER BY created_at DESC, session_id DESC LIMIT ? OFFSET ?",
+                        + titleFilter(title) + " ORDER BY updated_at DESC, session_id DESC LIMIT ? OFFSET ?",
                 mapper, withPaging(ownerParameters(agentId, owner, title), limit, offset));
     }
     private String titleFilter(String title) { return title == null || title.isBlank() ? "" : " AND title LIKE ?"; }
@@ -44,6 +45,11 @@ public class JdbcConversationRepository implements ConversationRepository {
         all[owner.length] = limit;
         all[owner.length + 1] = offset;
         return all;
+    }
+    @Override public void touch(Conversation c, long updatedAt) {
+        jdbc.update("UPDATE agent_conversation SET updated_at=? WHERE session_id=? AND agent_id=? AND user_id=?"
+                        + " AND tenant_key=? AND archived=FALSE AND updated_at<?",
+                updatedAt, c.sessionId(), c.agentId(), c.userId(), c.tenantKey(), updatedAt);
     }
     @Override public void archive(Conversation c) {
         jdbc.update("UPDATE agent_conversation SET archived=TRUE WHERE session_id=? AND agent_id=? AND user_id=? AND tenant_key=?",

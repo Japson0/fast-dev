@@ -26,8 +26,9 @@ public class ConversationService {
     public Conversation create(String agentId, String title, UserContext owner) {
         AgentRegistry.Descriptor agent = registry.descriptor(agentId);
         if (title != null && title.length() > 200) throw badRequest("标题不能超过200字符");
+        long now = System.currentTimeMillis();
         return repository.create(new Conversation(UUID.randomUUID().toString(), agentId, owner.userId(),
-                owner.tenantKey(), title == null || title.isBlank() ? agent.name() : title.strip(), System.currentTimeMillis(), false));
+                owner.tenantKey(), title == null || title.isBlank() ? agent.name() : title.strip(), now, now, false));
     }
     public PageRequest<Conversation> page(String agentId, UserContext owner, PageRequest<SessionQuery> request) {
         registry.descriptor(agentId);
@@ -67,6 +68,7 @@ public class ConversationService {
             c = require(agentId, id, owner);
             if (c.archived()) throw new ResponseStatusException(HttpStatus.CONFLICT, "会话已归档");
             Msg input = Msg.builder().name("user").role(MsgRole.USER).textContent(text).build();
+            repository.touch(c, System.currentTimeMillis());
             Msg result = registry.agent(c).call(input, registry.context(c)).block();
             return result == null ? "" : result.getTextContent();
         } finally { busy.remove(id); }
@@ -78,10 +80,11 @@ public class ConversationService {
         AgentRegistry.Descriptor descriptor = registry.descriptor(agentId);
         acquire(id);
         try {
+            long now = System.currentTimeMillis();
             Conversation c = repository.find(agentId, id, owner).orElseGet(() -> {
                 try {
                     return repository.create(new Conversation(id, agentId, owner.userId(), owner.tenantKey(),
-                            descriptor.name(), System.currentTimeMillis(), false));
+                            descriptor.name(), now, now, false));
                 } catch (DuplicateKeyException conflict) {
                     // A different owner/agent must never be able to claim an existing thread ID.
                     return require(agentId, id, owner);
@@ -93,6 +96,7 @@ public class ConversationService {
             context.put(SessionLog.class, registry.log(c));
             DocumentAttachmentMiddleware middleware = registry.attachmentMiddleware(c);
             if (middleware != null) context.put(DocumentAttachmentMiddleware.class, middleware);
+            repository.touch(c, now);
             return new Execution(agent, context, () -> busy.remove(id));
         } catch (RuntimeException | Error failure) {
             busy.remove(id);

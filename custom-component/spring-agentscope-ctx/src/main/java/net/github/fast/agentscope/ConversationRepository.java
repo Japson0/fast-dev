@@ -9,5 +9,6 @@ public interface ConversationRepository {
     Optional<Conversation> find(String agentId, String sessionId, UserContext owner);
     long count(String agentId, UserContext owner, String title);
     List<Conversation> list(String agentId, UserContext owner, int offset, int limit, String title);
+    void touch(Conversation conversation, long updatedAt);
     void archive(Conversation conversation);
 }

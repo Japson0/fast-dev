@@ -5,6 +5,7 @@ CREATE TABLE agent_conversation (
     tenant_key VARCHAR(32) NOT NULL,
     title VARCHAR(200) NOT NULL,
     created_at BIGINT NOT NULL,
+    updated_at BIGINT NOT NULL,
     archived BOOLEAN NOT NULL DEFAULT FALSE
 );
-CREATE INDEX idx_agent_conversation_owner ON agent_conversation (user_id, tenant_key, created_at);
+CREATE INDEX idx_agent_conversation_activity ON agent_conversation (agent_id, user_id, tenant_key, updated_at DESC, session_id DESC);

@@ -147,6 +147,10 @@ class ConversationHistoryHttpTest {
             assertThat(listBody.path("data").path("total").asLong()).isEqualTo(1);
             assertThat(listBody.path("data").path("records").size()).isEqualTo(1);
             assertThat(listBody.path("data").path("records").get(0).path("sessionId").asText()).isEqualTo(id);
+            var first = listBody.path("data").path("records").get(0);
+            long createdAt = first.path("createdAt").asLong();
+            assertThat(createdAt).isPositive();
+            assertThat(first.path("updatedAt").asLong()).isEqualTo(createdAt);
             assertThat(listBody.path("data").has("queryParams")).isFalse();
             var emptyFilter = post(base + "/agents/demo/sessions/list",
                     "{\"page\":0,\"size\":5,\"queryParams\":{\"title\":\"nope\"}}");
@@ -161,6 +165,9 @@ class ConversationHistoryHttpTest {
             context.getBean(AgentRegistry.class).release(service.require("demo", id, new UserContext(1L, 10L)));
             assertThat(run(base, id, "run-2", "u2", "continue"))
                     .contains("reply-2", "RUN_FINISHED").doesNotContain("RUN_ERROR");
+            var continued = service.require("demo", id, new UserContext(1L, 10L));
+            assertThat(continued.createdAt()).isEqualTo(createdAt);
+            assertThat(continued.updatedAt()).isGreaterThan(createdAt);
         }
     }
 
