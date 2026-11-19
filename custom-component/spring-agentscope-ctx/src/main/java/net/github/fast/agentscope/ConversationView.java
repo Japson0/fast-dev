@@ -40,6 +40,16 @@ public final class ConversationView {
 
     private static void project(Msg message, Map<String, Message> messages) {
         if (message.getRole() == MsgRole.SYSTEM) return;
+        if (message.getRole() == MsgRole.USER
+                && message.getMetadata().get(MessageMetadata.BUSINESS_MARKER_INDEX) instanceof Number marker) {
+            int index = marker.intValue();
+            if (index >= 0 && index < message.getContent().size()
+                    && message.getContent().get(index) instanceof TextBlock) {
+                var blocks = new ArrayList<>(message.getContent());
+                blocks.remove(index);
+                message = message.withContent(blocks);
+            }
+        }
         var results = message.getContentBlocks(ToolResultBlock.class);
         if (!results.isEmpty()) {
             for (var result : results) {

@@ -78,6 +78,27 @@ class ConversationHistoryHttpTest {
     }
 
     @Test
+    void hidesOnlyTheMarkedBusinessBlock() {
+        var log = org.mockito.Mockito.mock(io.agentscope.core.session.SessionLog.class);
+        List<io.agentscope.core.message.ContentBlock> blocks = List.of(TextBlock.builder().text("question").build(),
+                TextBlock.builder().text("business marker").build(), TextBlock.builder().text("tail").build());
+        var marked = Msg.builder().id("marked").role(io.agentscope.core.message.MsgRole.USER).content(blocks)
+                .metadata(java.util.Map.of(MessageMetadata.BUSINESS_MARKER_INDEX, 1)).build();
+        var ordinary = Msg.builder().id("ordinary").role(io.agentscope.core.message.MsgRole.USER).content(blocks).build();
+        org.mockito.Mockito.when(log.head()).thenReturn(new io.agentscope.core.session.SessionLog.Head(2, 0, null, 0, null));
+        org.mockito.Mockito.when(log.readAfter(0, 100)).thenReturn(List.of(userEvent(1, marked), userEvent(2, ordinary)));
+
+        assertThat(ConversationView.snapshot(log, "thread", 0, 100).messages()).satisfiesExactly(
+                msg -> assertThat(msg.content().toString()).contains("question", "tail").doesNotContain("business marker"),
+                msg -> assertThat(msg.content().toString()).contains("question", "business marker", "tail"));
+    }
+
+    private static io.agentscope.core.session.SessionEvent userEvent(long seq, Msg message) {
+        return new io.agentscope.core.session.SessionEvent(1, "e" + seq, seq, seq, "message/user", "r", "t", true,
+                io.agentscope.core.util.JsonUtils.getJsonCodec().toJson(java.util.Map.of("message", message)));
+    }
+
+    @Test
     void restoresAguiHistoryAndContinuesWithOnlyNewMessageAfterAgentRecreation() throws Exception {
         try (var context = new SpringApplicationBuilder(Application.class).run("--server.port=0",
                 "--server.address=127.0.0.1",
