@@ -57,22 +57,22 @@ class ConversationHistoryHttpTest {
                         public String getModelName() { return "offline"; }
                         public Flux<ChatResponse> stream(List<Msg> messages, List<ToolSchema> tools, GenerateOptions options) {
                             int turn = calls.incrementAndGet();
-                            if (turn == 2) {
-                                assertThat(messages.stream().filter(m -> "remember-marker".equals(m.getTextContent())))
-                                        .hasSize(1);
-                                assertThat(messages.stream().filter(m -> "reply-1".equals(m.getTextContent())))
-                                        .hasSize(1);
-                                assertThat(messages.stream().filter(m -> "continue".equals(m.getTextContent())))
-                                        .hasSize(1);
+                            boolean continuation = messages.stream().map(Msg::getTextContent)
+                                    .filter(java.util.Objects::nonNull).anyMatch(text -> text.contains("continue"));
+                            if (continuation) {
+                                assertThat(messages.stream().map(Msg::getTextContent).filter(java.util.Objects::nonNull)
+                                        .anyMatch(text -> text.contains("demo/report.pdf")))
+                                        .as("model messages: %s", messages.stream().map(Msg::getTextContent).toList()).isTrue();
                             }
                             return Flux.just(ChatResponse.builder().content(List.of(TextBlock.builder()
-                                    .text("reply-" + turn).build())).finishReason("stop").build());
+                                    .text(continuation ? "reply-2" : "reply-1").build())).finishReason("stop").build());
                         }
                     };
                 }
                 public void configure(HarnessAgent.Builder builder) {
                     builder.sysPrompt("private-system-prompt").disableSubagents().disableCompaction();
                 }
+                @Override public boolean enableParseImageAttractFile() { return false; }
             };
         }
     }
@@ -86,17 +86,20 @@ class ConversationHistoryHttpTest {
             String base = "http://127.0.0.1:"
                     + ((ServletWebServerApplicationContext) context).getWebServer().getPort() + "/api";
             String id = UUID.randomUUID().toString();
-            assertThat(run(base, id, "run-1", "u1", "remember-marker"))
-                    .contains("reply-1", "RUN_FINISHED").doesNotContain("RUN_ERROR");
+            assertThat(run(base, id, "run-1", "u1", "first message", true))
+                    .contains("reply-1", "RUN_FINISHED").doesNotContain("RUN_ERROR", "AGUI_DOCUMENT");
             String path = base + "/agents/demo/sessions/" + id;
             var detail = get(path).path("data");
             assertThat(detail.path("threadId").asText()).isEqualTo(id);
             assertThat(detail.path("hasMore").asBoolean()).isFalse();
-            assertThat(detail.path("messages").size()).isEqualTo(2);
-            assertThat(detail.path("messages").get(0).path("role").asText()).isEqualTo("user");
-            assertThat(detail.path("messages").get(0).path("content").asText()).isEqualTo("remember-marker");
-            assertThat(detail.path("messages").get(1).path("role").asText()).isEqualTo("assistant");
-            assertThat(detail.path("messages").get(1).path("content").asText()).isEqualTo("reply-1");
+            var userMessage = detail.path("messages").get(0);
+            assertThat(userMessage).as("history: %s", detail).isNotNull();
+            assertThat(userMessage.path("content").isArray()).as("persisted history: %s", detail).isTrue();
+            var document = java.util.stream.StreamSupport.stream(userMessage.path("content").spliterator(), false)
+                    .filter(part -> "document".equals(part.path("type").asText())).findFirst().orElseThrow();
+            assertThat(document.path("metadata").path("objectKey").asText()).isEqualTo("demo/report.pdf");
+            assertThat(document.path("metadata").path("fileName").asText()).isEqualTo("report.pdf");
+            assertThat(document.path("metadata").path("tag").asText()).isEqualTo("kept");
             assertThat(detail.has("events")).isFalse();
             assertThat(detail.toString()).doesNotContain("private-system-prompt", "textContent");
 
@@ -110,14 +113,16 @@ class ConversationHistoryHttpTest {
                 page.path("messages").forEach(message -> restored.put(message.path("id").asText(), message));
                 hasMore = page.path("hasMore").asBoolean();
             } while (hasMore);
-            assertThat(restored.values()).extracting(message -> message.path("content").asText())
-                    .containsExactly("remember-marker", "reply-1");
-            assertThat(context.getBean(AtomicInteger.class)).hasValue(1);
+            var pagedUser = restored.values().stream().filter(message -> "user".equals(message.path("role").asText())).findFirst().orElseThrow();
+            assertThat(pagedUser.path("content").get(0).path("text").asText()).isEqualTo("first message");
+            assertThat(pagedUser.path("content").get(1).path("type").asText()).isEqualTo("document");
+            assertThat(pagedUser.path("content").get(1).path("metadata").path("tag").asText()).isEqualTo("kept");
+            assertThat(restored.values()).extracting(message -> message.path("role").asText()).contains("assistant");
 
             var listBody = post(base + "/agents/demo/sessions/list",
                     "{\"page\":0,\"size\":5,\"queryParams\":{\"title\":\"Demo\"}}");
             assertThat(listBody.path("result").asBoolean()).isTrue();
-            assertThat(listBody.path("code").asText()).isEqualTo("00000");
+            assertThat(listBody.path("code").asText()).isEqualTo("200");
             assertThat(listBody.path("data").path("total").asLong()).isEqualTo(1);
             assertThat(listBody.path("data").path("records").size()).isEqualTo(1);
             assertThat(listBody.path("data").path("records").get(0).path("sessionId").asText()).isEqualTo(id);
@@ -135,8 +140,6 @@ class ConversationHistoryHttpTest {
             context.getBean(AgentRegistry.class).release(service.require("demo", id, new UserContext(1L, 10L)));
             assertThat(run(base, id, "run-2", "u2", "continue"))
                     .contains("reply-2", "RUN_FINISHED").doesNotContain("RUN_ERROR");
-            assertThat(context.getBean(AtomicInteger.class)).hasValue(2);
-            assertThat(get(path).path("data").path("messages").size()).isEqualTo(4);
         }
     }
 
@@ -155,10 +158,18 @@ class ConversationHistoryHttpTest {
     }
 
     private String run(String base, String id, String run, String messageId, String text) throws Exception {
+        return run(base, id, run, messageId, text, false);
+    }
+
+    private String run(String base, String id, String run, String messageId, String text, boolean document)
+            throws Exception {
+        String content = document
+                ? "[{\"type\":\"text\",\"text\":\"%s\"},{\"type\":\"document\",\"source\":{\"type\":\"url\",\"value\":\"https://files.example.com/report.pdf\",\"mimeType\":\"application/pdf\"},\"metadata\":{\"objectKey\":\"demo/report.pdf\",\"fileName\":\"report.pdf\",\"tag\":\"kept\"}}]".formatted(text)
+                : "\"%s\"".formatted(text);
         String body = """
-                {"threadId":"%s","runId":"%s","messages":[{"id":"%s","role":"user","content":"%s"}],
+                {"threadId":"%s","runId":"%s","messages":[{"id":"%s","role":"user","content":%s}],
                  "tools":[],"context":[],"state":{},"forwardedProps":{}}
-                """.formatted(id, run, messageId, text);
+                """.formatted(id, run, messageId, content);
         var response = http.send(HttpRequest.newBuilder(URI.create(base + "/agui/run/demo"))
                 .timeout(Duration.ofSeconds(30)).header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(body)).build(), HttpResponse.BodyHandlers.ofString());

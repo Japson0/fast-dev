@@ -8,7 +8,7 @@ public class AgentScopeProperties {
     private String modelApiKey;
     private String userIdHeader = "X-User-Id";
     private String tenantIdHeader = "X-Tenant-Id";
-
+    private String visionModelName = "agi:vl-llm-latest";
     public String getModelBaseUrl() { return modelBaseUrl; }
     public void setModelBaseUrl(String modelBaseUrl) {
         if (modelBaseUrl != null && modelBaseUrl.startsWith("${") && modelBaseUrl.endsWith("}")) return;
@@ -20,4 +20,6 @@ public class AgentScopeProperties {
     public void setUserIdHeader(String userIdHeader) { this.userIdHeader = userIdHeader; }
     public String getTenantIdHeader() { return tenantIdHeader; }
     public void setTenantIdHeader(String tenantIdHeader) { this.tenantIdHeader = tenantIdHeader; }
+    public String getVisionModelName() { return visionModelName; }
+    public void setVisionModelName(String visionModelName) { this.visionModelName = visionModelName; }
 }

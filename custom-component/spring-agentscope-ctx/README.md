@@ -81,6 +81,20 @@ POST /api/agui/run/{agentId}       (路径中的 agentId)
 
 前端按 `messages[].id` 合并多页结果，同 ID 消息替换已有值，避免最终回复重复展示。文本 `content` 为字符串；用户图片、音频和视频保留 AG-UI content blocks。工具调用使用 `toolCalls`，工具结果使用 `role: "tool"` 和 `toolCallId`；并行调用结果拆成各自关联的工具消息。系统提示、检查点、原始模型请求、推理内容和内部元数据不返回。
 
+### AG-UI 文档引用
+
+### 附件工具
+
+AG-UI 用户消息可在 `content` 中携带 `type: "document"` part；文本附件通过宿主提供的 `AttachmentFileService` 解析，Agent 定义通过 `enableParseTextAttractFile()` 控制是否注册 `read_text_attachment`。图片识别使用独立视觉模型，开关为 `enableParseImageAttractFile()`，模型名由 `fast.agentscope.vision-model-name` 配置。两个开关默认关闭；启用文本工具时必须提供 SPI Bean。
+
+文本工具将 `agentId`、原始 `objectKey` 和已认证的 `UserContext` 交给 SPI。图片工具接收原始 `objectKey` 与 HTTP(S) `fileUrl`，使用独立视觉模型识别。两种工具都只接受当前 Agent 目录下的 key。AG-UI 输入示例：
+
+```json
+{"id":"u1","role":"user","content":[{"type":"text","text":"总结附件"},{"type":"document","source":{"type":"url","value":"https://files.example.com/report.pdf","mimeType":"application/pdf"},"metadata":{"objectKey":"demo/report.pdf","fileName":"report.pdf"}}]}
+```
+
+实现 `AttachmentFileService` 并返回 `ParsedAttachment`，其中 `content` 是解析文本，`truncated` 表示是否截断。Document 的引用保存在 Session Log；会话重建后可继续调用工具，不必重复上传。内部 marker 不会出现在 SSE 或历史响应中。
+
 继续对话仍调用 AG-UI `/run/{agentId}`，复用 `threadId`，每轮使用新的 `runId` 和消息 ID，`messages` 只包含本轮新增消息。后端从 Session Log 恢复模型上下文，前端不回传历史消息。详情仅用于恢复展示，不重放 SSE，刷新页面不能重复提交原消息。
 
 Java 17 验证：

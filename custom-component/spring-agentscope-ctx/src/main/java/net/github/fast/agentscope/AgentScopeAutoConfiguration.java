@@ -49,8 +49,8 @@ public class AgentScopeAutoConfiguration {
     @Bean(destroyMethod = "close") @ConditionalOnMissingBean
     public AgentRegistry agentRegistry(List<HarnessAgentDefinition> definitions, SessionLogStore logStore,
             @Value("${fast.agentscope.workspace:./data/agentscope}") String workspace,
-            AgentScopeProperties properties) {
-        return new AgentRegistry(definitions, Path.of(workspace), logStore, properties);
+            AgentScopeProperties properties, ObjectProvider<AttachmentFileService> files) {
+        return new AgentRegistry(definitions, Path.of(workspace), logStore, properties, files.getIfAvailable());
     }
     @Bean
     public org.springframework.beans.factory.InitializingBean agentScopeRegisterRelayModel(
@@ -82,7 +82,9 @@ public class AgentScopeAutoConfiguration {
         return AguiAdapterConfig.builder().enableReasoning(false).emitStateEvents(false).build();
     }
     @Bean @ConditionalOnMissingBean
-    public AguiAgentAdapterFactory aguiAgentAdapterFactory() { return AguiAgentAdapterFactory.defaultFactory(); }
+    public AguiAgentAdapterFactory aguiAgentAdapterFactory(AguiAdapterConfig config) {
+        return new DocumentAguiAdapterFactory(config);
+    }
     @Bean @ConditionalOnMissingBean
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @ConditionalOnProperty(prefix = "fast.agentscope", name = "controller-enabled", havingValue = "true", matchIfMissing = true)

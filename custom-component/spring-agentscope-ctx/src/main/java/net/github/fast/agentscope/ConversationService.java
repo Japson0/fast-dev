@@ -1,12 +1,13 @@
 package net.github.fast.agentscope;
 
-import io.agentscope.core.message.Msg;
 import io.agentscope.core.message.MsgRole;
+import io.agentscope.core.message.Msg;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import io.agentscope.core.session.SessionLog;
 import io.agentscope.core.agent.RuntimeContext;
 import io.agentscope.harness.agent.HarnessAgent;
 import org.springframework.dao.DuplicateKeyException;
@@ -87,7 +88,12 @@ public class ConversationService {
                 }
             });
             if (c.archived()) throw new ResponseStatusException(HttpStatus.CONFLICT, "会话已归档");
-            return new Execution(registry.agent(c), registry.context(c), () -> busy.remove(id));
+            HarnessAgent agent = registry.agent(c);
+            RuntimeContext context = registry.context(c);
+            context.put(SessionLog.class, registry.log(c));
+            DocumentAttachmentMiddleware middleware = registry.attachmentMiddleware(c);
+            if (middleware != null) context.put(DocumentAttachmentMiddleware.class, middleware);
+            return new Execution(agent, context, () -> busy.remove(id));
         } catch (RuntimeException | Error failure) {
             busy.remove(id);
             throw failure;

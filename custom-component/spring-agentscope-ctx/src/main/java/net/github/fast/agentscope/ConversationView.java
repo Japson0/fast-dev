@@ -16,13 +16,11 @@ public final class ConversationView {
 
     private ConversationView() { }
 
-    /** Explicit wire fields exclude SDK convenience getters and internal message metadata. */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record Message(String id, String role, Object content, List<AguiToolCall> toolCalls,
                           String toolCallId) { }
     public record Snapshot(String threadId, long cursor, boolean hasMore, List<Message> messages) { }
 
-    /** limit bounds scanned log events; clients upsert messages by id, including across pages. */
     public static Snapshot snapshot(SessionLog log, String threadId, long after, int limit) {
         long head = log.head().seq();
         var events = log.readAfter(after, limit);
@@ -44,7 +42,6 @@ public final class ConversationView {
         if (message.getRole() == MsgRole.SYSTEM) return;
         var results = message.getContentBlocks(ToolResultBlock.class);
         if (!results.isEmpty()) {
-            // AG-UI tool messages reference exactly one call, even for parallel SDK tool results.
             for (var result : results) {
                 String id = results.size() == 1 ? message.getId() : message.getId() + ":" + result.getId();
                 var converted = CONVERTER.toAguiMessage(Msg.builder().id(id).role(MsgRole.TOOL)
@@ -56,10 +53,10 @@ public final class ConversationView {
         }
         var converted = CONVERTER.toAguiMessage(message);
         Object content = converted.getTextContent();
-        if (message.getRole() == MsgRole.USER && message.getContent().stream().anyMatch(block ->
-                block instanceof ImageBlock || block instanceof AudioBlock || block instanceof VideoBlock)) {
-            content = inputContent(message);
-        }
+        boolean structured = message.getRole() == MsgRole.USER && message.getContent().stream().anyMatch(block ->
+                block instanceof ImageBlock || block instanceof AudioBlock || block instanceof VideoBlock
+                        || block instanceof TextBlock text && DocumentAttachmentMiddleware.isMarker(text.getText()));
+        if (structured) content = inputContent(message);
         if (content == null && !converted.hasToolCalls()) return;
         messages.put(message.getId(), new Message(message.getId(), converted.getRole(), content,
                 converted.hasToolCalls() ? converted.getToolCalls() : null, null));
@@ -69,7 +66,13 @@ public final class ConversationView {
         var parts = new ArrayList<Map<String, Object>>();
         for (var block : message.getContent()) {
             if (block instanceof TextBlock text) {
-                parts.add(Map.of("type", "text", "text", text.getText()));
+                if (DocumentAttachmentMiddleware.isMarker(text.getText())) {
+                    var document = DocumentAttachmentMiddleware.payload(text.getText());
+                    parts.add(Map.of("type", "document", "source", document.get("source"),
+                            "metadata", document.get("metadata")));
+                } else {
+                    parts.add(Map.of("type", "text", "text", text.getText()));
+                }
             } else if (block instanceof ImageBlock image) {
                 parts.add(media("image", image.getSource()));
             } else if (block instanceof AudioBlock audio) {
