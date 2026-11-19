@@ -30,7 +30,7 @@ public class JdbcConversationRepository implements ConversationRepository {
     }
     @Override public List<Conversation> list(String agentId, UserContext owner, int offset, int limit, String title) {
         return jdbc.query("SELECT * FROM agent_conversation WHERE agent_id=? AND user_id=? AND tenant_key=?"
-                        + titleFilter(title) + " ORDER BY updated_at DESC, session_id DESC LIMIT ? OFFSET ?",
+                        + titleFilter(title) + " ORDER BY updated_at DESC LIMIT ? OFFSET ?",
                 mapper, withPaging(ownerParameters(agentId, owner, title), limit, offset));
     }
     private String titleFilter(String title) { return title == null || title.isBlank() ? "" : " AND title LIKE ?"; }
