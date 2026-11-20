@@ -37,8 +37,9 @@ public final class DocumentAttachmentMiddleware implements MiddlewareBase {
     private static final String REQUEST_KEY = "fast.agentscope.attachment-request";
     private static final String MARKER_PREFIX = "[[AGUI_ATTACHMENT:";
     private static final String MARKER_SUFFIX = "]]";
-    private static final String TEXT_PROMPT = "文本附件读取\n1. 本轮消息带有文本类文件元数据（objectKey）时，先调用 read_text_attachment 读取内容再作答；不要猜测附件内容。\n2. objectKey 必须原样传入，不要拼接、改写或猜测。\n3. 返回 code 为 00000 表示成功，data.content 是解析文本；00001 是参数或文件问题，99999 是系统异常。失败时如实说明原因。\n4. 多个附件逐个调用；data.truncated 为 true 说明内容被截断。";
-    private static final String IMAGE_PROMPT = "图片附件读取\n1. 本轮消息带有图片类文件元数据（objectKey、fileUrl）时，先调用 read_image_attachment 读取内容再作答；不要猜测图片内容。\n2. objectKey 与 fileUrl 必须原样传入。\n3. 返回 code 为 00000 表示成功，data.content 是识别结果；00001 是参数或文件问题，99999 是系统异常。失败时如实说明原因。\n4. 多张图片逐个调用。";
+    private static final String TEXT_PROMPT = "文本附件读取\n1. 本轮消息带有文本类文件元数据（objectKey）时，先调用 read_text_attachment 读取内容再作答；不要猜测附件内容。\n2. objectKey 必须原样传入，不要拼接、改写或猜测。\n3. 仅当返回 result 为 true 时才视为成功并使用 data.content；result 为 false 时视为失败，不要使用 data.content 冒充解析结果。\n4. 多个附件逐个调用；data.truncated 为 true 说明内容被截断。";
+    private static final String IMAGE_PROMPT = "图片附件视觉识别\n1. 本轮消息带有图片附件元数据（objectKey、fileUrl）时，调用 read_image_attachment 使用视觉模型识别，再基于识别结果回答用户的问题；不要猜测图片内容。\n2. objectKey 与 fileUrl 仅用于调用工具，必须原样传入，不要拼接、改写或猜测。\n3. 仅当返回 result 为 true 时才视为视觉识别成功并使用 data.content；result 为 false 时视为识别失败，不要使用 data.content 冒充识别结果。\n4. 多张图片逐个调用。";
+    private static final String ATTACHMENT_RESPONSE_RULE = "附件工具参数仅用于调用工具，不要在最终回复中展示。工具读取成功后，必须结合 data.content 回答用户关于附件的问题；不要只报告读取或识别成功，也不要机械复述全部识别结果。用户没有提出具体问题时，再简要概括附件内容。读取失败时，简要说明未能读取并建议重新上传，不复述技术错误信息。";
 
     public record AttachmentPart(String marker, Map<String, Object> payload) { }
     public record RequestAttachments(List<AttachmentPart> parts, SessionLog log,
@@ -65,6 +66,7 @@ public final class DocumentAttachmentMiddleware implements MiddlewareBase {
             selected.add(new ReadImageAttachmentTool(agentId, owner, visionModel));
             prompts.add(IMAGE_PROMPT);
         }
+        if (textEnabled || imageEnabled) prompts.add(ATTACHMENT_RESPONSE_RULE);
         tools = List.copyOf(selected);
         prompt = String.join("\n\n", prompts);
     }

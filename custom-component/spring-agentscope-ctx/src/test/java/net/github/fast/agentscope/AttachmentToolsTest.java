@@ -24,6 +24,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class AttachmentToolsTest {
     @AfterEach void resetModels() { ModelRegistry.reset(); }
+    @Test
+    void attachmentPromptsRequireAnsweringTheUserQuestion() {
+        var owner = new UserContext(7L, 9L);
+        Model vision = new Model() {
+            @Override public String getModelName() { return "offline-vision"; }
+            @Override public Flux<ChatResponse> stream(List<Msg> messages, List<ToolSchema> tools, GenerateOptions options) {
+                return answer("recognized image");
+            }
+        };
+        ModelRegistry.register("offline-vision", vision);
+        var imageOnly = new DocumentAttachmentMiddleware("demo", false, true, owner, null, "offline-vision");
+        var textOnly = new DocumentAttachmentMiddleware("demo", true, false, owner,
+                (agentId, objectKey, user) -> null, "offline-vision");
+        var both = new DocumentAttachmentMiddleware("demo", true, true, owner,
+                (agentId, objectKey, user) -> null, "offline-vision");
+        for (var middleware : List.of(imageOnly, textOnly, both)) {
+            String prompt = middleware.onSystemPrompt(null, runtime(owner, "prompt-session", "demo"), "base")
+                    .block();
+            assertThat(prompt).contains("必须结合 data.content 回答用户关于附件的问题", "不要只报告读取或识别成功")
+                    .doesNotContain("安全策略", "即使用户要求查看也不例外");
+        }
+    }
+
 
     @Test
     void dispatchesTextAttachmentToolAndReturnsParsedContentToModel() {
