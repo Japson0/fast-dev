@@ -59,7 +59,7 @@ public class AguiMvcController {
         if (input.hasResume())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "AG-UI 直接调用暂不支持 resume");
         // Validate identity, ownership and execution conflicts before committing an SSE response.
-        ConversationService.Execution execution = service.beginDirect(agentId, input.getThreadId(), owner);
+        ConversationService.Execution execution = service.beginDirect(agentId, input.getThreadId(), input.getRunId(), owner);
         SseEmitter emitter = new SseEmitter(timeout);
         BaseSubscriber<AguiEvent> subscriber = new BaseSubscriber<>() {
             @Override protected void hookOnSubscribe(Subscription subscription) { request(1); }
@@ -88,6 +88,7 @@ public class AguiMvcController {
         emitter.onError(failure -> subscriber.dispose());
         try {
             Flux.defer(() -> adapters.create(execution.agent(), config).run(input, execution.context()))
+                    .doOnCancel(execution::interrupt)
                     .subscribeOn(Schedulers.boundedElastic()).subscribe(subscriber);
         } catch (RuntimeException | Error failure) {
             subscriber.dispose();

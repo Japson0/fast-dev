@@ -40,6 +40,8 @@ public final class ConversationView {
 
     private static void project(Msg message, Map<String, Message> messages) {
         if (message.getRole() == MsgRole.SYSTEM) return;
+        if (message.getRole() == MsgRole.ASSISTANT
+                && message.getGenerateReason() == GenerateReason.INTERRUPTED) return;
         if (message.getRole() == MsgRole.USER
                 && message.getMetadata().get(MessageMetadata.BUSINESS_MARKER_INDEX) instanceof Number marker) {
             int index = marker.intValue();

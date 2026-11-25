@@ -46,7 +46,10 @@ class ConversationHistoryHttpTest {
         }
         @Bean UserContextProvider users() { return () -> new UserContext(1L, 10L); }
         @Bean AtomicInteger modelCalls() { return new AtomicInteger(); }
-        @Bean HarnessAgentDefinition definition(AtomicInteger calls) {
+        @Bean java.util.concurrent.CountDownLatch modelStarted() { return new java.util.concurrent.CountDownLatch(1); }
+        @Bean reactor.core.publisher.Sinks.One<ChatResponse> modelReply() { return reactor.core.publisher.Sinks.one(); }
+        @Bean HarnessAgentDefinition definition(AtomicInteger calls, java.util.concurrent.CountDownLatch modelStarted,
+                reactor.core.publisher.Sinks.One<ChatResponse> modelReply) {
             return new HarnessAgentDefinition() {
                 public String id() { return "demo"; }
                 public String name() { return "Demo"; }
@@ -57,6 +60,10 @@ class ConversationHistoryHttpTest {
                         public String getModelName() { return "offline"; }
                         public Flux<ChatResponse> stream(List<Msg> messages, List<ToolSchema> tools, GenerateOptions options) {
                             int turn = calls.incrementAndGet();
+                            if (messages.stream().anyMatch(msg -> "wait-for-stop".equals(msg.getTextContent()))) {
+                                modelStarted.countDown();
+                                return modelReply.asMono().flux();
+                            }
                             boolean continuation = messages.stream().map(Msg::getTextContent)
                                     .filter(java.util.Objects::nonNull).anyMatch(text -> text.contains("continue"));
                             if (continuation) {
@@ -96,6 +103,31 @@ class ConversationHistoryHttpTest {
     private static io.agentscope.core.session.SessionEvent userEvent(long seq, Msg message) {
         return new io.agentscope.core.session.SessionEvent(1, "e" + seq, seq, seq, "message/user", "r", "t", true,
                 io.agentscope.core.util.JsonUtils.getJsonCodec().toJson(java.util.Map.of("message", message)));
+    }
+
+    @Test
+    void stopFinishesOriginalStreamWithoutExposingSdkPrompt() throws Exception {
+        try (var ctx = new SpringApplicationBuilder(Application.class).run("--server.port=0",
+                "--server.address=127.0.0.1", "--fast.agentscope.workspace=" + workspace,
+                "--fast.agentscope.session-log.auto-create-table=true")) {
+            String base = "http://127.0.0.1:" + ((ServletWebServerApplicationContext) ctx).getWebServer().getPort() + "/api";
+            String path = base + "/agents/demo/sessions/s1";
+            String body = """
+                    {"threadId":"s1","runId":"r1","messages":[{"id":"u1","role":"user","content":"wait-for-stop"}]}
+                    """;
+            var stream = http.sendAsync(HttpRequest.newBuilder(URI.create(base + "/agui/run/demo"))
+                    .header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build(),
+                    HttpResponse.BodyHandlers.ofString());
+            assertThat(ctx.getBean(java.util.concurrent.CountDownLatch.class).await(10, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
+            var stale = HttpRequest.newBuilder(URI.create(path + "/interrupt?runId=old"))
+                    .POST(HttpRequest.BodyPublishers.noBody()).build();
+            assertThat(http.send(stale, HttpResponse.BodyHandlers.discarding()).statusCode()).isEqualTo(409);
+            post(path + "/interrupt?runId=r1", "");
+            assertThat(stream).isNotDone();
+            ctx.getBean(reactor.core.publisher.Sinks.One.class).tryEmitEmpty();
+            assertThat(stream.get(10, java.util.concurrent.TimeUnit.SECONDS).body()).contains("RUN_FINISHED").doesNotContain("RUN_ERROR");
+            assertThat(get(path).path("data").path("messages").toString()).contains("wait-for-stop").doesNotContain("I noticed that you have interrupted me");
+        }
     }
 
     @Test

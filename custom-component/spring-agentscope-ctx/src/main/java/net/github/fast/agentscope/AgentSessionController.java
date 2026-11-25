@@ -40,4 +40,10 @@ public class AgentSessionController {
             @RequestParam(defaultValue = "0") long after, @RequestParam(defaultValue = "200") int limit) {
         return RestResponse.renderSuccess(service.history(agentCode, id, user(), after, limit));
     }
+    @PostMapping("/agents/{agentCode}/sessions/{id}/interrupt")
+    public RestResponse<Void> interrupt(@PathVariable String agentCode, @PathVariable String id,
+            @RequestParam String runId) {
+        service.interrupt(agentCode, id, runId, user());
+        return RestResponse.renderSuccess(null);
+    }
 }

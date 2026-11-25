@@ -59,6 +59,10 @@ POST /api/agui/run/{agentId}       (路径中的 agentId)
 
 请求体为 SDK 的 `RunAgentInput` JSON，`threadId` 对应会话 ID，`runId` 必填。执行前按注入的 `UserContextProvider` 校验/创建该用户和租户的会话；已有会话不可被其他用户认领。resume 暂不支持。参数为 `fast.agentscope.agui-enabled`（默认启用）、`fast.agentscope.agui.path-prefix`（默认 `/api/agui`）、`fast.agentscope.agui.sse-timeout`。发生执行异常时返回通用 AG-UI `RUN_ERROR`，不向客户端泄露内部异常信息。
 
+手动停止调用 `POST /api/agents/{agentCode}/sessions/{id}/interrupt?runId=<当前运行 ID>`。接口成功表示已调用 SDK 中断方法，不表示执行已结束。前端保持原 SSE 打开，继续读到流结束；过期或不匹配的 `runId` 返回 `409`。MVC 检测到 SSE 写入失败、断开或超时后会取消订阅并尝试中断；空闲连接的断开不一定会被 Servlet 容器即时发现。
+
+历史快照不展示 SDK 标记为 `GenerateReason.INTERRUPTED` 的 assistant 消息，不修改原始日志或分页游标。手动停止与现有执行互斥一样，仅作用于当前实例；多实例部署需把停止请求路由到承载原 SSE 的实例。
+
 **限制**：普通消息接口是同步 MVC 调用；AG-UI SSE 使用异步 MVC。执行互斥仅在单个进程内有效，不提供集群锁。默认 Session Log 使用新的 JDBC 命名空间，原服务历史日志需单独迁移或注入兼容的 `SessionLogStore`；不要假设旧历史自动可见。
 
 ## AG-UI 会话历史与增量续聊

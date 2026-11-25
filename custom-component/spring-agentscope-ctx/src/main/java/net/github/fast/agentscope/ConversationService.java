@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-import io.agentscope.core.session.SessionLog;
 import io.agentscope.core.agent.RuntimeContext;
+import io.agentscope.core.session.SessionLog;
 import io.agentscope.harness.agent.HarnessAgent;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -18,6 +17,7 @@ public class ConversationService {
     private final AgentRegistry registry;
     private final ConversationRepository repository;
     private final Set<String> busy = ConcurrentHashMap.newKeySet();
+    private final ConcurrentHashMap<String, Execution> activeRuns = new ConcurrentHashMap<>();
 
     public ConversationService(AgentRegistry registry, ConversationRepository repository) {
         this.registry = registry;
@@ -73,8 +73,17 @@ public class ConversationService {
             return result == null ? "" : result.getTextContent();
         } finally { busy.remove(id); }
     }
+
+    public void interrupt(String agentId, String id, String runId, UserContext owner) {
+        if (runId == null || runId.isBlank()) throw badRequest("runId 不能为空");
+        require(agentId, id, owner);
+        Execution execution = activeRuns.get(id);
+        if (execution == null || !runId.equals(execution.runId) || !execution.interrupt())
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "指定运行已不在执行");
+    }
+
     /** Acquire a direct AG-UI run. The verified owner is captured before leaving the request thread. */
-    public Execution beginDirect(String agentId, String id, UserContext owner) {
+    public Execution beginDirect(String agentId, String id, String runId, UserContext owner) {
         if (id == null || !id.matches("[a-zA-Z0-9_-]{1,36}"))
             throw badRequest("threadId 必须为1到36位字母、数字、下划线或短横线");
         AgentRegistry.Descriptor descriptor = registry.descriptor(agentId);
@@ -97,7 +106,12 @@ public class ConversationService {
             DocumentAttachmentMiddleware middleware = registry.attachmentMiddleware(c);
             if (middleware != null) context.put(DocumentAttachmentMiddleware.class, middleware);
             repository.touch(c, now);
-            return new Execution(agent, context, () -> busy.remove(id));
+            Execution execution = new Execution(agent, context, runId, () -> {
+                activeRuns.remove(id);
+                busy.remove(id);
+            });
+            activeRuns.put(id, execution);
+            return execution;
         } catch (RuntimeException | Error failure) {
             busy.remove(id);
             throw failure;
@@ -108,14 +122,28 @@ public class ConversationService {
         private final HarnessAgent agent;
         private final RuntimeContext context;
         private final Runnable release;
-        private final AtomicBoolean closed = new AtomicBoolean();
+        private final String runId;
+        private boolean closed;
+        private boolean interrupted;
 
-        Execution(HarnessAgent agent, RuntimeContext context, Runnable release) {
-            this.agent = agent; this.context = context; this.release = release;
+        Execution(HarnessAgent agent, RuntimeContext context, String runId, Runnable release) {
+            this.agent = agent; this.context = context; this.runId = runId; this.release = release;
         }
         public HarnessAgent agent() { return agent; }
         public RuntimeContext context() { return context; }
-        @Override public void close() { if (closed.compareAndSet(false, true)) release.run(); }
+        synchronized boolean interrupt() {
+            if (closed) return false;
+            if (!interrupted) {
+                agent.interrupt(context.getUserId(), context.getSessionId());
+                interrupted = true;
+            }
+            return true;
+        }
+        @Override public synchronized void close() {
+            if (closed) return;
+            closed = true;
+            release.run();
+        }
     }
     private void acquire(String id) {
         if (!busy.add(id)) throw new ResponseStatusException(HttpStatus.CONFLICT, "会话正在执行");
